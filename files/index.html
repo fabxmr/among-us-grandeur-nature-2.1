@@ -1,0 +1,2838 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Among Us - Cartes 16 Joueurs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap');
+
+  :root {
+    --space-dark: #0a0e1a;
+    --space-blue: #1a2340;
+    --neon-red: #ff2244;
+    --neon-cyan: #00e5ff;
+    --neon-green: #39ff14;
+    --neon-yellow: #ffe600;
+    --neon-orange: #ff8c00;
+    --neon-purple: #c400ff;
+    --neon-pink: #ff00aa;
+    --card-w: 210px;
+    --card-h: 320px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--space-dark);
+    font-family: 'Nunito', sans-serif;
+    color: white;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    position: relative;
+  }
+  .header h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(18px, 4vw, 36px);
+    color: var(--neon-red);
+    text-shadow: 0 0 20px #ff224488, 0 0 40px #ff224444;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: #8899bb;
+    font-size: 14px;
+    font-family: 'Press Start 2P', monospace;
+  }
+  .stars {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    overflow: hidden; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 50%, #aaa 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 15%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 70%, #ccc 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 30%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 80%, #aaa 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 90%, #fff 0%, transparent 100%);
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #1e2a44;
+  }
+  .tab-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .2s;
+    text-transform: uppercase;
+  }
+  .tab-btn.crewmate { background: #1a3a2a; color: var(--neon-green); border: 1px solid var(--neon-green); }
+  .tab-btn.impostor { background: #3a1a1a; color: var(--neon-red); border: 1px solid var(--neon-red); }
+  .tab-btn.sheriff  { background: #2a2a10; color: var(--neon-yellow); border: 1px solid var(--neon-yellow); }
+  .tab-btn.engineer { background: #1a1a3a; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
+  .tab-btn.sabotage { background: #2a1a3a; color: var(--neon-purple); border: 1px solid var(--neon-purple); }
+  .tab-btn.quests   { background: #1a2a2a; color: #a0e0cc; border: 1px solid #4a8877; }
+  .tab-btn.backs    { background: #2a2a2a; color: #ccc; border: 1px solid #666; }
+  .tab-btn.defis    { background: #2a1a10; color: #ff9966; border: 1px solid #c66a3c; }
+  .tab-btn.rules    { background: #1a1a2a; color: #aabbff; border: 1px solid #445599; }
+  .tab-btn.all      { background: #1a2340; color: white; border: 1px solid #445577; }
+  .tab-btn:hover, .tab-btn.active { filter: brightness(1.4); transform: translateY(-2px); box-shadow: 0 4px 20px #00000088; }
+
+  /* ── GRID ── */
+  .section { display: none; padding: 30px 20px; }
+  .section.active { display: block; }
+  .cards-grid {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    justify-content: center;
+  }
+
+  /* ── BASE CARD ── */
+  .card {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 16px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between;
+    padding: 18px 14px 14px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s, box-shadow .25s;
+    cursor: pointer;
+  }
+  .card:hover { transform: translateY(-6px) scale(1.03); }
+
+  /* ── CARD THEMES ── */
+  .card.crewmate {
+    background: linear-gradient(145deg, #0d2a1a, #0a1f2a);
+    border: 2px solid var(--neon-green);
+    box-shadow: 0 0 15px #39ff1433, 0 8px 32px #00000088;
+  }
+  .card.crewmate:hover { box-shadow: 0 0 30px #39ff1466, 0 12px 40px #00000099; }
+
+  .card.impostor {
+    background: linear-gradient(145deg, #2a0d0d, #1a0a0a);
+    border: 2px solid var(--neon-red);
+    box-shadow: 0 0 15px #ff224433, 0 8px 32px #00000088;
+  }
+  .card.impostor:hover { box-shadow: 0 0 30px #ff224466, 0 12px 40px #00000099; }
+
+  .card.sheriff {
+    background: linear-gradient(145deg, #2a2000, #1a1500);
+    border: 2px solid var(--neon-yellow);
+    box-shadow: 0 0 15px #ffe60033, 0 8px 32px #00000088;
+  }
+  .card.sheriff:hover { box-shadow: 0 0 30px #ffe60066, 0 12px 40px #00000099; }
+
+  .card.engineer {
+    background: linear-gradient(145deg, #00152a, #000d1a);
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 15px #00e5ff33, 0 8px 32px #00000088;
+  }
+  .card.engineer:hover { box-shadow: 0 0 30px #00e5ff66, 0 12px 40px #00000099; }
+
+  /* ── CARD INNER ── */
+  .card-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.6;
+    z-index: 1;
+    margin-bottom: 4px;
+  }
+  .crewmate .card-title { color: var(--neon-green); text-shadow: 0 0 8px #39ff1466; }
+  .impostor .card-title { color: var(--neon-red);   text-shadow: 0 0 8px #ff224466; }
+  .sheriff  .card-title { color: var(--neon-yellow); text-shadow: 0 0 8px #ffe60066; }
+  .engineer .card-title { color: var(--neon-cyan);  text-shadow: 0 0 8px #00e5ff66; }
+
+  /* Among Us character SVG area */
+  .char-area {
+    width: 140px; height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+  .char-area svg {
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+
+  /* Glow effect autour du personnage selon le rôle */
+  .crewmate .char-area { filter: drop-shadow(0 0 8px #39ff1433) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+  .impostor .char-area { filter: drop-shadow(0 0 8px #ff224455) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+  .sheriff  .char-area { filter: drop-shadow(0 0 8px #ffe60044) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+  .engineer .char-area { filter: drop-shadow(0 0 8px #00e5ff44) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+
+  /* missions badge */
+  .missions {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+  }
+  .missions-label {
+    opacity: .6;
+    font-size: 6px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-align: center;
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  .missions-nums {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .mission-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    border-radius: 50%;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    font-weight: bold;
+    border: 1.5px solid currentColor;
+    background: rgba(0,0,0,0.3);
+  }
+
+  .mission-extra {
+    font-size: 7px;
+    margin-top: 6px;
+    opacity: .75;
+    letter-spacing: .5px;
+  }
+
+  .crewmate .missions { color: var(--neon-green); background: #39ff1411; border: 1px solid #39ff1433; }
+  .impostor .missions { color: var(--neon-red);   background: #ff224411; border: 1px solid #ff224433; }
+  .sheriff  .missions { color: var(--neon-yellow); background: #ffe60011; border: 1px solid #ffe60033; }
+  .engineer .missions { color: var(--neon-cyan);  background: #00e5ff11; border: 1px solid #00e5ff33; }
+
+  /* color label */
+  .color-dot {
+    position: absolute; top: 10px; right: 12px;
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+
+  /* card back (secret) */
+  .card-back-hint {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 0 0 14px 14px;
+  }
+  .crewmate .card-back-hint { background: var(--neon-green); opacity: .4; }
+  .impostor .card-back-hint { background: var(--neon-red);   opacity: .6; }
+  .sheriff  .card-back-hint { background: var(--neon-yellow); opacity: .5; }
+  .engineer .card-back-hint { background: var(--neon-cyan);  opacity: .5; }
+
+  /* grid noise overlay on card */
+  .card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, #ffffff04 3px, #ffffff04 4px),
+                      repeating-linear-gradient(90deg, transparent, transparent 3px, #ffffff04 3px, #ffffff04 4px);
+    pointer-events: none;
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 13px;
+    margin-bottom: 24px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+
+  /* ── SABOTAGE SECTION ── */
+  .sabotage-container {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .sabotage-card {
+    border-radius: 16px;
+    padding: 24px 20px;
+    border: 2px solid var(--neon-purple);
+    background: linear-gradient(145deg, #1a0a2a, #0d0617);
+    box-shadow: 0 0 15px #c400ff22;
+  }
+  .sabotage-card h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--neon-purple);
+    margin-bottom: 14px;
+    text-shadow: 0 0 8px #c400ff66;
+  }
+  .sabotage-card p, .sabotage-card li {
+    font-size: 12px;
+    color: #ccd;
+    line-height: 1.7;
+  }
+  .sabotage-card ul { padding-left: 18px; }
+  .sabotage-card .tag {
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .tag.green  { background: #39ff1422; color: var(--neon-green);  border: 1px solid #39ff1444; }
+  .tag.red    { background: #ff224422; color: var(--neon-red);    border: 1px solid #ff224444; }
+  .tag.cyan   { background: #00e5ff22; color: var(--neon-cyan);   border: 1px solid #00e5ff44; }
+  .tag.purple { background: #c400ff22; color: var(--neon-purple); border: 1px solid #c400ff44; }
+
+  /* pancarte visuelle (mini-démo) */
+  .pancarte-demo {
+    display: flex; gap: 16px; margin: 16px 0;
+    justify-content: center;
+  }
+  .pancarte {
+    width: 70px; height: 80px;
+    border-radius: 8px;
+    border: 3px solid;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    font-weight: bold;
+  }
+  .pancarte.open    { border-color: var(--neon-green); color: var(--neon-green); background: #39ff1411; }
+  .pancarte.saboted { border-color: var(--neon-red);   color: var(--neon-red);   background: #ff224411; }
+  .pancarte svg { width: 28px; height: 28px; }
+
+  /* ── PANCARTES IMPRIMABLES ── */
+  .pancartes-print-section {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 2px dashed #2a3060;
+  }
+  .pancartes-print-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: #8899bb;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .pancartes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  /* La pancarte elle-même — format A5 paysage simulé */
+  .pancarte-big {
+    aspect-ratio: 1.41 / 1;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 28px 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: transform .25s;
+  }
+  .pancarte-big:hover { transform: scale(1.02); }
+
+  .pancarte-big.libre {
+    background: linear-gradient(145deg, #061a0c, #021008);
+    border: 4px solid var(--neon-green);
+    box-shadow: 0 0 40px #39ff1433, 0 0 80px #39ff1411, inset 0 0 40px #39ff1408;
+  }
+  .pancarte-big.sabotee {
+    background: linear-gradient(145deg, #1a0606, #100202);
+    border: 4px solid var(--neon-red);
+    box-shadow: 0 0 40px #ff224433, 0 0 80px #ff224411, inset 0 0 40px #ff224408;
+  }
+
+  /* Fond étoiles */
+  .pancarte-big::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, #ffffff44, transparent),
+      radial-gradient(1px 1px at 80% 15%, #ffffff33, transparent),
+      radial-gradient(1px 1px at 40% 75%, #ffffff33, transparent),
+      radial-gradient(1px 1px at 70% 60%, #ffffff22, transparent),
+      radial-gradient(1px 1px at 25% 55%, #ffffff22, transparent),
+      radial-gradient(1px 1px at 90% 80%, #ffffff22, transparent);
+    pointer-events: none;
+  }
+
+  .pancarte-big-icon {
+    width: 90px; height: 90px;
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 0 12px currentColor);
+  }
+  .pancarte-big.libre   .pancarte-big-icon { color: var(--neon-green); }
+  .pancarte-big.sabotee .pancarte-big-icon { color: var(--neon-red); }
+
+  .pancarte-big-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 28px;
+    letter-spacing: 6px;
+    position: relative; z-index: 1;
+    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+  }
+  .pancarte-big.libre   .pancarte-big-label { color: var(--neon-green); }
+  .pancarte-big.sabotee .pancarte-big-label { color: var(--neon-red); }
+
+  .pancarte-big-sub {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    position: relative; z-index: 1;
+    text-align: center;
+    line-height: 1.8;
+  }
+  .pancarte-big.libre   .pancarte-big-sub { color: #39ff1488; }
+  .pancarte-big.sabotee .pancarte-big-sub { color: #ff224488; }
+
+  /* Coins décoratifs */
+  .pancarte-big .corner {
+    position: absolute;
+    width: 24px; height: 24px;
+    border-style: solid;
+    z-index: 2;
+  }
+  .pancarte-big.libre   .corner { border-color: var(--neon-green); }
+  .pancarte-big.sabotee .corner { border-color: var(--neon-red); }
+  .pancarte-big .corner.tl { top: 14px; left: 14px;  border-width: 3px 0 0 3px; }
+  .pancarte-big .corner.tr { top: 14px; right: 14px; border-width: 3px 3px 0 0; }
+  .pancarte-big .corner.bl { bottom: 14px; left: 14px;  border-width: 0 0 3px 3px; }
+  .pancarte-big .corner.br { bottom: 14px; right: 14px; border-width: 0 3px 3px 0; }
+
+  /* ── PRINT styles pancartes ── */
+  @media print {
+    /* Masquer TOUT le contenu de l'onglet sabotage sauf les pancartes */
+    #tab-sabotage .sabotage-container { display: none !important; }
+    #tab-sabotage .pancartes-print-title { display: none !important; }
+    #tab-sabotage .section-title { display: none !important; }
+    #tab-sabotage .pancartes-print-section {
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+    }
+
+    /* Grille : 2 pancartes empilées = 1 page A4 complète */
+    .pancartes-grid {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4mm !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      width: 210mm !important;
+      height: 297mm !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    /* Chaque pancarte = légèrement moins que la moitié pour laisser la place au gap */
+    .pancarte-big {
+      width: 210mm !important;
+      height: 146mm !important;
+      aspect-ratio: unset !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      padding: 10mm 18mm !important;
+      box-sizing: border-box !important;
+      flex-shrink: 0 !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+    .pancarte-big.libre {
+      background: #021008 !important;
+      border: 3px solid #39ff14 !important;
+      border-bottom: 2px dashed #39ff1455 !important;
+    }
+    .pancarte-big.sabotee {
+      background: #100202 !important;
+      border: 3px solid #ff2244 !important;
+      border-top: 2px dashed #ff224455 !important;
+    }
+
+    /* Icône et textes agrandis */
+    .pancarte-big-icon {
+      width: 120px !important;
+      height: 120px !important;
+      filter: none !important;
+    }
+    .pancarte-big-label {
+      font-size: 40px !important;
+      text-shadow: none !important;
+      letter-spacing: 10px !important;
+    }
+    .pancarte-big-sub {
+      font-size: 11px !important;
+      letter-spacing: 3px !important;
+    }
+    .pancarte-big .corner {
+      width: 18px !important;
+      height: 18px !important;
+    }
+
+    /* Masquer le texte indicatif sous les pancartes */
+    .pancartes-print-section > p { display: none !important; }
+  }
+
+  /* ── PRINT BTN ── */
+  .print-bar {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #1e2a44;
+  }
+  .print-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 14px 28px;
+    background: transparent;
+    color: white;
+    border: 2px solid #445577;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .2s;
+    letter-spacing: 2px;
+  }
+  .print-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px #00e5ff33; }
+
+  /* ═══════════════════════════════════════════════════
+     DOS DE CARTE
+  ═══════════════════════════════════════════════════ */
+  .card-back {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 16px;
+    border: none;
+    background:
+      radial-gradient(circle at 30% 30%, #2a1a0a 0%, #0a0500 70%),
+      linear-gradient(145deg, #1a0f05, #0a0500);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px #00000088;
+    transition: transform .25s, box-shadow .25s;
+    cursor: pointer;
+  }
+  .card-back:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 0 30px #ff6b0033, 0 12px 40px #00000099;
+  }
+
+  /* Fond avec pattern d'étoiles */
+  .card-back::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 25%, #ffaa44aa 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 40%, #ff880088 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 70%, #ffaa44aa 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 80%, #ff660066 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 85%, #ffaa4488 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 60% 15%, #ff880099 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Grille rétro */
+  .card-back::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 10px, #ff6b0008 10px, #ff6b0008 11px),
+      repeating-linear-gradient(90deg, transparent, transparent 10px, #ff6b0008 10px, #ff6b0008 11px);
+    pointer-events: none;
+  }
+
+  .card-back-logo {
+    font-family: 'Press Start 2P', monospace;
+    color: #ff6b00;
+    text-shadow:
+      0 0 10px #ff6b00aa,
+      0 0 20px #ff6b0066,
+      2px 2px 0 #000,
+      -2px -2px 0 #000,
+      2px -2px 0 #000,
+      -2px 2px 0 #000;
+    z-index: 2;
+    text-align: center;
+  }
+  .card-back-logo-top {
+    font-size: 16px;
+    letter-spacing: 2px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .card-back-logo-bottom {
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-top: 8px;
+    opacity: .85;
+  }
+
+  /* Icône SSHHH stylisée au centre */
+  .card-back-icon {
+    margin: 14px 0;
+    width: 110px;
+    height: 110px;
+    display: block;
+    filter: drop-shadow(0 0 12px #ff6b0088);
+    z-index: 2;
+    position: relative;
+  }
+
+  /* Coins décoratifs (anciens — conservés pour compatibilité) */
+  .card-back-corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: #ff6b00;
+    border-style: solid;
+    z-index: 2;
+    display: none; /* masqués — remplacés par les équerres intérieures */
+  }
+
+  /* Équerres intérieures : proches du texte AMONG US et SHHHH */
+  .back-inner-corner {
+    position: absolute;
+    width: 14px; height: 14px;
+    border-color: #ff6b00;
+    border-style: solid;
+    opacity: 0.7;
+    z-index: 3;
+  }
+  /* Coin haut-gauche : sous le logo AMONG US */
+  .back-tl {
+    top: 28px; left: 14px;
+    border-width: 2px 0 0 2px;
+  }
+  /* Coin haut-droit : sous le logo AMONG US */
+  .back-tr {
+    top: 28px; right: 14px;
+    border-width: 2px 2px 0 0;
+  }
+  /* Coin bas-gauche : au-dessus de SHHHH */
+  .back-bl {
+    bottom: 28px; left: 14px;
+    border-width: 0 0 2px 2px;
+  }
+  /* Coin bas-droit : au-dessus de SHHHH */
+  .back-br {
+    bottom: 28px; right: 14px;
+    border-width: 0 2px 2px 0;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     FICHE QUESTS (à remplir à la main)
+  ═══════════════════════════════════════════════════ */
+  .quest-sheet {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #080c18;
+    color: #ccd6ee;
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid #1a2244;
+    box-shadow: 0 12px 60px #00000088;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* ── Header ── */
+  .quest-sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid #1a2244;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .quest-sheet-header h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: white;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px #4a9eff66;
+  }
+  .quest-sheet-meta {
+    font-size: 12px;
+    color: #6677aa;
+    text-align: right;
+    line-height: 1.9;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+  }
+  .quest-sheet-meta strong { color: #8899cc; }
+
+  /* ── Titres de section étage / RDC ── */
+  .quest-floor-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 12px 18px;
+    margin: 22px 0 12px;
+    border-radius: 8px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .quest-floor-title.etage {
+    background: linear-gradient(135deg, #1a0a0a, #2a0d0d);
+    color: var(--neon-red);
+    border: 1px solid #ff224444;
+    text-shadow: 0 0 8px #ff224466;
+  }
+  .quest-floor-title.rdc {
+    background: linear-gradient(135deg, #0a0d1a, #0d1530);
+    color: #4a9eff;
+    border: 1px solid #4a9eff44;
+    text-shadow: 0 0 8px #4a9eff66;
+  }
+
+  /* ── Grille des missions ── */
+  .quest-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .quest-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #0c1020;
+    border: 1px solid #1a2244;
+    transition: border-color .2s;
+  }
+  .quest-row:hover { border-color: #2a3a66; }
+
+  /* Numéro de mission */
+  .quest-row-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    text-align: center;
+    padding: 6px 4px;
+    border-radius: 6px;
+    line-height: 1.4;
+  }
+  .quest-row-num.etage { color: var(--neon-red);  background: #ff224415; border: 1px solid #ff224433; }
+  .quest-row-num.rdc   { color: #4a9eff;           background: #4a9eff15; border: 1px solid #4a9eff33; }
+
+  /* Nom de la pièce */
+  .quest-row-room {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+  }
+
+  /* Cases à cocher — 3 joueurs anonymes + sabotage */
+  .quest-checkboxes {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .quest-checkbox {
+    width: 34px; height: 34px;
+    border: 2px solid #2a3a66;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #2a3a66;
+    background: #0a0e1a;
+    transition: border-color .15s;
+    flex-shrink: 0;
+  }
+  .quest-checkbox:hover { border-color: #4a9eff66; }
+  .quest-checkbox.sabotage-box {
+    border-color: #ff224444;
+    background: #ff224410;
+    color: #ff224466;
+    font-size: 9px;
+  }
+
+  /* Légende */
+  .quest-legend {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    justify-content: center;
+    margin-top: 28px;
+    padding: 16px 20px;
+    border: 1px solid #2a3a66;
+    border-radius: 10px;
+    background: #0c1020;
+    font-size: 13px;
+    color: #aabbdd;
+    font-weight: 600;
+  }
+  .quest-legend-item { display: flex; align-items: center; gap: 10px; }
+  .legend-box {
+    width: 26px; height: 26px;
+    border: 2px solid #2a3a66;
+    border-radius: 5px;
+    background: #0a0e1a;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .legend-box.sab  {
+    border-color: #ff224466;
+    background: #ff224420;
+  }
+  .legend-box.check {
+    background: #0a0e1a; color: #4a9eff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 16px;
+  }
+
+  /* Trackers Buzz / Morts / Sheriff */
+  .tracker-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .tracker-card {
+    background: #0c1020;
+    border: 1px solid #1a2244;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .tracker-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #4a9eff;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+  .tracker-circles { display: flex; gap: 10px; }
+  .tracker-circle {
+    width: 30px; height: 30px;
+    border: 2px solid #2a3a66;
+    border-radius: 50%;
+    background: #0a0e1a;
+  }
+  .tracker-circle.red { border-color: #ff224444; }
+  .tracker-line {
+    height: 22px;
+    border-bottom: 1.5px solid #2a3a66;
+    flex: 1;
+    margin-top: 8px;
+  }
+  .tracker-lines { display: flex; flex-direction: column; gap: 8px; }
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid #d4c9b0;
+    border-radius: 8px;
+    min-height: 48px;
+  }
+  .quest-row-room {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1510;
+  }
+  .quest-row-players {
+    font-size: 11px;
+    color: #5a4e3a;
+    font-style: italic;
+  }
+
+  /* CASES À COCHER */
+  .quest-checkboxes {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .quest-checkbox {
+    width: 32px; height: 32px;
+    border: 2px solid #1a1510;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #5a4e3a;
+    background: white;
+    position: relative;
+  }
+  .quest-checkbox.sabotage-box {
+    border-color: #a02020;
+    background: #fdf2f2;
+    color: #a02020;
+  }
+
+  /* Petite croix en filigrane pour guide */
+  .quest-checkbox::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(45deg, transparent 48%, #f5efe4 48%, #f5efe4 52%, transparent 52%);
+    opacity: .3;
+    pointer-events: none;
+  }
+
+  /* Légende */
+  .quest-legend {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    justify-content: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 2px dashed #c0b595;
+    font-size: 12px;
+    color: #5a4e3a;
+  }
+  .quest-legend-item {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .legend-box {
+    width: 20px; height: 20px;
+    border: 2px solid #1a1510;
+    border-radius: 3px;
+    display: inline-block;
+    background: white;
+  }
+  .legend-box.sab { border-color: #a02020; background: #fdf2f2; }
+  .legend-box.check {
+    background: #1a1510; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 14px;
+  }
+
+  /* Trackers supplémentaires (Buzz, Morts, Sabotage actif) */
+  .tracker-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+  }
+  .tracker-card {
+    background: white;
+    border: 1px solid #d4c9b0;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .tracker-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #1a1510;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .tracker-circles {
+    display: flex; gap: 10px;
+  }
+  .tracker-circle {
+    width: 28px; height: 28px;
+    border: 2px solid #1a1510;
+    border-radius: 50%;
+    background: white;
+  }
+  .tracker-circle.red { border-color: #a02020; }
+  .tracker-line {
+    height: 20px;
+    border-bottom: 1.5px solid #1a1510;
+    flex: 1;
+    margin-top: 8px;
+  }
+  .tracker-lines { display: flex; flex-direction: column; gap: 6px; }
+
+  /* ═══════════════════════════════════════════════════
+     DÉFIS & TÂCHES (dans le même style néon)
+  ═══════════════════════════════════════════════════ */
+  .defis-container {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Légende */
+  .defi-legend {
+    display: flex; gap: 20px; justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 0 28px;
+    padding: 14px 20px;
+    background: #0a0e1a;
+    border: 1px solid #1a2244;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #aab;
+  }
+  .defi-legend-item { display: flex; align-items: center; gap: 8px; }
+  .defi-legend-dot {
+    width: 14px; height: 14px; border-radius: 4px; border: 2px solid;
+    flex-shrink: 0;
+  }
+  .defi-legend-dot.red   { border-color: var(--neon-red);   background: #ff224422; }
+  .defi-legend-dot.blue  { border-color: #4a9eff;           background: #4a9eff22; }
+  .defi-legend-dot.green { border-color: var(--neon-green); background: #39ff1422; }
+
+  /* Titres de section */
+  .defis-section-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin: 28px 0 16px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .defis-section-title.red   { color: #ff7788; background: #2a0a10; border: 1.5px solid #ff224466; text-shadow: 0 0 10px #ff224466; }
+  .defis-section-title.blue  { color: #88ccff; background: #0a1530; border: 1.5px solid #4a9eff66; text-shadow: 0 0 10px #4a9eff44; }
+  .defis-section-title.green { color: var(--neon-green); background: #0a2015; border: 1.5px solid #39ff1466; text-shadow: 0 0 10px #39ff1444; }
+
+  /* Grille des défis — 2 colonnes */
+  .defis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  /* Carte défi — hauteur FIXE et UNIFORME pour toutes */
+  .defi-card {
+    border-radius: 14px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform .2s, box-shadow .2s;
+    box-sizing: border-box;
+  }
+  .defi-card:hover {
+    transform: translateY(-3px);
+  }
+  .defi-card.red {
+    background: linear-gradient(145deg, #2e0e0e, #1a0505);
+    border: 1.5px solid var(--neon-red);
+    box-shadow: 0 0 14px #ff224422, inset 0 0 30px #ff22440a;
+  }
+  .defi-card.red:hover { box-shadow: 0 6px 24px #ff224440; }
+  .defi-card.blue {
+    background: linear-gradient(145deg, #0e1a2e, #050f1a);
+    border: 1.5px solid #4a9eff;
+    box-shadow: 0 0 14px #4a9eff22, inset 0 0 30px #4a9eff0a;
+  }
+  .defi-card.blue:hover { box-shadow: 0 6px 24px #4a9eff40; }
+
+  /* Header de la carte : icône + numéro */
+  .defi-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid;
+  }
+  .defi-card.red  .defi-header { border-color: #ff224433; }
+  .defi-card.blue .defi-header { border-color: #4a9eff33; }
+
+  .defi-icon-wrap {
+    width: 38px; height: 38px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+  }
+  .defi-card.red  .defi-icon-wrap { background: #ff224415; }
+  .defi-card.blue .defi-icon-wrap { background: #4a9eff15; }
+  .defi-icon-wrap svg { width: 26px; height: 26px; }
+
+  .defi-number {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .defi-card.red  .defi-number { color: var(--neon-red); text-shadow: 0 0 8px #ff224466; }
+  .defi-card.blue .defi-number { color: #4a9eff; text-shadow: 0 0 8px #4a9eff66; }
+
+  /* Badge de type */
+  .defi-badge {
+    margin-left: auto;
+    font-size: 9px;
+    font-family: 'Press Start 2P', monospace;
+    padding: 4px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .defi-card.red  .defi-badge { background: #ff224422; color: #ff7788; border: 1px solid #ff224444; }
+  .defi-card.blue .defi-badge { background: #4a9eff22; color: #88ccff; border: 1px solid #4a9eff44; }
+
+  /* Texte du défi */
+  .defi-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #dde6ff;
+    flex: 1;
+  }
+
+  /* ─── TÂCHES ─── */
+  .taches-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 4px;
+  }
+  .taches-zone {
+    border-radius: 14px;
+    padding: 20px 22px;
+    background: linear-gradient(145deg, #0d2a1a, #051a0d);
+    border: 1.5px solid var(--neon-green);
+    box-shadow: 0 0 14px #39ff1422, inset 0 0 30px #39ff140a;
+  }
+  .taches-zone-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--neon-green);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px #39ff1466;
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #39ff1422;
+  }
+  .taches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .tache-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 4px;
+    border-bottom: 1px solid #39ff1415;
+    transition: background .15s;
+  }
+  .tache-item:last-child { border-bottom: none; }
+  .tache-item:hover { background: #39ff1408; border-radius: 6px; }
+  .tache-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--neon-green);
+    min-width: 36px;
+    text-shadow: 0 0 6px #39ff1444;
+  }
+  .tache-nom {
+    font-size: 13px;
+    color: #c8ecd0;
+    line-height: 1.4;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     RÈGLES DU JEU
+  ═══════════════════════════════════════════════════ */
+  .rules-container {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Page de titre */
+  .rules-title-page {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #0a0e1a, #0d1225);
+    border: 1px solid #223366;
+  }
+  .rules-title-page h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 28px;
+    color: white;
+    letter-spacing: 6px;
+    text-shadow: 0 0 30px #aabbff88;
+    margin-bottom: 8px;
+  }
+  .rules-title-page p {
+    font-size: 12px;
+    color: #8899bb;
+    font-family: 'Press Start 2P', monospace;
+    letter-spacing: 2px;
+  }
+
+  /* Sections de règles */
+  .rules-section {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .rules-section-header {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .rules-section-header.blue   { background: #0d1a3a; color: #4a9eff; border-left: 3px solid #4a9eff; }
+  .rules-section-header.green  { background: #0d2a1a; color: var(--neon-green); border-left: 3px solid var(--neon-green); }
+  .rules-section-header.red    { background: #2a0d0d; color: var(--neon-red); border-left: 3px solid var(--neon-red); }
+  .rules-section-header.yellow { background: #2a2000; color: var(--neon-yellow); border-left: 3px solid var(--neon-yellow); }
+  .rules-section-header.cyan   { background: #001a2a; color: var(--neon-cyan); border-left: 3px solid var(--neon-cyan); }
+  .rules-section-header.purple { background: #1a0a2a; color: var(--neon-purple); border-left: 3px solid var(--neon-purple); }
+  .rules-section-header.orange { background: #2a1200; color: #ff9944; border-left: 3px solid #ff9944; }
+
+  .rules-section-body {
+    background: #080c18;
+    border: 1px solid #1a2244;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 18px 20px;
+    font-size: 13px;
+    color: #ccd6ee;
+    line-height: 1.8;
+    overflow: hidden;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Cartes de rôle dans les règles */
+  .rules-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 14px;
+    margin-top: 6px;
+    align-items: stretch;
+  }
+  .rules-role-card {
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .rules-role-card.crewmate { background: linear-gradient(145deg, #0d2a1a, #0a1a10); border: 1.5px solid #39ff1466; }
+  .rules-role-card.impostor { background: linear-gradient(145deg, #2a0d0d, #1a0505); border: 1.5px solid #ff224466; }
+  .rules-role-card.sheriff  { background: linear-gradient(145deg, #2a2000, #1a1500); border: 1.5px solid #ffe60066; }
+  .rules-role-card.engineer { background: linear-gradient(145deg, #001a2a, #000d1a); border: 1.5px solid #00e5ff66; }
+
+  .rules-role-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    word-break: break-word;
+  }
+  .rules-role-card.crewmate .rules-role-title { color: var(--neon-green); }
+  .rules-role-card.impostor .rules-role-title { color: var(--neon-red); }
+  .rules-role-card.sheriff  .rules-role-title { color: var(--neon-yellow); }
+  .rules-role-card.engineer .rules-role-title { color: var(--neon-cyan); }
+
+  .rules-role-text {
+    font-size: 12px;
+    color: #ccd6ee;
+    line-height: 1.7;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Bullet points stylisés */
+  .rules-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rules-list li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 12px;
+    color: #ccd6ee;
+    line-height: 1.65;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  .rules-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 4px;
+    top: 0;
+    line-height: 1.65;
+    font-size: 12px;
+  }
+  .rules-list.green li::before { color: var(--neon-green); }
+  .rules-list.red   li::before { color: var(--neon-red); }
+  .rules-list.cyan  li::before { color: var(--neon-cyan); }
+  .rules-list.yellow li::before { color: var(--neon-yellow); }
+  .rules-list.purple li::before { color: var(--neon-purple); }
+  .rules-list.orange li::before { color: #ff9944; }
+  .rules-list.blue  li::before { color: #4a9eff; }
+
+  /* Mots-clés colorés */
+  .kw-green  { color: var(--neon-green);  font-weight: 700; }
+  .kw-red    { color: var(--neon-red);    font-weight: 700; }
+  .kw-yellow { color: var(--neon-yellow); font-weight: 700; }
+  .kw-cyan   { color: var(--neon-cyan);   font-weight: 700; }
+  .kw-purple { color: var(--neon-purple); font-weight: 700; }
+  .kw-orange { color: #ff9944;            font-weight: 700; }
+  .kw-blue   { color: #4a9eff;            font-weight: 700; }
+  .kw-pink   { color: #ff77cc;            font-weight: 700; }
+
+  /* Tableau config joueurs */
+  .rules-config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 12px;
+    margin-top: 8px;
+    align-items: stretch;
+  }
+  .rules-config-card {
+    background: #0a0e1a;
+    border: 1px solid #22335577;
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-width: 0;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .rules-config-card h4 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #4a9eff;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .rules-config-card ul {
+    list-style: none; padding: 0;
+    display: flex; flex-direction: column; gap: 6px;
+    font-size: 12px; color: #ccd6ee;
+    line-height: 1.5;
+  }
+  .rules-config-card ul li::before {
+    content: '·  ';
+    color: #4a9eff;
+  }
+
+  /* Victoire / défaite */
+  .rules-win-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: 12px;
+    margin-top: 6px;
+    align-items: stretch;
+  }
+  .rules-win-card {
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-width: 0;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .rules-win-card.crew     { background: #0d2a1a; border: 1.5px solid #39ff1444; }
+  .rules-win-card.impostor { background: #2a0d0d; border: 1.5px solid #ff224444; }
+  .rules-win-card h4 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .rules-win-card.crew h4     { color: var(--neon-green); }
+  .rules-win-card.impostor h4 { color: var(--neon-red); }
+
+  /* Chrono badges */
+  .rules-timers {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;
+    justify-content: flex-start;
+  }
+  .rules-timer-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: #0d1225;
+    border: 1px solid #2233aa;
+    color: #4a9eff;
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  /* Page de fin */
+  .rules-end-page {
+    text-align: center;
+    padding: 30px 20px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #0a0e1a, #0d1225);
+    border: 1px solid #223366;
+  }
+  .rules-end-page h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 22px;
+    color: white;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px #ffffff44;
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     PRINT STYLES
+  ═══════════════════════════════════════════════════ */
+  @media print {
+    /* Forcer l'impression des couleurs */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
+    @page {
+      margin: 8mm;
+      size: A4 portrait;
+    }
+
+    body {
+      background: white !important;
+      color: black;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .tabs, .print-bar, .header { display: none !important; }
+    .section { display: none !important; padding: 0 !important; }
+    .section.print-active { display: block !important; padding: 0 !important; }
+    .stars { display: none !important; }
+    .section-title { display: none !important; }
+
+    /* ─── GRILLE D'IMPRESSION : 3 colonnes × 3 lignes, IDENTIQUE recto/verso ─── */
+    .cards-grid {
+      display: grid !important;
+      grid-template-columns: repeat(3, 60mm) !important;
+      grid-auto-rows: 88mm !important;
+      gap: 6mm 6mm !important;
+      justify-content: center !important;
+      align-content: start !important;
+      margin: 0 auto !important;
+      padding: 4mm 0 0 0 !important;
+    }
+
+    /* ─── CARTE RECTO : taille fixe 60×88mm ─── */
+    .card {
+      width: 60mm !important;
+      height: 88mm !important;
+      max-width: 60mm !important;
+      max-height: 88mm !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+      padding: 3mm !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      box-shadow: none !important;
+      border-radius: 4mm !important;
+      overflow: visible !important;
+      position: relative !important;
+    }
+    .card.crewmate {
+      background: linear-gradient(145deg, #0d2a1a, #0a1f2a) !important;
+      border: 2px solid #39ff14 !important;
+    }
+    .card.impostor {
+      background: linear-gradient(145deg, #2a0d0d, #1a0a0a) !important;
+      border: 2px solid #ff2244 !important;
+    }
+    .card.sheriff {
+      background: linear-gradient(145deg, #2a2000, #1a1500) !important;
+      border: 2px solid #ffe600 !important;
+    }
+    .card.engineer {
+      background: linear-gradient(145deg, #00152a, #000d1a) !important;
+      border: 2px solid #00e5ff !important;
+    }
+
+    /* ─── DOS DE CARTE : 66×94mm (avec BLEED 3mm intégré) ─── */
+    .card-back {
+      width: 66mm !important;
+      height: 94mm !important;
+      max-width: 66mm !important;
+      max-height: 94mm !important;
+      box-sizing: border-box !important;
+      margin: -3mm !important;
+      padding: 6mm !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+      box-shadow: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      overflow: visible !important;
+      position: relative !important;
+      background: #1a0500 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .card-back::before {
+      background-image: none !important;
+      display: none !important;
+    }
+    /* Équerres intérieures : visibles en impression */
+    .back-inner-corner {
+      border-color: #ff6b00 !important;
+      opacity: 0.8 !important;
+    }
+    .card-back-logo { color: #ff6b00 !important; position: relative !important; z-index: 2 !important; }
+    .card-back-icon { position: relative !important; z-index: 2 !important; }
+
+    /* Note explicative retirée à l'impression */
+    #tab-backs > div:not(.cards-grid) { display: none !important; }
+
+    /* ─── REPÈRES DE DÉCOUPE (recto uniquement) ─── */
+    /* Petits traits noirs aux 4 coins de chaque carte recto, juste à l'extérieur.
+       Invisibles sur le verso car les dos débordent et couvrent cette zone. */
+    .card::after {
+      content: '' !important;
+      position: absolute !important;
+      inset: -1.5mm !important;
+      pointer-events: none !important;
+      background:
+        linear-gradient(#333, #333) top left    / 2mm 0.2mm no-repeat,
+        linear-gradient(#333, #333) top left    / 0.2mm 2mm no-repeat,
+        linear-gradient(#333, #333) top right   / 2mm 0.2mm no-repeat,
+        linear-gradient(#333, #333) top right   / 0.2mm 2mm no-repeat,
+        linear-gradient(#333, #333) bottom left / 2mm 0.2mm no-repeat,
+        linear-gradient(#333, #333) bottom left / 0.2mm 2mm no-repeat,
+        linear-gradient(#333, #333) bottom right/ 2mm 0.2mm no-repeat,
+        linear-gradient(#333, #333) bottom right/ 0.2mm 2mm no-repeat !important;
+    }
+    /* Désactive l'overlay de grille bruit sur le recto à l'impression */
+    .card > div::before { background-image: none !important; }
+
+    /* Note explicative retirée à l'impression */
+    #tab-backs > div:not(.cards-grid) { display: none !important; }
+
+    .crewmate .card-title { color: #39ff14 !important; }
+    .impostor .card-title { color: #ff2244 !important; }
+    .sheriff  .card-title { color: #ffe600 !important; }
+    .engineer .card-title { color: #00e5ff !important; }
+
+    .crewmate .missions { color: #39ff14 !important; background: #39ff1411 !important; border: 1px solid #39ff1433 !important; }
+    .impostor .missions { color: #ff2244 !important; background: #ff224411 !important; border: 1px solid #ff224433 !important; }
+    .sheriff  .missions { color: #ffe600 !important; background: #ffe60011 !important; border: 1px solid #ffe60033 !important; }
+    .engineer .missions { color: #00e5ff !important; background: #00e5ff11 !important; border: 1px solid #00e5ff33 !important; }
+
+    /* Drop-shadows retirés pour économiser l'encre */
+    .char-area { filter: none !important; width: 36mm !important; height: 36mm !important; }
+    .card-back-icon { filter: none !important; width: 30mm !important; height: 30mm !important; margin: 2mm 0 !important; }
+
+    /* Ajustements texte impression */
+    .card-title { font-size: 10pt !important; margin-bottom: 1mm !important; }
+    .missions { padding: 2mm !important; }
+    .missions-label { font-size: 6pt !important; margin-bottom: 2mm !important; }
+    .mission-num { min-width: 7mm !important; height: 7mm !important; font-size: 9pt !important; }
+    .card-back-logo-top { font-size: 13pt !important; }
+    .card-back-logo-bottom { font-size: 9pt !important; }
+    .color-dot { width: 3mm !important; height: 3mm !important; top: 2mm !important; right: 2mm !important; }
+
+    /* ─── RÈGLES ─── */
+    .rules-section { break-inside: avoid; page-break-inside: avoid; }
+    .rules-section-body {
+      background: #080c18 !important;
+      border: 1px solid #1a2244 !important;
+      color: #ccd6ee !important;
+    }
+    .rules-section-header.blue   { background: #0d1a3a !important; color: #4a9eff !important; }
+    .rules-section-header.green  { background: #0d2a1a !important; color: #39ff14 !important; }
+    .rules-section-header.red    { background: #2a0d0d !important; color: #ff2244 !important; }
+    .rules-section-header.yellow { background: #2a2000 !important; color: #ffe600 !important; }
+    .rules-section-header.cyan   { background: #001a2a !important; color: #00e5ff !important; }
+    .rules-section-header.purple { background: #1a0a2a !important; color: #c400ff !important; }
+    .rules-section-header.orange { background: #2a1200 !important; color: #ff9944 !important; }
+    .rules-role-card.crewmate { background: #0d2a1a !important; }
+    .rules-role-card.impostor { background: #2a0d0d !important; }
+    .rules-role-card.sheriff  { background: #2a2000 !important; }
+    .rules-role-card.engineer { background: #001a2a !important; }
+    .rules-win-card.crew      { background: #0d2a1a !important; }
+    .rules-win-card.impostor  { background: #2a0d0d !important; }
+    .rules-config-card        { background: #0a0e1a !important; border: 1px solid #223355 !important; }
+    .rules-title-page, .rules-end-page { background: #0a0e1a !important; border: 1px solid #223366 !important; }
+    .rules-timer-badge { background: #0d1225 !important; border: 1px solid #2233aa !important; }
+
+    /* ─── SECTION SABOTAGE ─── */
+    .sabotage-card {
+      background: #1a0a2a !important;
+      border: 2px solid #c400ff !important;
+      break-inside: avoid;
+    }
+    .sabotage-card h3 { color: #c400ff !important; }
+    .sabotage-card p, .sabotage-card li { color: #ddd !important; }
+
+    /* ─── DÉFIS ─── */
+    .defis-container .defi-legend { display: none !important; }
+    .defis-section-title { padding: 6px 14px !important; margin: 10px 0 6px !important; font-size: 9px !important; }
+    .defis-grid {
+      grid-template-columns: 1fr !important;
+      gap: 6px !important;
+    }
+    .defi-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      box-shadow: none !important;
+      height: 60mm !important;
+      min-height: 60mm !important;
+      max-height: 60mm !important;
+      overflow: hidden !important;
+      padding: 12px 18px !important;
+    }
+    .defi-card.red  { background: #2e0e0e !important; border: 1.5px solid #ff2244 !important; }
+    .defi-card.blue { background: #0e1a2e !important; border: 1.5px solid #4a9eff !important; }
+    .defi-text { color: #dde6ff !important; font-size: 22px !important; line-height: 1.6 !important; text-align: center !important; }
+    .defi-number { font-size: 14px !important; }
+    .defi-icon-wrap { width: 32px !important; height: 32px !important; }
+    .defi-header { justify-content: center !important; }
+    .defi-card { align-items: center !important; justify-content: center !important; text-align: center !important; }
+    .defi-badge { display: none !important; }
+    .taches-grid { grid-template-columns: 1fr 1fr !important; }
+    .taches-zone  { background: #0d2a1a !important; border: 1.5px solid #39ff14 !important; break-inside: avoid; box-shadow: none !important; }
+    .taches-zone-title { font-size: 14px !important; margin-bottom: 12px !important; padding-bottom: 10px !important; }
+    .tache-item { padding: 12px 6px !important; }
+    .tache-num  { font-size: 14px !important; min-width: 50px !important; }
+    .tache-nom  { font-size: 18px !important; line-height: 1.4 !important; }
+
+    /* ─── FICHE QUESTS ─── */
+    /* ═══════════════════════════════════════════════════
+       IMPRESSION FICHE QUESTS — 2 pages A4 (1 par étage)
+    ═══════════════════════════════════════════════════ */
+    .quest-sheet {
+      background: #080c18 !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #ccd6ee !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+
+    /* Header global masqué — chaque section a son propre header */
+    .quest-sheet-header { display: none !important; }
+    .quest-legend { break-inside: avoid; page-break-inside: avoid; }
+
+    /* Chaque section (étage / RDC) = 1 page A4 */
+    .quest-floor-block {
+      page-break-before: always;
+      break-before: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      display: flex;
+      flex-direction: column;
+      padding: 8mm 10mm;
+      box-sizing: border-box;
+      background: #080c18 !important;
+    }
+    .quest-floor-block:first-of-type {
+      page-break-before: avoid;
+      break-before: avoid;
+    }
+
+    /* Titre de section — grand et bien visible */
+    .quest-floor-title {
+      font-size: 14px !important;
+      padding: 14px 20px !important;
+      margin: 0 0 10px 0 !important;
+      border-radius: 8px !important;
+    }
+    .quest-floor-title.etage {
+      background: #2a0d0d !important;
+      color: #ff2244 !important;
+      border: 2px solid #ff224466 !important;
+    }
+    .quest-floor-title.rdc {
+      background: #0d1530 !important;
+      color: #4a9eff !important;
+      border: 2px solid #4a9eff66 !important;
+    }
+
+    /* Mini-header sur chaque page */
+    .quest-page-header {
+      display: flex !important;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #1a2244;
+    }
+    .quest-page-header-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: #445577;
+      letter-spacing: 2px;
+    }
+    .quest-page-header-meta {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #2a3a66;
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    /* Lignes de missions */
+    .quest-rows { gap: 3px !important; }
+    .quest-row {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      background: #0c1020 !important;
+      border: 1px solid #1a2244 !important;
+      padding: 7px 12px !important;
+      grid-template-columns: 52px 1fr auto !important;
+    }
+    .quest-row:hover { border-color: #1a2244 !important; }
+
+    /* Numéros de mission */
+    .quest-row-num.etage { color: #ff2244 !important; background: #ff224415 !important; border: 1px solid #ff224433 !important; font-size: 10px !important; }
+    .quest-row-num.rdc   { color: #4a9eff  !important; background: #4a9eff15  !important; border: 1px solid #4a9eff33  !important; font-size: 10px !important; }
+    .quest-row-room { color: #ffffff !important; font-size: 14px !important; }
+
+    /* Cases à cocher agrandies pour l'écriture à la main */
+    .quest-checkboxes { gap: 10px !important; }
+    .quest-checkbox {
+      width: 42px !important;
+      height: 42px !important;
+      background: #0a0e1a !important;
+      border: 2px solid #2a3a66 !important;
+      border-radius: 6px !important;
+    }
+    .quest-checkbox.sabotage-box {
+      background: #ff224410 !important;
+      border: 2px solid #ff224455 !important;
+    }
+
+    /* Légende */
+    .quest-legend {
+      margin-top: 14px !important;
+      padding: 10px 16px !important;
+      background: #0c1020 !important;
+      border: 1px solid #1a2244 !important;
+      color: #8899bb !important;
+      font-size: 11px !important;
+    }
+    .legend-box {
+      width: 22px !important; height: 22px !important;
+      background: #0a0e1a !important;
+      border: 2px solid #2a3a66 !important;
+    }
+    .legend-box.sab   { background: #ff224410 !important; border-color: #ff224455 !important; }
+    .legend-box.check { font-size: 14px !important; }
+
+    /* Trackers en bas de page */
+    .tracker-row {
+      margin-top: 12px !important;
+      break-inside: avoid;
+    }
+    .tracker-card {
+      background: #0c1020 !important;
+      border: 1px solid #1a2244 !important;
+      break-inside: avoid;
+    }
+    .tracker-title { color: #4a9eff !important; }
+    .tracker-circle {
+      width: 36px !important; height: 36px !important;
+      background: #0a0e1a !important;
+      border: 2px solid #2a3a66 !important;
+    }
+    .tracker-circle.red { border-color: #ff224455 !important; }
+    .tracker-line { border-bottom-color: #2a3a66 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="stars"></div>
+  <h1>AMONG US</h1>
+  <p>CARTES — 16 JOUEURS</p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn all active"     onclick="showTab('all')">TOUTES</button>
+  <button class="tab-btn crewmate"       onclick="showTab('crewmate')">CREWMATES</button>
+  <button class="tab-btn impostor"       onclick="showTab('impostor')">IMPOSTORS</button>
+  <button class="tab-btn sheriff"        onclick="showTab('sheriff')">SHERIFF</button>
+  <button class="tab-btn engineer"       onclick="showTab('engineer')">INGÉNIEUR</button>
+  <button class="tab-btn sabotage"       onclick="showTab('sabotage')">SABOTAGE</button>
+  <button class="tab-btn quests"         onclick="showTab('quests')">FICHE QUESTS</button>
+  <button class="tab-btn backs"          onclick="showTab('backs')">DOS DE CARTES</button>
+  <button class="tab-btn defis"          onclick="showTab('defis')">DÉFIS &amp; TÂCHES</button>
+  <button class="tab-btn rules"          onclick="showTab('rules')">RÈGLES</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ALL / CREWMATES
+════════════════════════════════════════════════════ -->
+<div class="section active" id="tab-all">
+  <div class="section-title" style="color:#8899bb">TOUTES LES CARTES — 16 JOUEURS</div>
+  <div class="cards-grid" id="all-grid"></div>
+</div>
+
+<div class="section" id="tab-crewmate">
+  <div class="section-title" style="color:var(--neon-green)">CREWMATES (12)</div>
+  <div class="cards-grid" id="crew-grid"></div>
+</div>
+
+<div class="section" id="tab-impostor">
+  <div class="section-title" style="color:var(--neon-red)">IMPOSTORS (3)</div>
+  <div class="cards-grid" id="imp-grid"></div>
+</div>
+
+<div class="section" id="tab-sheriff">
+  <div class="section-title" style="color:var(--neon-yellow)">SHERIFF (1)</div>
+  <div class="cards-grid" id="sheriff-grid"></div>
+</div>
+
+<div class="section" id="tab-engineer">
+  <div class="section-title" style="color:var(--neon-cyan)">INGÉNIEUR (1)</div>
+  <div class="cards-grid" id="eng-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SABOTAGE
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-sabotage">
+  <div class="section-title" style="color:var(--neon-purple)">RÈGLES — SABOTAGE & INGÉNIEUR</div>
+  <div class="sabotage-container">
+
+    <div class="sabotage-card">
+      <span class="tag purple">IMPOSTEUR FANTÔME</span>
+      <h3>⚡ SABOTER UNE PIÈCE</h3>
+      <p>Quand un Imposteur devient Fantôme, il peut saboter des pièces du bâtiment.</p>
+      <br>
+      <ul>
+        <li>Retourne discrètement la <strong>pancarte</strong> d'une pièce côté <span style="color:var(--neon-red)">ROUGE</span></li>
+        <li>Personne ne peut <strong>entrer</strong> dans une pièce rouge pendant <strong>3 minutes</strong></li>
+        <li>Un seul sabotage actif à la fois</li>
+        <li>La salle de réunion ne peut pas être sabotée</li>
+      </ul>
+      <div class="pancarte-demo">
+        <div class="pancarte open">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          LIBRE
+        </div>
+        <div class="pancarte saboted">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          SABOTÉE
+        </div>
+      </div>
+    </div>
+
+    <div class="sabotage-card">
+      <span class="tag cyan">INGÉNIEUR</span>
+      <h3>🔧 RÉPARER UNE PIÈCE</h3>
+      <p>L'Ingénieur est le seul joueur capable d'entrer dans une pièce sabotée.</p>
+      <br>
+      <ul>
+        <li>Se rend dans la pièce sabotée et retourne la pancarte côté <span style="color:var(--neon-green)">VERT</span></li>
+        <li>La pièce est de nouveau accessible à tous</li>
+        <li>L'Ingénieur peut réparer <strong>autant de fois</strong> que nécessaire</li>
+        <li>La réparation prend <strong>10 secondes</strong> (rester dans la pièce)</li>
+      </ul>
+      <br>
+      <p style="color:#8899bb; font-size:11px">⚠️ L'Ingénieur peut être ciblé en priorité par les Imposteurs !</p>
+    </div>
+
+    <div class="sabotage-card">
+      <span class="tag cyan">INGÉNIEUR</span>
+      <h3>🤝 POUVOIR SPÉCIAL</h3>
+      <p>L'Ingénieur dispose d'un pouvoir unique :</p>
+      <br>
+      <ul>
+        <li><strong>Mission posthume :</strong> Peut valider <strong>une mission</strong> à la place d'un Crewmate mort — <em>une seule fois par partie</em></li>
+      </ul>
+    </div>
+
+    <div class="sabotage-card">
+      <span class="tag purple">IMPOSTEUR FANTÔME</span>
+      <h3>🌑 AUTRES SABOTAGES</h3>
+      <p>En plus de saboter une pièce, le Fantôme Imposteur garde ses anciens pouvoirs :</p>
+      <br>
+      <ul>
+        <li>Fermer les portes d'une pièce</li>
+        <li>Éteindre les lumières</li>
+        <li>Effacer jusqu'à <strong>3 défis</strong> (hors Meeting)</li>
+      </ul>
+      <br>
+      <p style="color:#8899bb; font-size:11px">Ces actions sont cumulables avec le sabotage de pièce, mais le sabotage de pièce ne peut être actif que sur <strong>une seule pièce</strong> à la fois.</p>
+    </div>
+
+  </div><!-- fin sabotage-container -->
+
+  <!-- ── PANCARTES IMPRIMABLES ── -->
+  <div class="pancartes-print-section">
+      <div class="pancartes-print-title">🖨️ PANCARTES À IMPRIMER &amp; PLASTIFIER</div>
+      <div class="pancartes-grid">
+
+        <!-- PANCARTE VERTE : LIBRE -->
+        <div class="pancarte-big libre">
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <svg class="pancarte-big-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Crewmate vert -->
+            <g transform="translate(50,52)">
+              <path d="M -18 -14 Q -18 -26 0 -26 Q 18 -26 18 -14 L 18 18 Q 18 24 12 24 L 10 24 L 10 30 L 3 30 L 3 24 L -3 24 L -3 30 L -10 30 L -10 24 L -12 24 Q -18 24 -18 18 Z"
+                    fill="#39ff1422" stroke="#39ff14" stroke-width="2.5"/>
+              <path d="M 16 -4 Q 25 -4 25 4 L 25 14 Q 25 20 18 20 L 18 -4 Z"
+                    fill="#39ff1411" stroke="#39ff14" stroke-width="2"/>
+              <rect x="-11" y="-22" width="22" height="12" rx="6"
+                    fill="#39ff1433" stroke="#39ff14" stroke-width="2"/>
+              <rect x="-7" y="-20" width="14" height="8" rx="4"
+                    fill="#39ff1466"/>
+              <!-- Check mark -->
+              <path d="M -6 2 L -1 7 L 8 -4" stroke="#39ff14" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </g>
+          </svg>
+          <div class="pancarte-big-label">LIBRE</div>
+          <div class="pancarte-big-sub">ACCÈS AUTORISÉ<br>POUR TOUS</div>
+        </div>
+
+        <!-- PANCARTE ROUGE : SABOTÉE -->
+        <div class="pancarte-big sabotee">
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <svg class="pancarte-big-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Crewmate rouge / imposteur -->
+            <g transform="translate(50,52)">
+              <path d="M -18 -14 Q -18 -26 0 -26 Q 18 -26 18 -14 L 18 18 Q 18 24 12 24 L 10 24 L 10 30 L 3 30 L 3 24 L -3 24 L -3 30 L -10 30 L -10 24 L -12 24 Q -18 24 -18 18 Z"
+                    fill="#ff224422" stroke="#ff2244" stroke-width="2.5"/>
+              <path d="M 16 -4 Q 25 -4 25 4 L 25 14 Q 25 20 18 20 L 18 -4 Z"
+                    fill="#ff224411" stroke="#ff2244" stroke-width="2"/>
+              <rect x="-11" y="-22" width="22" height="12" rx="6"
+                    fill="#ff224433" stroke="#ff2244" stroke-width="2"/>
+              <rect x="-7" y="-20" width="14" height="8" rx="4"
+                    fill="#ff224466"/>
+              <!-- X mark -->
+              <path d="M -7 -3 L 7 9 M 7 -3 L -7 9" stroke="#ff2244" stroke-width="3"
+                    stroke-linecap="round" fill="none"/>
+            </g>
+          </svg>
+          <div class="pancarte-big-label">SABOTÉE</div>
+          <div class="pancarte-big-sub">ACCÈS INTERDIT<br>INGÉNIEUR SEULEMENT</div>
+        </div>
+
+      </div>
+      <p style="text-align:center; color:#445577; font-size:11px; margin-top:20px; font-family:'Press Start 2P',monospace; letter-spacing:1px">
+        IMPRIMER · DÉCOUPER · PLASTIFIER · AFFICHER SUR CHAQUE PORTE
+      </p>
+    </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     FICHE QUESTS (à imprimer et remplir à la main)
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-quests">
+  <div class="section-title" style="color:#a0e0cc">FICHE DE SUIVI DES QUÊTES</div>
+  <div class="quest-sheet" id="quest-sheet-content">
+    <!-- rempli par JS -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DOS DE CARTES (17 copies identiques)
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-backs">
+  <div class="section-title" style="color:#ff6b00">DOS DE CARTES — 17 COPIES</div>
+  <div style="text-align:center; color:#8899bb; font-size:12px; margin-bottom:20px; max-width:600px; margin-left:auto; margin-right:auto">
+    Imprime cette page sur le <strong>verso</strong> de la feuille contenant les cartes de rôles.
+    Avec 17 joueurs (12 Crewmates + 3 Imposteurs + 1 Sheriff + 1 Ingénieur), tu as exactement 17 dos à imprimer.
+  </div>
+  <div class="cards-grid" id="backs-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DÉFIS & TÂCHES
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-defis">
+  <div class="section-title" style="color:#ff9966">DÉFIS &amp; TÂCHES</div>
+  <div class="defis-container">
+    <div class="defi-legend">
+      <div class="defi-legend-item"><span class="defi-legend-dot red"></span>Défi rouge : mission à l'étage</div>
+      <div class="defi-legend-item"><span class="defi-legend-dot blue"></span>Défi bleu : mission au RDC</div>
+      <div class="defi-legend-item"><span class="defi-legend-dot green"></span>Tâche verte : localisation d'une mission</div>
+    </div>
+
+    <div class="defis-section-title red">🔴 DÉFIS ROUGES — 9 DÉFIS</div>
+    <div class="defis-grid" id="defis-red"></div>
+
+    <div class="defis-section-title blue">🔵 DÉFIS BLEUS — 8 DÉFIS</div>
+    <div class="defis-grid" id="defis-blue"></div>
+
+    <div class="defis-section-title green">🗺️ TÂCHES — LOCALISATIONS</div>
+    <div class="taches-grid" id="taches-zones"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     RÈGLES DU JEU
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-rules">
+  <div class="section-title" style="color:#aabbff">RÈGLES DU JEU</div>
+  <div class="rules-container">
+
+    <!-- TITRE -->
+    <div class="rules-title-page">
+      <h2>RULES</h2>
+      <p>AMONG US — GRANDEUR NATURE · 16 JOUEURS</p>
+    </div>
+
+    <!-- PRÉSENTATION : RÔLES -->
+    <div class="rules-section">
+      <div class="rules-section-header blue">📋 PRÉSENTATION — RÔLES</div>
+      <div class="rules-section-body">
+        <div class="rules-roles-grid">
+
+          <div class="rules-role-card crewmate">
+            <div class="rules-role-title">CREWMATE</div>
+            <div class="rules-role-text">
+              Les <span class="kw-green">CREWMATES</span> doivent terminer toutes les missions dans le temps imparti
+              <strong>OU</strong> démasquer tous les <span class="kw-red">IMPOSTORS</span>.
+            </div>
+          </div>
+
+          <div class="rules-role-card impostor">
+            <div class="rules-role-title">IMPOSTOR</div>
+            <div class="rules-role-text">
+              Les <span class="kw-red">IMPOSTORS</span> doivent éliminer tous les joueurs sans se faire repérer.
+              Pour éliminer, il suffit de <strong>toucher l'épaule</strong> du joueur cible.
+              Ils gagnent aussi si la limite de temps est dépassée.
+            </div>
+          </div>
+
+          <div class="rules-role-card sheriff">
+            <div class="rules-role-title">SHERIFF</div>
+            <div class="rules-role-text">
+              Le <span class="kw-yellow">SHERIFF</span> possède un fusil avec <strong>une seule balle</strong>.
+              Au moindre soupçon il peut l'utiliser :
+            </div>
+            <ul class="rules-list yellow">
+              <li>S'il élimine un <span class="kw-green">CREWMATE</span> : le Sheriff meurt à sa place, et le Crewmate visé devient Sheriff.</li>
+              <li>S'il tue un <span class="kw-red">IMPOSTOR</span> : le Sheriff reste en vie mais ne peut plus tirer.</li>
+            </ul>
+          </div>
+
+          <div class="rules-role-card engineer">
+            <div class="rules-role-title">INGÉNIEUR</div>
+            <div class="rules-role-text">
+              L'<span class="kw-cyan">INGÉNIEUR</span> est un Crewmate spécial aux pouvoirs techniques :
+            </div>
+            <ul class="rules-list cyan">
+              <li><strong>Réparer :</strong> seul capable d'entrer dans une pièce sabotée (pancarte rouge) et de la remettre en service en 10 secondes.</li>
+              <li><strong>Mission posthume :</strong> peut valider une mission à la place d'un Crewmate mort — une seule fois par partie.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MISE EN PLACE -->
+    <div class="rules-section">
+      <div class="rules-section-header blue">⚙️ MISE EN PLACE — 16 JOUEURS</div>
+      <div class="rules-section-body">
+        <p style="margin-bottom:14px">17 cartes sont disponibles. Deux configurations possibles :</p>
+        <div class="rules-config-grid">
+          <div class="rules-config-card">
+            <h4>CONFIG A</h4>
+            <ul>
+              <li>3 <span class="kw-red">IMPOSTORS</span></li>
+              <li>12 <span class="kw-green">CREWMATES</span></li>
+              <li>1 <span class="kw-yellow">SHERIFF</span></li>
+              <li>1 <span class="kw-cyan">INGÉNIEUR</span></li>
+            </ul>
+          </div>
+          <div class="rules-config-card">
+            <h4>CONFIG B</h4>
+            <ul>
+              <li>4 <span class="kw-red">IMPOSTORS</span></li>
+              <li>11 <span class="kw-green">CREWMATES</span></li>
+              <li>1 <span class="kw-yellow">SHERIFF</span></li>
+              <li>1 <span class="kw-cyan">INGÉNIEUR</span></li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:16px; font-size:12px; color:#8899bb">
+          Pour choisir entre 3 ou 4 Impostors : retirer ou ajouter la carte Impostor <span class="kw-red">Cramoisi</span> (missions <span class="kw-red">1 - 13 - 14</span>) — elle a les mêmes missions que le Crewmate <span class="kw-green">Vert</span>, donc une seule des deux cartes est utilisée.
+        </p>
+        <p style="margin-top:10px; font-size:12px; color:#8899bb">
+          Distribuer les cartes. Les <span class="kw-red">IMPOSTORS</span> doivent se reconnaître avant le début — faites fermer les yeux à tous pendant ce temps.
+        </p>
+      </div>
+    </div>
+
+    <!-- DÉFIS -->
+    <div class="rules-section">
+      <div class="rules-section-header orange">🎯 DÉFIS</div>
+      <div class="rules-section-body">
+        <ul class="rules-list orange">
+          <li>Installer les défis selon le nombre de joueurs (16 joueurs → Défis 1 à 16).</li>
+          <li><span class="kw-red">Défis rouges</span> : missions situées à l'étage.</li>
+          <li><span class="kw-blue">Défis bleus</span> : missions situées au RDC.</li>
+          <li><span class="kw-green">Défis verts</span> : localisations des tâches, en soutien au maître du jeu.</li>
+          <li>Mettre la <strong>fiche QUESTS</strong> en évidence. Les joueurs remplissent eux-mêmes leur avancée.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DÉROULEMENT -->
+    <div class="rules-section">
+      <div class="rules-section-header green">▶️ DÉROULEMENT D'UNE PARTIE</div>
+      <div class="rules-section-body">
+        <p style="margin-bottom:14px">
+          Quand un joueur découvre un mort, il crie <span class="kw-orange">REPORT</span> → on passe au <span class="kw-orange">MEETING</span>.
+        </p>
+
+        <p style="font-family:'Press Start 2P',monospace;font-size:9px;color:#ff9944;margin-bottom:10px;letter-spacing:1px">MEETING</p>
+        <p style="margin-bottom:10px">Réunion de tous les joueurs. En fonction des arguments, deux options :</p>
+        <ul class="rules-list orange" style="margin-bottom:14px">
+          <li><span class="kw-blue">VOTE</span> : les joueurs votent pour l'élimination d'un suspect.</li>
+          <li><span class="kw-purple">SKIP</span> : les joueurs ne votent pas et continuent la partie.</li>
+        </ul>
+        <ul class="rules-list blue">
+          <li>Si les SKIP sont majoritaires → personne n'est éliminé.</li>
+          <li>Si les VOTE sont majoritaires → la personne la plus votée est éliminée.</li>
+          <li>En cas d'égalité de votes → SKIP automatique.</li>
+        </ul>
+
+        <p style="margin-top:16px; font-family:'Press Start 2P',monospace;font-size:9px;color:#4a9eff;margin-bottom:10px;letter-spacing:1px">BUZZ</p>
+        <ul class="rules-list blue">
+          <li>Un joueur peut <span class="kw-blue">BUZZER</span> (taper la table) pour déclencher un Meeting sans mort.</li>
+          <li>Maximum <strong>3 BUZZ par partie</strong>, une seule fois par joueur.</li>
+          <li>Après avoir buzzé, le joueur ne peut plus le faire. Il reste 2 BUZZ pour les autres.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SABOTAGE -->
+    <div class="rules-section">
+      <div class="rules-section-header purple">⚡ SABOTAGE (Fantôme Impostor)</div>
+      <div class="rules-section-body">
+        <p style="margin-bottom:12px">
+          Quand un <span class="kw-red">IMPOSTOR</span> est éliminé, il devient <span class="kw-pink">FANTÔME</span> et peut saboter :
+        </p>
+        <ul class="rules-list purple">
+          <li>Fermer les portes d'une pièce.</li>
+          <li>Éteindre les lumières.</li>
+          <li>Effacer jusqu'à <strong>3 défis</strong> sur la fiche Quests (hors Meeting).</li>
+          <li><strong>Saboter une pièce :</strong> retourner la pancarte côté <span class="kw-red">ROUGE</span> — personne ne peut y entrer pendant 3 minutes, sauf l'<span class="kw-cyan">INGÉNIEUR</span>.</li>
+        </ul>
+        <p style="margin-top:12px;font-size:12px;color:#8899bb">Un seul sabotage de pièce actif à la fois. La salle de Meeting ne peut pas être sabotée.</p>
+      </div>
+    </div>
+
+    <!-- MORTS -->
+    <div class="rules-section">
+      <div class="rules-section-header red">💀 MORTS &amp; FANTÔMES</div>
+      <div class="rules-section-body">
+        <ul class="rules-list red">
+          <li>Un joueur éliminé reste à l'endroit de sa mort, <strong>carte face visible</strong>.</li>
+          <li>Il devient <span class="kw-pink">FANTÔME</span> quel que soit son rôle.</li>
+          <li>Le Fantôme peut continuer ses défis mais a l'<strong>INTERDICTION de parler et de voter</strong>.</li>
+          <li>Un Fantôme <span class="kw-red">IMPOSTOR</span> peut toujours saboter (voir section Sabotage).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FIN DE PARTIE -->
+    <div class="rules-section">
+      <div class="rules-section-header green">🏆 FIN DE PARTIE — CONDITIONS DE VICTOIRE</div>
+      <div class="rules-section-body">
+        <div class="rules-win-grid">
+          <div class="rules-win-card crew">
+            <h4>CREWMATES &amp; SHERIFF &amp; INGÉNIEUR</h4>
+            <ul class="rules-list green">
+              <li>Toutes les missions sont terminées dans le temps imparti.</li>
+              <li>OU tous les Impostors ont été éliminés.</li>
+            </ul>
+          </div>
+          <div class="rules-win-card impostor">
+            <h4>IMPOSTORS</h4>
+            <ul class="rules-list red">
+              <li>Tous les Crewmates, Sheriff et Ingénieur ont été éliminés.</li>
+              <li>OU la limite de temps est dépassée.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="rules-timers">
+          <span class="rules-timer-badge">8 joueurs → 20 min</span>
+          <span class="rules-timer-badge">12 joueurs → 30 min</span>
+          <span class="rules-timer-badge">16 joueurs → 40 min</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BONNE CHANCE -->
+    <div class="rules-end-page">
+      <h2>BONNE<br>CHANCE</h2>
+    </div>
+
+  </div>
+</div>
+
+<div class="print-bar">
+  <button class="print-btn" onclick="printCurrent()">🖨 IMPRIMER LA VUE ACTUELLE</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+const COLORS = [
+  { name: 'Violet',  hex: '#9B59B6', body: '#7D3C98' },
+  { name: 'Jaune',   hex: '#F1C40F', body: '#B7950B' },
+  { name: 'Vert',    hex: '#27AE60', body: '#1E8449' },
+  { name: 'Orange',  hex: '#E67E22', body: '#CA6F1E' },
+  { name: 'Cyan',    hex: '#1ABC9C', body: '#148F77' },
+  { name: 'Rose',    hex: '#E91E8C', body: '#C2185B' },
+  { name: 'Noir',    hex: '#555566', body: '#333344' },
+  { name: 'Gris',    hex: '#95A5A6', body: '#717D7E' },
+  { name: 'Bleu',    hex: '#2980B9', body: '#1F618D' },
+  { name: 'Marron',  hex: '#A04000', body: '#784212' },
+  { name: 'Lilas',   hex: '#AF7AC5', body: '#8E44AD' },
+  { name: 'Bordeaux',hex: '#6E2C2C', body: '#512E2E' },
+  // special roles get their own colors
+];
+
+// 16 players: 12 crewmates, 1 sheriff, 1 engineer, 3 impostors
+// Missions are distributed so each is covered ~3 times across all players
+// 16 missions total
+
+const crewmatesData = [
+  { color: COLORS[0],  missions: [1, 5, 15]  },  // Violet
+  { color: COLORS[1],  missions: [10, 11, 12] }, // Jaune
+  { color: COLORS[2],  missions: [1, 13, 14] },  // Vert ← CARTE SWING (même missions que Cramoisi)
+  { color: COLORS[4],  missions: [4, 11, 14] },  // Cyan
+  { color: COLORS[6],  missions: [12, 15, 16] }, // Noir
+  { color: COLORS[7],  missions: [7, 13, 15] },  // Gris
+  { color: COLORS[8],  missions: [2, 10, 17] },  // Bleu
+  { color: COLORS[9],  missions: [3, 9, 16]  },  // Marron
+  { color: COLORS[10], missions: [2, 11, 16] },  // Lilas
+  { color: COLORS[11], missions: [3, 5, 6]   },  // Bordeaux
+  { color: { name: 'Vert foncé', hex: '#1a6b3a', body: '#145230' }, missions: [7, 8, 10] },
+  { color: { name: 'Bleu nuit',  hex: '#1a3a6b', body: '#122a52' }, missions: [2, 5, 12] },
+];
+
+const impostorsData = [
+  { color: { name: 'Rouge',    hex: '#E74C3C', body: '#C0392B' }, missions: [3, 4, 17]  },
+  { color: { name: 'Bordeaux', hex: '#8B1A1A', body: '#6B1010' }, missions: [4, 6, 8]   },
+  { color: { name: 'Cramoisi', hex: '#B22222', body: '#8B1414' }, missions: [1, 13, 14] }, // ← CARTE SWING (même missions que Vert)
+];
+
+const sheriffData = {
+  color: { name: 'Marron', hex: '#C68642', body: '#A0522D' },
+  missions: [7, 9, 17],
+};
+
+const engineerData = {
+  color: { name: 'Acier', hex: '#4A90D9', body: '#2471A3' },
+  missions: [6, 8, 9],
+};
+
+// ═══════════════════════════════════════════════════
+// SVG CHARACTERS — Style authentique Among Us
+// ═══════════════════════════════════════════════════
+function crewmateSVG(bodyColor, helmetColor, isImpostor = false, isSheriff = false, isEngineer = false) {
+  // Darken body color for shadow
+  const shadow = darken(bodyColor, 0.35);
+  const highlight = lighten(bodyColor, 0.15);
+
+  // Finger "shhh" for impostor
+  const impostorFinger = isImpostor ? `
+    <!-- Main devant la visière (chut) -->
+    <g transform="translate(42, 38)">
+      <!-- Avant-bras -->
+      <path d="M 0 8 Q 2 2 5 0 L 10 -2 Q 13 0 12 4 L 10 10 Q 6 12 2 11 Z"
+            fill="${bodyColor}" stroke="${shadow}" stroke-width="1"/>
+      <!-- Doigt levé -->
+      <path d="M 10 -2 L 11 -12 Q 12 -14 13.5 -13 Q 15 -12 14 -10 L 13 -2 Z"
+            fill="${bodyColor}" stroke="${shadow}" stroke-width="1"/>
+      <!-- Ongle -->
+      <ellipse cx="12.5" cy="-11" rx="1" ry="1.5" fill="${shadow}" opacity="0.5"/>
+    </g>
+  ` : '';
+
+  // Sheriff badge/hat
+  const sheriffHat = isSheriff ? `
+    <!-- Chapeau de shérif (repositionné plus bas pour pas déborder) -->
+    <g transform="translate(38, 16)">
+      <!-- Bord -->
+      <ellipse cx="0" cy="3" rx="20" ry="3.5" fill="#6B3410" stroke="#3d1d08" stroke-width="1"/>
+      <!-- Couronne -->
+      <path d="M -9 3 Q -9 -6 0 -8 Q 9 -6 9 3 Z" fill="#8B4513" stroke="#3d1d08" stroke-width="1"/>
+      <!-- Bande -->
+      <rect x="-9" y="0" width="18" height="2.5" fill="#3d1d08"/>
+    </g>
+    <!-- Étoile de shérif -->
+    <g transform="translate(38, 72)">
+      <polygon points="0,-6 1.7,-1.7 6,-1.7 2.5,1.3 3.8,5.5 0,3 -3.8,5.5 -2.5,1.3 -6,-1.7 -1.7,-1.7"
+               fill="#FFD700" stroke="#B8860B" stroke-width="0.7"/>
+    </g>
+  ` : '';
+
+  // Engineer tools
+  const engineerTools = isEngineer ? `
+    <!-- Clé à molette sur le côté -->
+    <g transform="translate(58, 48) rotate(25)">
+      <rect x="-2" y="0" width="4" height="18" fill="#888" stroke="#444" stroke-width="0.5"/>
+      <path d="M -4 -2 L 4 -2 L 5 3 L 2 3 L 2 -0.5 L -2 -0.5 L -2 3 L -5 3 Z"
+            fill="#aaa" stroke="#444" stroke-width="0.5"/>
+    </g>
+    <!-- Petite LED clignotante -->
+    <circle cx="50" cy="25" r="2" fill="#00e5ff" opacity="0.9"/>
+    <circle cx="50" cy="25" r="3.5" fill="#00e5ff" opacity="0.3"/>
+  ` : '';
+
+  return `<svg viewBox="-4 0 84 95" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="body-clip-${bodyColor.replace('#','')}">
+        <path d="M 20 28
+                 Q 20 14 38 14
+                 Q 56 14 56 28
+                 L 56 74
+                 Q 56 82 48 82
+                 L 46 82
+                 L 46 87
+                 Q 46 89 44 89
+                 L 38 89
+                 Q 36 89 36 87
+                 L 36 82
+                 L 30 82
+                 L 30 87
+                 Q 30 89 28 89
+                 L 22 89
+                 Q 20 89 20 87
+                 L 20 82
+                 Z"/>
+      </clipPath>
+    </defs>
+
+    <!-- OMBRE SOL -->
+    <ellipse cx="38" cy="88" rx="20" ry="2" fill="#000" opacity="0.35"/>
+
+    <!-- SAC À DOS (derrière) -->
+    <g>
+      <path d="M 54 42
+               Q 66 42 66 52
+               L 66 68
+               Q 66 76 58 76
+               L 54 76 Z"
+            fill="${shadow}" stroke="#000" stroke-width="1.2"/>
+      <!-- Détail sac -->
+      <rect x="60" y="48" width="4" height="8" fill="${lighten(shadow, 0.1)}" rx="1"/>
+    </g>
+
+    <!-- CORPS PRINCIPAL (forme œuf caractéristique) -->
+    <path d="M 20 28
+             Q 20 14 38 14
+             Q 56 14 56 28
+             L 56 74
+             Q 56 82 48 82
+             L 46 82
+             L 46 87
+             Q 46 89 44 89
+             L 38 89
+             Q 36 89 36 87
+             L 36 82
+             L 30 82
+             L 30 87
+             Q 30 89 28 89
+             L 22 89
+             Q 20 89 20 87
+             L 20 82
+             Z"
+          fill="${bodyColor}" stroke="#000" stroke-width="1.5"/>
+
+    <!-- HIGHLIGHT (reflet sur le corps) -->
+    <path d="M 24 30
+             Q 24 18 34 17
+             L 30 28
+             Q 28 40 28 60
+             L 28 80
+             L 24 80 Z"
+          fill="${highlight}" opacity="0.5" clip-path="url(#body-clip-${bodyColor.replace('#','')})"/>
+
+    <!-- OMBRE CORPS (côté droit) -->
+    <path d="M 48 20
+             L 56 28
+             L 56 74
+             Q 56 82 48 82
+             L 46 82
+             L 46 87
+             L 44 87
+             Z"
+          fill="${shadow}" opacity="0.4" clip-path="url(#body-clip-${bodyColor.replace('#','')})"/>
+
+    <!-- VISIÈRE (forme large et caractéristique) -->
+    <g>
+      <!-- Contour visière -->
+      <path d="M 25 24
+               Q 25 19 30 19
+               L 48 19
+               Q 53 19 53 24
+               L 53 34
+               Q 53 39 48 39
+               L 30 39
+               Q 25 39 25 34
+               Z"
+            fill="#1a3a5a" stroke="#000" stroke-width="1.2"/>
+      <!-- Glass -->
+      <path d="M 27 24
+               Q 27 21 30 21
+               L 48 21
+               Q 51 21 51 24
+               L 51 33
+               Q 51 37 48 37
+               L 30 37
+               Q 27 37 27 33
+               Z"
+            fill="${helmetColor}"/>
+      <!-- Reflet principal -->
+      <path d="M 29 24
+               Q 29 22 31 22
+               L 38 22
+               Q 40 22 40 24
+               L 40 30
+               Q 40 32 38 32
+               L 31 32
+               Q 29 32 29 30
+               Z"
+            fill="white" opacity="0.4"/>
+      <!-- Petit reflet supplémentaire -->
+      <ellipse cx="47" cy="25" rx="2" ry="3" fill="white" opacity="0.6"/>
+    </g>
+
+    ${sheriffHat}
+    ${engineerTools}
+    ${impostorFinger}
+  </svg>`;
+}
+
+// Helpers: lighten/darken hex color
+function darken(hex, amount) {
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHex(
+    Math.max(0, Math.floor(r * (1 - amount))),
+    Math.max(0, Math.floor(g * (1 - amount))),
+    Math.max(0, Math.floor(b * (1 - amount)))
+  );
+}
+function lighten(hex, amount) {
+  const [r, g, b] = hexToRgb(hex);
+  return rgbToHex(
+    Math.min(255, Math.floor(r + (255 - r) * amount)),
+    Math.min(255, Math.floor(g + (255 - g) * amount)),
+    Math.min(255, Math.floor(b + (255 - b) * amount))
+  );
+}
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  return [parseInt(hex.substr(0,2),16), parseInt(hex.substr(2,2),16), parseInt(hex.substr(4,2),16)];
+}
+function rgbToHex(r, g, b) {
+  return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD CARDS
+// ═══════════════════════════════════════════════════
+function buildCard(type, colorObj, missions, extra = '') {
+  const typeLabel = { crewmate: 'CREWMATE', impostor: 'IMPOSTOR', sheriff: 'SHERIFF', engineer: 'INGÉNIEUR' }[type];
+  const isImp  = type === 'impostor';
+  const isSher = type === 'sheriff';
+  const isEng  = type === 'engineer';
+  const helmet = '#7FC8E8';
+  const svg    = crewmateSVG(colorObj.body, helmet, isImp, isSher, isEng);
+  const numsHTML = missions.map(m => `<span class="mission-num">${m}</span>`).join('');
+
+  return `<div class="card ${type}">
+    <div class="color-dot" style="background:${colorObj.hex}"></div>
+    <div class="card-title">${typeLabel}</div>
+    <div class="char-area">${svg}</div>
+    <div class="missions">
+      <div class="missions-label">${colorObj.name.toUpperCase()} · MISSIONS</div>
+      <div class="missions-nums">${numsHTML}</div>
+      ${extra ? `<div class="mission-extra">${extra}</div>` : ''}
+    </div>
+    <div class="card-back-hint"></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// POPULATE GRIDS
+// ═══════════════════════════════════════════════════
+function populateGrids() {
+  const allCards  = [];
+  const crewCards = [];
+  const impCards  = [];
+  const sherCards = [];
+  const engCards  = [];
+
+  crewmatesData.forEach(c => {
+    const html = buildCard('crewmate', c.color, c.missions);
+    crewCards.push(html);
+    allCards.push(html);
+  });
+
+  impostorsData.forEach(c => {
+    const html = buildCard('impostor', c.color, c.missions);
+    impCards.push(html);
+    allCards.push(html);
+  });
+
+  const sherHtml = buildCard('sheriff', sheriffData.color, sheriffData.missions,
+    `🔫 1 BALLE`);
+  sherCards.push(sherHtml);
+  allCards.push(sherHtml);
+
+  const engHtml = buildCard('engineer', engineerData.color, engineerData.missions,
+    `🔧 RÉPARATION`);
+  engCards.push(engHtml);
+  allCards.push(engHtml);
+
+  document.getElementById('all-grid').innerHTML    = allCards.join('');
+  document.getElementById('crew-grid').innerHTML   = crewCards.join('');
+  document.getElementById('imp-grid').innerHTML    = impCards.join('');
+  document.getElementById('sheriff-grid').innerHTML= sherCards.join('');
+  document.getElementById('eng-grid').innerHTML    = engCards.join('');
+
+  // Dos de cartes : 17 copies identiques
+  const backCard = `<div class="card-back">
+    <!-- Équerres proches du texte "AMONG US" (haut) -->
+    <div class="back-inner-corner back-tl"></div>
+    <div class="back-inner-corner back-tr"></div>
+    <div class="card-back-logo card-back-logo-top">AMONG US</div>
+    <svg class="card-back-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- Halo de fond (cercles concentriques au lieu de gradient) -->
+      <circle cx="50" cy="50" r="46" fill="#ff6b00" opacity="0.08"/>
+      <circle cx="50" cy="50" r="38" fill="#ff6b00" opacity="0.12"/>
+      <circle cx="50" cy="50" r="30" fill="#ff6b00" opacity="0.18"/>
+      <!-- Rayons lumineux -->
+      <g stroke="#ff6b00" stroke-width="2" opacity="0.5" stroke-linecap="round">
+        <line x1="50" y1="6"  x2="50" y2="14"/>
+        <line x1="50" y1="86" x2="50" y2="94"/>
+        <line x1="6"  y1="50" x2="14" y2="50"/>
+        <line x1="86" y1="50" x2="94" y2="50"/>
+        <line x1="18" y1="18" x2="24" y2="24"/>
+        <line x1="76" y1="76" x2="82" y2="82"/>
+        <line x1="82" y1="18" x2="76" y2="24"/>
+        <line x1="24" y1="76" x2="18" y2="82"/>
+      </g>
+      <!-- Crewmate silhouette -->
+      <g transform="translate(50, 54)">
+        <!-- Corps -->
+        <path d="M -18 -14
+                 Q -18 -26 0 -26
+                 Q 18 -26 18 -14
+                 L 18 18
+                 Q 18 24 12 24
+                 L 10 24
+                 L 10 30
+                 L 3 30
+                 L 3 24
+                 L -3 24
+                 L -3 30
+                 L -10 30
+                 L -10 24
+                 L -12 24
+                 Q -18 24 -18 18 Z"
+              fill="#1a0800" stroke="#ff6b00" stroke-width="2"/>
+        <!-- Sac à dos -->
+        <path d="M 16 -4
+                 Q 25 -4 25 4
+                 L 25 14
+                 Q 25 19 18 19
+                 L 16 19 Z"
+              fill="#1a0800" stroke="#ff6b00" stroke-width="2"/>
+        <!-- Visière -->
+        <rect x="-13" y="-21" width="26" height="13" rx="5" fill="#ff6b00"/>
+        <rect x="-10" y="-19" width="10" height="7" rx="2" fill="#ffcc88" opacity="0.6"/>
+        <!-- Bras/main avec doigt "chut" -->
+        <rect x="-3" y="-8" width="6" height="5" rx="2" fill="#ff6b00"/>
+        <rect x="-1.5" y="-20" width="3" height="12" rx="1.5" fill="#ff6b00"/>
+      </g>
+    </svg>
+    <div class="card-back-logo card-back-logo-bottom">SHHHH...</div>
+    <!-- Équerres proches du texte "SHHHH..." (bas) -->
+    <div class="back-inner-corner back-bl"></div>
+    <div class="back-inner-corner back-br"></div>
+  </div>`;
+
+  const backsHTML = Array(17).fill(backCard).join('');
+  document.getElementById('backs-grid').innerHTML = backsHTML;
+}
+
+// ═══════════════════════════════════════════════════
+// FICHE QUESTS — construction des lignes
+// ═══════════════════════════════════════════════════
+const MISSIONS_DATA = [
+  // PAGE 1 — 9 missions mélangées
+  { id:4,  room:"Salle Hublot",         floor:"etage" },
+  { id:3,  room:"Salle des 3 marches",  floor:"etage" },
+  { id:14, room:"Info Jeunes",          floor:"rdc"   },
+  { id:15, room:"Salle d'attente",      floor:"rdc"   },
+  { id:8,  room:"Salle des 3 marches",  floor:"etage" },
+  { id:10, room:"Salle de danse",       floor:"etage" },
+  { id:16, room:"Grande Salle",         floor:"rdc"   },
+  { id:13, room:"Cuisine",              floor:"rdc"   },
+  { id:6,  room:"Salle de danse",       floor:"etage" },
+  // PAGE 2 — 8 missions mélangées
+  { id:12, room:"Grande Salle",         floor:"rdc"   },
+  { id:9,  room:"Couloir Haut",         floor:"etage" },
+  { id:2,  room:"Couloir Haut",         floor:"etage" },
+  { id:1,  room:"Salle de danse",       floor:"etage" },
+  { id:17, room:"Couloir Bas",          floor:"rdc"   },
+  { id:7,  room:"Salle Hublot",         floor:"etage" },
+  { id:5,  room:"Couloir Haut",         floor:"etage" },
+  { id:11, room:"Couloir Bas",          floor:"rdc"   },
+];
+
+function buildQuestSheet() {
+  const page1 = MISSIONS_DATA.slice(0, 9);   // 9 premières missions
+  const page2 = MISSIONS_DATA.slice(9);      // 8 dernières missions
+
+  const rowHTML = (m) => `
+    <div class="quest-row">
+      <div class="quest-row-num ${m.floor}">N°${String(m.id).padStart(2,'0')}</div>
+      <div class="quest-row-room">${m.room}</div>
+      <div class="quest-checkboxes">
+        <div class="quest-checkbox" title="Joueur 1"></div>
+        <div class="quest-checkbox" title="Joueur 2"></div>
+        <div class="quest-checkbox" title="Joueur 3"></div>
+        <div class="quest-checkbox sabotage-box" title="Mission sabotée"></div>
+      </div>
+    </div>
+  `;
+
+  const html = `
+    <!-- En-tête écran uniquement -->
+    <div class="quest-sheet-header">
+      <h2>📋 QUESTS — 16 JOUEURS</h2>
+      <div class="quest-sheet-meta">
+        <strong>Durée max :</strong> 40 minutes<br>
+        <strong>Total missions :</strong> 17
+      </div>
+    </div>
+
+    <!-- ── PAGE 1 ── -->
+    <div class="quest-floor-block">
+      <div class="quest-page-header">
+        <div class="quest-page-header-title">📋 QUESTS — 16 JOUEURS</div>
+        <div class="quest-page-header-meta">Durée max : 40 min &nbsp;|&nbsp; 17 missions</div>
+      </div>
+      <div class="quest-floor-title etage">📋 PAGE 1 — 9 missions</div>
+      <div class="quest-rows">${page1.map(rowHTML).join('')}</div>
+      <div class="quest-legend">
+        <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
+        <div class="quest-legend-item"><span class="legend-box check">✓</span><span>Case cochée = joueur a terminé</span></div>
+        <div class="quest-legend-item"><span class="legend-box sab"></span><span>Case rouge cochée = sabotée</span></div>
+      </div>
+    </div>
+
+    <!-- ── PAGE 2 ── -->
+    <div class="quest-floor-block">
+      <div class="quest-page-header">
+        <div class="quest-page-header-title">📋 QUESTS — 16 JOUEURS</div>
+        <div class="quest-page-header-meta">Durée max : 40 min &nbsp;|&nbsp; 17 missions</div>
+      </div>
+      <div class="quest-floor-title rdc">📋 PAGE 2 — 8 missions</div>
+      <div class="quest-rows">${page2.map(rowHTML).join('')}</div>
+      <div class="quest-legend">
+        <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
+        <div class="quest-legend-item"><span class="legend-box check">✓</span><span>Case cochée = joueur a terminé</span></div>
+        <div class="quest-legend-item"><span class="legend-box sab"></span><span>Case rouge cochée = sabotée</span></div>
+      </div>
+      <div class="tracker-row">
+        <div class="tracker-card">
+          <div class="tracker-title">🔔 BUZZ RESTANTS (3 max)</div>
+          <div class="tracker-circles">
+            <div class="tracker-circle"></div>
+            <div class="tracker-circle"></div>
+            <div class="tracker-circle"></div>
+          </div>
+        </div>
+        <div class="tracker-card">
+          <div class="tracker-title">🔫 SHERIFF — BALLE</div>
+          <div class="tracker-circles"><div class="tracker-circle red"></div></div>
+          <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('quest-sheet-content').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// Print: only the currently visible section
+function printCurrent() {
+  const active = document.querySelector('.section.active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('print-active'));
+  if (active) active.classList.add('print-active');
+  window.print();
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('print-active'));
+}
+
+// ═══════════════════════════════════════════════════
+// DÉFIS & TÂCHES
+// ═══════════════════════════════════════════════════
+const DEFIS = [
+  // ── ROUGES : missions étage (N°01 à 10) ──────────────────────
+  { num:  1, color: "red",  text: "Danse pendant une minute sans t'arrêter, peu importe où tu te trouves." },
+  { num:  2, color: "blue",  text: "Tu n'as plus le droit de descendre jusqu'à la fin du prochain meeting." },
+  { num:  3, color: "red",  text: "Tu dois te déplacer sans faire aucun bruit jusqu'au prochain meeting." },
+  { num:  4, color: "red",  text: "Fais la statue devant le Hublot en prenant une drôle de pose pendant 30 secondes. Si quelqu'un te voit, tu dois rester dans cette position jusqu'à ce qu'une autre personne te parle." },
+  { num:  5, color: "blue",  text: "Tu dois te déplacer en marche arrière jusqu'à la fin du prochain meeting." },
+  { num:  6, color: "blue",  text: "Suis le joueur le plus proche de toi pendant 10 secondes sans lui expliquer pourquoi." },
+  { num:  7, color: "blue",  text: "Mets tes chaussures dans tes mains et applaudis dès que tu entres dans une pièce, jusqu'à ce que tu reviennes dans la Grande Salle." },
+  { num:  8, color: "red",  text: "Fais 5 pompes immédiatement. Si tu ne peux pas, chante une comptine à la place." },
+  { num:  9, color: "red",  text: "Pendant 2 minutes tu dois parler uniquement en chuchotant." },
+  { num: 10, color: "red",  text: "Baisse les bras, marche les jambes écartées et dis « suspect » à chaque personne que tu croises, jusqu'au prochain meeting." },
+
+  // ── BLEUS : missions RDC (N°11 à 17) ─────────────────────────
+  { num: 11, color: "red", text: "Tu n'as plus le droit d'aller à l'étage jusqu'à la fin du prochain meeting." },
+  { num: 12, color: "blue", text: "Répète tout ce que dit le joueur le plus proche de toi jusqu'au prochain meeting." },
+  { num: 13, color: "blue", text: "Raconte une blague à un autre joueur. S'il rit, il lui est interdit de parler jusqu'au prochain meeting." },
+  { num: 14, color: "red", text: "Monte et descends les escaliers 2 fois de suite avant de pouvoir aller où tu veux." },
+  { num: 15, color: "blue", text: "Tu dois faire semblant de parler dans un talkie-walkie à chaque fois que tu t'adresses à quelqu'un, jusqu'au prochain meeting. N'oublie pas de dire « Terminé » à la fin de chaque phrase." },
+  { num: 16, color: "red", text: "Interdiction de prononcer le prénom d'un autre joueur. Tu dois inventer un surnom pour chacun jusqu'à la fin de la partie." },
+  { num: 17, color: "blue", text: "À chaque fois que tu entres dans une pièce, tu dois frapper à la porte (même si elle est ouverte) jusqu'au prochain meeting." },
+];
+
+const TACHES_ETAGE = [
+  { num:  1, lieu: "Salle de danse" },
+  { num:  3, lieu: "Salle des trois marches" },
+  { num:  4, lieu: "Salle Hublot" },
+  { num:  8, lieu: "Salle des trois marches" },
+  { num:  9, lieu: "Couloir Haut" },
+  { num: 10, lieu: "Salle de danse" },
+  { num: 11, lieu: "Couloir Bas" },
+  { num: 14, lieu: "Info Jeunes" },
+  { num: 16, lieu: "Grande Salle" },
+];
+const TACHES_RDC = [
+  { num:  2, lieu: "Couloir Haut" },
+  { num:  5, lieu: "Couloir Haut" },
+  { num:  6, lieu: "Salle de danse" },
+  { num:  7, lieu: "Salle Hublot" },
+  { num: 12, lieu: "Grande Salle" },
+  { num: 13, lieu: "Cuisine" },
+  { num: 15, lieu: "Salle d'attente" },
+  { num: 17, lieu: "Couloir Bas" },
+];
+
+function defiIconSVG(color) {
+  const stroke = color === "red" ? "#ff2244" : "#4a9eff";
+  const fill   = color === "red" ? "#ff224433" : "#4a9eff33";
+  return `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 6 8 Q 6 4 16 4 Q 26 4 26 8 L 26 22 Q 26 26 22 26 L 21 26 L 21 28 L 19 28 L 19 26 L 13 26 L 13 28 L 11 28 L 11 26 L 10 26 Q 6 26 6 22 Z"
+          fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
+    <rect x="10" y="8" width="12" height="5" rx="2" fill="${stroke}" opacity="0.7"/>
+  </svg>`;
+}
+
+function buildDefis() {
+  const reds  = DEFIS.filter(d => d.color === "red");
+  const blues = DEFIS.filter(d => d.color === "blue");
+
+  const cardHTML = (d) => `
+    <div class="defi-card ${d.color}">
+      <div class="defi-header">
+        <div class="defi-icon-wrap">${defiIconSVG(d.color)}</div>
+        <div class="defi-number">DÉFI N°${String(d.num).padStart(2,'0')}</div>
+        <div class="defi-badge">${d.color === 'red' ? '🔴 ÉTAGE' : '🔵 RDC'}</div>
+      </div>
+      <div class="defi-text">${d.text}</div>
+    </div>
+  `;
+
+  document.getElementById("defis-red").innerHTML  = reds.map(cardHTML).join("");
+  document.getElementById("defis-blue").innerHTML = blues.map(cardHTML).join("");
+
+  const zoneHTML = (title, icon, items) => `
+    <div class="taches-zone">
+      <div class="taches-zone-title">${icon} ${title}</div>
+      <div class="taches-list">
+        ${items.map(t => `
+          <div class="tache-item">
+            <span class="tache-num">N°${String(t.num).padStart(2,'0')}</span>
+            <span class="tache-nom">${t.lieu}</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  document.getElementById("taches-zones").innerHTML =
+    zoneHTML("TÂCHES ÉTAGE", "🔼", TACHES_ETAGE) +
+    zoneHTML("TÂCHES RDC",   "🔽", TACHES_RDC);
+}
+
+populateGrids();
+buildQuestSheet();
+buildDefis();
+</script>
+</body>
+</html>
