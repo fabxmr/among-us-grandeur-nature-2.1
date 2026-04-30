@@ -113,6 +113,8 @@
   .tab-btn.quests   { background: #1a2a2a; color: #a0e0cc; border: 1px solid #4a8877; }
   .tab-btn.backs    { background: #2a2a2a; color: #ccc; border: 1px solid #666; }
   .tab-btn.printtab { background: #001a2a; color: #00e5ff; border: 1px solid #00aabb; }
+  .tab-btn.timer    { background: #002a2a; color: #00ffcc; border: 1px solid #00aa88; }
+  .tab-btn.distrib  { background: #2a0a2a; color: #ff66ff; border: 1px solid #aa44aa; }
   .tab-btn.defis    { background: #2a1a10; color: #ff9966; border: 1px solid #c66a3c; }
   .tab-btn.rules    { background: #1a1a2a; color: #aabbff; border: 1px solid #445599; }
   .tab-btn.all      { background: #1a2340; color: white; border: 1px solid #445577; }
@@ -2077,6 +2079,253 @@
       border-radius: 0 !important;
     }
   }
+
+  /* ──────────────────────────────────────────────
+     ⏱ TIMER
+     ────────────────────────────────────────────── */
+  #tab-timer { text-align: center; padding: 40px 20px 80px; }
+  .timer-display {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(56px, 16vw, 150px);
+    letter-spacing: 6px;
+    margin: 30px auto;
+    color: #00ffcc;
+    text-shadow: 0 0 22px #00ffcc55;
+    transition: color .3s, text-shadow .3s, transform .2s;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-display.running  { color: #fff;     text-shadow: 0 0 30px #ffffff66; }
+  .timer-display.warning  { color: #ff8c00;  text-shadow: 0 0 30px #ff8c0088; }
+  .timer-display.critical {
+    color: #ff2244;
+    text-shadow: 0 0 40px #ff2244aa;
+    animation: timerCriticalPulse 1s ease-in-out infinite;
+  }
+  .timer-display.finished {
+    color: #ff2244;
+    animation: timerFinishedFlash .5s ease-in-out infinite;
+  }
+  @keyframes timerCriticalPulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+  }
+  @keyframes timerFinishedFlash {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.4; transform: scale(1.04); }
+  }
+
+  .timer-controls {
+    display: flex; gap: 14px;
+    justify-content: center;
+    margin: 28px 0;
+    flex-wrap: wrap;
+  }
+  .timer-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 16px 26px;
+    border: 1.5px solid currentColor;
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    letter-spacing: 1px;
+    transition: all .2s;
+  }
+  .timer-btn:hover { background: currentColor; color: var(--space-dark); }
+  .timer-btn.start { color: #39ff14; }
+  .timer-btn.pause { color: #ff8c00; }
+  .timer-btn.reset { color: #ff7788; }
+  .timer-info {
+    max-width: 540px;
+    margin: 40px auto 0;
+    color: #8899bb;
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: left;
+    padding: 18px 22px;
+    background: #0e1a2a;
+    border: 1px solid #00aabb55;
+    border-radius: 8px;
+  }
+  .timer-info p { margin: 4px 0; }
+
+  /* ──────────────────────────────────────────────
+     🎲 DISTRIBUTION
+     ────────────────────────────────────────────── */
+  #tab-distrib { padding: 30px 20px 80px; max-width: 760px; margin: 0 auto; }
+  .dist-section {
+    background: #0e1525;
+    border: 1px solid #aa44aa55;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+    color: #cce8ff;
+  }
+  .dist-section h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    margin-bottom: 14px;
+    color: #ff66ff;
+    letter-spacing: 1px;
+  }
+  .dist-hint { font-size: 13px; color: #88aaff; margin-bottom: 14px; line-height: 1.5; }
+  #dist-names {
+    width: 100%;
+    height: 220px;
+    background: #0a0e1a;
+    color: white;
+    border: 1px solid #335;
+    border-radius: 6px;
+    padding: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  #dist-names:focus { outline: none; border-color: #ff66ff; box-shadow: 0 0 0 2px #ff66ff33; }
+  .dist-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 14px 24px;
+    border: 1.5px solid currentColor;
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    letter-spacing: 1px;
+    transition: all .2s;
+    margin-top: 14px;
+  }
+  .dist-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px #00000066; }
+  .dist-btn.primary { color: #ff66ff; background: #ff66ff22; }
+  .dist-btn.primary:hover { background: #ff66ff44; }
+  .dist-btn.danger  { color: #ff7788; background: #ff224422; border-color: #ff7788; }
+  .dist-btn.success { color: #39ff14; background: #39ff1422; border-color: #39ff14; font-size: 13px; padding: 16px 28px; }
+
+  .dist-names-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .dist-name-btn {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 16px 14px;
+    background: #1a2340;
+    color: white;
+    border: 2px solid #4a6088;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: left;
+  }
+  .dist-name-btn:hover:not(:disabled) {
+    background: #2a3a60;
+    border-color: #ff66ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px #00000066;
+  }
+  .dist-name-btn.viewed {
+    background: #0a1015;
+    color: #4a5566;
+    border-color: #2a3344;
+    text-decoration: line-through;
+    cursor: default;
+  }
+  .dist-name-btn:disabled { opacity: 0.55; }
+  .dist-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+
+  .dist-reveal { text-align: center; padding: 20px; }
+  .dist-reveal-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    color: #ff66ff;
+    margin-bottom: 22px;
+    text-shadow: 0 0 18px #ff66ff66;
+    letter-spacing: 2px;
+  }
+  .dist-reveal-card { display: flex; justify-content: center; margin-bottom: 26px; }
+  .dist-reveal-card .card {
+    width: 240px !important;
+    height: 360px !important;
+    cursor: default !important;
+    animation: none !important;
+  }
+  .dist-reveal-card .card:hover { transform: none !important; }
+
+  /* ──────────────────────────────────────────────
+     🖥 OVERLAY PLEIN ÉCRAN (cartes + révélation rôles)
+     ────────────────────────────────────────────── */
+  .fullscreen-overlay {
+    position: fixed; inset: 0;
+    background: rgba(5,8,15,0.94);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .fullscreen-overlay[style*="flex"] { display: flex !important; }
+  .fullscreen-close {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10001;
+    transition: background .2s;
+  }
+  .fullscreen-close:hover { background: rgba(255,255,255,0.18); }
+  .fullscreen-content {
+    max-width: 100%;
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fullscreen-card-wrap > .card {
+    width: min(85vw, 320px) !important;
+    height: min(80vh, 480px) !important;
+    cursor: default !important;
+    animation: none !important;
+  }
+  .fullscreen-card-wrap > .card:hover { transform: none !important; }
+
+  /* ──────────────────────────────────────────────
+     ☑ TRACKERS CLIQUABLES (Buzz, Sheriff balle)
+     ────────────────────────────────────────────── */
+  .tracker-circle {
+    cursor: pointer;
+    transition: background .2s, transform .15s;
+    user-select: none;
+  }
+  .tracker-circle:hover { transform: scale(1.12); }
+  .tracker-circle.used {
+    background: currentColor !important;
+    position: relative;
+  }
+  .tracker-circle.used::after {
+    content: '✕';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--space-dark);
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  /* Indicateur "carte cliquable = aperçu" — discret */
+  .section.active .card { cursor: pointer; }
+
+  @media print {
+    .fullscreen-overlay, #tab-timer, #tab-distrib { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -2098,6 +2347,8 @@
   <button class="tab-btn printtab"       onclick="showTab('print')">🖨 IMPRESSION</button>
   <button class="tab-btn defis"          onclick="showTab('defis')">DÉFIS &amp; TÂCHES</button>
   <button class="tab-btn rules"          onclick="showTab('rules')">RÈGLES</button>
+  <button class="tab-btn timer"          onclick="showTab('timer')">⏱ TIMER</button>
+  <button class="tab-btn distrib"        onclick="showTab('distrib')">🎲 DISTRIBUER</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -2527,6 +2778,54 @@
     </div>
 
   </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ⏱ TIMER (40 min) + Wake Lock
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-timer">
+  <div class="section-title" style="color:#00e5ff">⏱ MINUTERIE — 40 MIN</div>
+  <div id="timer-display" class="timer-display">40:00</div>
+  <div class="timer-controls">
+    <button class="timer-btn start" id="timer-start" onclick="startTimer()">▶ DÉMARRER</button>
+    <button class="timer-btn pause" id="timer-pause" onclick="pauseTimer()" style="display:none">⏸ PAUSE</button>
+    <button class="timer-btn reset" onclick="resetTimer()">⏹ RESET</button>
+  </div>
+  <div class="timer-info">
+    <p>📱 L'écran reste allumé tant que le timer tourne (Wake Lock).</p>
+    <p>💾 L'état est sauvegardé : tu peux fermer l'onglet ou recharger sans perdre le compte à rebours.</p>
+    <p>🔔 Alarme sonore + flash rouge quand le temps est écoulé.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     🎲 DISTRIBUTION DES RÔLES
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-distrib">
+  <div class="section-title" style="color:#c400ff">🎲 DISTRIBUTION DES RÔLES</div>
+
+  <div id="dist-setup" class="dist-section">
+    <h3>1. ENTRER LES 16 PRÉNOMS</h3>
+    <p class="dist-hint">Un prénom par ligne. À la fin, clique sur "Distribuer" → chaque carte sera assignée aléatoirement à un prénom.</p>
+    <textarea id="dist-names" placeholder="Alex&#10;Marie&#10;Tom&#10;...&#10;(16 lignes)"></textarea>
+    <button class="dist-btn primary" onclick="startDistribution()">🎲 DISTRIBUER LES RÔLES</button>
+  </div>
+
+  <div id="dist-play" class="dist-section" style="display:none">
+    <h3>2. CHAQUE JOUEUR TAPE SON NOM</h3>
+    <p class="dist-hint">Passe le téléphone au joueur. Il tape son prénom, voit son rôle, ferme. Personne ne peut revoir un rôle déjà consulté.</p>
+    <div id="dist-names-list" class="dist-names-grid"></div>
+    <div class="dist-actions">
+      <button class="dist-btn danger" onclick="resetDistribution()">↻ Recommencer</button>
+      <button id="dist-launch" class="dist-btn success" style="display:none" onclick="goToTimer()">⏱ LANCER LE TIMER</button>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay plein écran pour cartes & révélation rôles -->
+<div id="fullscreen-overlay" class="fullscreen-overlay" style="display:none">
+  <button class="fullscreen-close" onclick="closeFullscreen()" aria-label="Fermer">✕</button>
+  <div class="fullscreen-content"></div>
 </div>
 
 <div class="print-bar">
@@ -3111,8 +3410,12 @@ function buildQuestSheet() {
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  event.currentTarget.classList.add('active');
+  const sect = document.getElementById('tab-' + name);
+  if (sect) sect.classList.add('active');
+  // Support à la fois l'appel via onclick (event défini) et programmatique
+  const btn = (typeof event !== 'undefined' && event && event.currentTarget) ||
+              document.querySelector(`.tab-btn[onclick*="'${name}'"]`);
+  if (btn && btn.classList) btn.classList.add('active');
 }
 
 // Print: only the currently visible section
@@ -3217,10 +3520,305 @@ function buildDefis() {
     zoneHTML("TÂCHES RDC",   "🔽", TACHES_RDC);
 }
 
+// ═══════════════════════════════════════════════════
+// ⏱ TIMER (40 min) — état persistant via localStorage
+// ═══════════════════════════════════════════════════
+const TIMER_KEY = 'among-us:timer:v1';
+const TIMER_DURATION_MS = 40 * 60 * 1000;
+let timerInterval = null;
+let timerEndAt = null;          // timestamp où le timer atteindra zéro
+let timerPausedRemaining = null; // ms restantes quand mis en pause
+
+function loadTimerState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(TIMER_KEY) || 'null');
+    if (s && s.endAt && s.endAt > Date.now()) {
+      timerEndAt = s.endAt;
+      startTimerInterval();
+      requestWakeLock();
+    } else if (s && s.paused) {
+      timerPausedRemaining = s.paused;
+      renderTimer(timerPausedRemaining);
+    } else {
+      renderTimer(TIMER_DURATION_MS);
+    }
+  } catch { renderTimer(TIMER_DURATION_MS); }
+}
+function saveTimerState() {
+  if (timerEndAt) localStorage.setItem(TIMER_KEY, JSON.stringify({ endAt: timerEndAt }));
+  else if (timerPausedRemaining !== null) localStorage.setItem(TIMER_KEY, JSON.stringify({ paused: timerPausedRemaining }));
+  else localStorage.removeItem(TIMER_KEY);
+}
+function startTimer() {
+  const remaining = timerPausedRemaining ?? TIMER_DURATION_MS;
+  timerEndAt = Date.now() + remaining;
+  timerPausedRemaining = null;
+  saveTimerState();
+  startTimerInterval();
+  requestWakeLock();
+}
+function pauseTimer() {
+  if (!timerEndAt) return;
+  timerPausedRemaining = Math.max(0, timerEndAt - Date.now());
+  timerEndAt = null;
+  clearInterval(timerInterval);
+  timerInterval = null;
+  saveTimerState();
+  renderTimer(timerPausedRemaining);
+  releaseWakeLock();
+}
+function resetTimer() {
+  timerEndAt = null;
+  timerPausedRemaining = null;
+  clearInterval(timerInterval);
+  timerInterval = null;
+  saveTimerState();
+  renderTimer(TIMER_DURATION_MS);
+  releaseWakeLock();
+}
+function startTimerInterval() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const remaining = timerEndAt - Date.now();
+    if (remaining <= 0) {
+      renderTimer(0);
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerEndAt = null;
+      saveTimerState();
+      releaseWakeLock();
+      playAlarm();
+    } else {
+      renderTimer(remaining);
+    }
+  }, 250);
+  renderTimer(timerEndAt - Date.now());
+}
+function renderTimer(remainingMs) {
+  const display = document.getElementById('timer-display');
+  if (!display) return;
+  const totalSec = Math.max(0, Math.ceil(remainingMs / 1000));
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  display.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  display.className = 'timer-display';
+  if (remainingMs <= 0) display.classList.add('finished');
+  else if (remainingMs <= 60000) display.classList.add('critical');
+  else if (remainingMs <= 5 * 60000) display.classList.add('warning');
+  else if (timerEndAt) display.classList.add('running');
+  const startBtn = document.getElementById('timer-start');
+  const pauseBtn = document.getElementById('timer-pause');
+  if (startBtn && pauseBtn) {
+    if (timerEndAt) { startBtn.style.display = 'none'; pauseBtn.style.display = ''; }
+    else            { startBtn.style.display = '';     pauseBtn.style.display = 'none'; }
+  }
+}
+function playAlarm() {
+  // Suite de bips simples via Web Audio API (pas de fichier audio nécessaire)
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    [0, 0.4, 0.8].forEach(delay => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain).connect(ctx.destination);
+      osc.frequency.value = 880;
+      osc.type = 'sine';
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.35, t + 0.02);
+      gain.gain.linearRampToValueAtTime(0, t + 0.25);
+      osc.start(t);
+      osc.stop(t + 0.3);
+    });
+  } catch {}
+}
+
+// ═══════════════════════════════════════════════════
+// 🔋 WAKE LOCK — empêche l'écran de s'éteindre pendant la partie
+// ═══════════════════════════════════════════════════
+let wakeLock = null;
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    }
+  } catch {}
+}
+function releaseWakeLock() {
+  if (wakeLock) { try { wakeLock.release(); } catch {} wakeLock = null; }
+}
+// Ré-acquérir si l'utilisateur revient sur l'onglet pendant que le timer tourne
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && timerEndAt && !wakeLock) {
+    requestWakeLock();
+  }
+});
+
+// ═══════════════════════════════════════════════════
+// 🎲 DISTRIBUTEUR DE RÔLES
+// ═══════════════════════════════════════════════════
+const DIST_KEY = 'among-us:distribution:v1';
+
+function getAllRoleCards() {
+  const cards = [];
+  crewmatesData.forEach(c => cards.push({ role: 'crewmate', color: c.color, missions: c.missions }));
+  impostorsData.forEach(c => cards.push({ role: 'impostor', color: c.color, missions: c.missions }));
+  cards.push({ role: 'sheriff',  color: sheriffData.color,  missions: sheriffData.missions });
+  cards.push({ role: 'engineer', color: engineerData.color, missions: engineerData.missions });
+  return cards;
+}
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function loadDistribution() {
+  try { return JSON.parse(localStorage.getItem(DIST_KEY) || 'null'); }
+  catch { return null; }
+}
+function saveDistribution(state) { localStorage.setItem(DIST_KEY, JSON.stringify(state)); }
+function clearDistributionState() { localStorage.removeItem(DIST_KEY); }
+
+function startDistribution() {
+  const namesText = document.getElementById('dist-names').value;
+  const names = namesText.split('\n').map(n => n.trim()).filter(Boolean);
+  const expected = getAllRoleCards().length; // 16
+  if (names.length !== expected) {
+    alert(`Il faut exactement ${expected} prénoms (tu en as ${names.length}).`);
+    return;
+  }
+  const cards = shuffleArray(getAllRoleCards());
+  const assignments = names.map((name, i) => ({ name, cardIdx: i, viewed: false }));
+  saveDistribution({ names, cards, assignments });
+  renderDistribution();
+}
+function renderDistribution() {
+  const state = loadDistribution();
+  const setupEl = document.getElementById('dist-setup');
+  const playEl  = document.getElementById('dist-play');
+  if (!setupEl || !playEl) return;
+  if (!state) {
+    setupEl.style.display = '';
+    playEl.style.display  = 'none';
+    return;
+  }
+  setupEl.style.display = 'none';
+  playEl.style.display  = '';
+  const list = document.getElementById('dist-names-list');
+  list.innerHTML = state.assignments.map((a, i) => `
+    <button class="dist-name-btn ${a.viewed ? 'viewed' : ''}" data-idx="${i}" ${a.viewed ? 'disabled' : ''}>
+      ${a.viewed ? '✓ ' : '👁 '}${a.name}
+    </button>
+  `).join('');
+  list.querySelectorAll('.dist-name-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', () => revealRole(parseInt(btn.dataset.idx)));
+  });
+  const allViewed = state.assignments.every(a => a.viewed);
+  document.getElementById('dist-launch').style.display = allViewed ? '' : 'none';
+}
+function revealRole(idx) {
+  const state = loadDistribution();
+  if (!state) return;
+  const assignment = state.assignments[idx];
+  const card = state.cards[assignment.cardIdx];
+  const cardHTML = buildCard(card.role, card.color, card.missions);
+  showFullscreen(`
+    <div class="dist-reveal">
+      <div class="dist-reveal-name">${assignment.name}</div>
+      <div class="dist-reveal-card">${cardHTML}</div>
+      <button class="dist-btn primary" id="dist-confirm-btn">J'AI VU MON RÔLE — FERMER</button>
+    </div>
+  `);
+  document.getElementById('dist-confirm-btn').addEventListener('click', () => {
+    const s = loadDistribution();
+    if (s) { s.assignments[idx].viewed = true; saveDistribution(s); }
+    closeFullscreen();
+    renderDistribution();
+  });
+}
+function resetDistribution() {
+  if (confirm('Effacer la distribution actuelle ?')) {
+    clearDistributionState();
+    document.getElementById('dist-names').value = '';
+    renderDistribution();
+  }
+}
+function goToTimer() {
+  const btn = document.querySelector('.tab-btn.timer');
+  if (btn) btn.click();
+}
+
+// ═══════════════════════════════════════════════════
+// 🖥 OVERLAY PLEIN ÉCRAN (cartes + révélation rôle)
+// ═══════════════════════════════════════════════════
+function showFullscreen(content) {
+  const overlay = document.getElementById('fullscreen-overlay');
+  if (!overlay) return;
+  overlay.querySelector('.fullscreen-content').innerHTML = content;
+  overlay.style.display = 'flex';
+}
+function closeFullscreen() {
+  const overlay = document.getElementById('fullscreen-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+// Click-outside et ESC pour fermer
+document.addEventListener('click', e => {
+  const overlay = document.getElementById('fullscreen-overlay');
+  if (overlay && e.target === overlay) closeFullscreen();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeFullscreen();
+});
+// Click sur n'importe quelle carte → afficher en grand (sauf en mode impression / dans la révélation)
+function initCardClicks() {
+  document.body.addEventListener('click', e => {
+    const card = e.target.closest('.card');
+    if (!card) return;
+    if (card.closest('.print-page')) return;     // pas en mode impression
+    if (card.closest('.dist-reveal')) return;    // pas dans la révélation
+    if (card.closest('.fullscreen-content')) return; // pas dans l'overlay
+    if (card.classList.contains('card-back')) return;
+    showFullscreen(`<div class="fullscreen-card-wrap">${card.outerHTML}</div>`);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// ☑ TRACKERS CLIQUABLES (Buzz, Sheriff balle, sabotages)
+// ═══════════════════════════════════════════════════
+const TRACKERS_KEY = 'among-us:trackers:v1';
+function loadTrackers() {
+  try { return JSON.parse(localStorage.getItem(TRACKERS_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveTrackers(state) { localStorage.setItem(TRACKERS_KEY, JSON.stringify(state)); }
+function initTrackers() {
+  const state = loadTrackers();
+  document.querySelectorAll('.tracker-circle').forEach((c, i) => {
+    const key = `t${i}`;
+    if (state[key]) c.classList.add('used');
+    c.addEventListener('click', () => {
+      c.classList.toggle('used');
+      const newState = loadTrackers();
+      newState[key] = c.classList.contains('used');
+      saveTrackers(newState);
+    });
+  });
+}
+
 populateGrids();
 buildQuestSheet();
 buildDefis();
 buildPrintPages();
+initTrackers();
+loadTimerState();
+renderDistribution();
+initCardClicks();
 </script>
 <script>
   if ('serviceWorker' in navigator) {
