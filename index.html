@@ -475,16 +475,16 @@
       gap: 4mm !important;
       max-width: 100% !important;
       margin: 0 !important;
-      width: 210mm !important;
-      height: 297mm !important;
+      width: 194mm !important;
+      height: 281mm !important;
       page-break-inside: avoid !important;
       break-inside: avoid !important;
     }
 
     /* Chaque pancarte = légèrement moins que la moitié pour laisser la place au gap */
     .pancarte-big {
-      width: 210mm !important;
-      height: 146mm !important;
+      width: 194mm !important;
+      height: 138mm !important;
       aspect-ratio: unset !important;
       border-radius: 0 !important;
       box-shadow: none !important;
@@ -1843,7 +1843,7 @@
 </div>
 
 <div class="section" id="tab-impostor">
-  <div class="section-title" style="color:var(--neon-red)">IMPOSTORS (3)</div>
+  <div class="section-title" style="color:var(--neon-red)">IMPOSTORS (3 ou 4)</div>
   <div class="cards-grid" id="imp-grid"></div>
 </div>
 
@@ -2013,10 +2013,10 @@
      DOS DE CARTES (17 copies identiques)
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-backs">
-  <div class="section-title" style="color:#ff6b00">DOS DE CARTES — 17 COPIES</div>
+  <div class="section-title" style="color:#ff6b00">DOS DE CARTES — 17 OU 18 COPIES</div>
   <div style="text-align:center; color:#8899bb; font-size:12px; margin-bottom:20px; max-width:600px; margin-left:auto; margin-right:auto">
     Imprime cette page sur le <strong>verso</strong> de la feuille contenant les cartes de rôles.
-    Avec 17 joueurs (12 Crewmates + 3 Imposteurs + 1 Sheriff + 1 Ingénieur), tu as exactement 17 dos à imprimer.
+    Config A (3 Imposteurs) = <strong>17 dos</strong>, Config B (4 Imposteurs) = <strong>18 dos</strong>.
   </div>
   <div class="cards-grid" id="backs-grid"></div>
 </div>
@@ -2111,10 +2111,10 @@
     <div class="rules-section">
       <div class="rules-section-header blue">⚙️ MISE EN PLACE — 16 JOUEURS</div>
       <div class="rules-section-body">
-        <p style="margin-bottom:14px">17 cartes sont disponibles. Deux configurations possibles :</p>
+        <p style="margin-bottom:14px">18 cartes sont disponibles. Deux configurations possibles :</p>
         <div class="rules-config-grid">
           <div class="rules-config-card">
-            <h4>CONFIG A</h4>
+            <h4>CONFIG A — 16 JOUEURS</h4>
             <ul>
               <li>3 <span class="kw-red">IMPOSTORS</span></li>
               <li>12 <span class="kw-green">CREWMATES</span></li>
@@ -2123,7 +2123,7 @@
             </ul>
           </div>
           <div class="rules-config-card">
-            <h4>CONFIG B</h4>
+            <h4>CONFIG B — 17 JOUEURS</h4>
             <ul>
               <li>4 <span class="kw-red">IMPOSTORS</span></li>
               <li>11 <span class="kw-green">CREWMATES</span></li>
@@ -2133,7 +2133,8 @@
           </div>
         </div>
         <p style="margin-top:16px; font-size:12px; color:#8899bb">
-          Pour choisir entre 3 ou 4 Impostors : retirer ou ajouter la carte Impostor <span class="kw-red">Cramoisi</span> (missions <span class="kw-red">1 - 13 - 14</span>) — elle a les mêmes missions que le Crewmate <span class="kw-green">Vert</span>, donc une seule des deux cartes est utilisée.
+          <span class="kw-red">Config A</span> : jouer la carte Crewmate <span class="kw-green">Vert</span>, retirer <span class="kw-red">Cramoisi</span> et <span class="kw-red">Écarlate</span>.<br>
+          <span class="kw-red">Config B</span> : jouer <span class="kw-red">Cramoisi</span> + <span class="kw-red">Écarlate</span>, retirer la carte Crewmate <span class="kw-green">Vert</span>. Ces deux cartes Imposteur ont les mêmes missions <span class="kw-red">1 - 13 - 14</span> que Vert, ce qui maintient l'équilibre parfait.
         </p>
         <p style="margin-top:10px; font-size:12px; color:#8899bb">
           Distribuer les cartes. Les <span class="kw-red">IMPOSTORS</span> doivent se reconnaître avant le début — faites fermer les yeux à tous pendant ce temps.
@@ -2296,7 +2297,8 @@ const crewmatesData = [
 const impostorsData = [
   { color: { name: 'Rouge',    hex: '#E74C3C', body: '#C0392B' }, missions: [3, 4, 17]  },
   { color: { name: 'Bordeaux', hex: '#8B1A1A', body: '#6B1010' }, missions: [4, 6, 8]   },
-  { color: { name: 'Cramoisi', hex: '#B22222', body: '#8B1414' }, missions: [1, 13, 14] }, // ← CARTE SWING (même missions que Vert)
+  { color: { name: 'Cramoisi', hex: '#B22222', body: '#8B1414' }, missions: [1, 13, 14], swing: true }, // ← CARTE SWING (même missions que Vert)
+  { color: { name: 'Écarlate', hex: '#CC1100', body: '#990D00' }, missions: [1, 13, 14], swing: true }, // ← Config B uniquement (remplace Vert)
 ];
 
 const sheriffData = {
@@ -2555,7 +2557,8 @@ function populateGrids() {
   });
 
   impostorsData.forEach(c => {
-    const html = buildCard('impostor', c.color, c.missions);
+    const extra = c.swing ? `⚡ CONFIG B` : '';
+    const html = buildCard('impostor', c.color, c.missions, extra);
     impCards.push(html);
     allCards.push(html);
   });
