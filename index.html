@@ -2838,13 +2838,11 @@ function populateGrids() {
     allCards.push(html);
   });
 
-  const sherHtml = buildCard('sheriff', sheriffData.color, sheriffData.missions,
-    `🔫 1 BALLE`);
+  const sherHtml = buildCard('sheriff', sheriffData.color, sheriffData.missions);
   sherCards.push(sherHtml);
   allCards.push(sherHtml);
 
-  const engHtml = buildCard('engineer', engineerData.color, engineerData.missions,
-    `🔧 RÉPARATION`);
+  const engHtml = buildCard('engineer', engineerData.color, engineerData.missions);
   engCards.push(engHtml);
   allCards.push(engHtml);
 
@@ -2902,8 +2900,8 @@ function buildPrintPages() {
   const allCards = [];
   crewmatesData.forEach(c => allCards.push(buildCard('crewmate', c.color, c.missions)));
   impostorsData.forEach(c => allCards.push(buildCard('impostor', c.color, c.missions)));
-  allCards.push(buildCard('sheriff',  sheriffData.color,  sheriffData.missions,  '🔫 1 BALLE'));
-  allCards.push(buildCard('engineer', engineerData.color, engineerData.missions, '🔧 RÉPARATION'));
+  allCards.push(buildCard('sheriff',  sheriffData.color,  sheriffData.missions));
+  allCards.push(buildCard('engineer', engineerData.color, engineerData.missions));
 
   const PER_PAGE = 9;
   let html = '';
