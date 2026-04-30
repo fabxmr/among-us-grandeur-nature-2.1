@@ -1,0 +1,25 @@
+{
+  "name": "Among Us — Grandeur Nature",
+  "short_name": "Among Us",
+  "description": "Cartes 16 joueurs : rôles, règles, quests, sabotage, défis.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
+  "orientation": "any",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icon-512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

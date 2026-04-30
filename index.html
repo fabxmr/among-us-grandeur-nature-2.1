@@ -3,9 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Among Us - Cartes 16 Joueurs</title>
+<title>Among Us — Grandeur Nature · Cartes 16 Joueurs</title>
+
+<meta name="description" content="Among Us grandeur nature à 16 joueurs : cartes de rôles, règles, fiches quests, défis et tâches à imprimer ou consulter sur mobile.">
+<meta name="theme-color" content="#0a0e1a">
+
+<!-- Open Graph (aperçu lors du partage Discord/WhatsApp/Facebook) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Among Us — Grandeur Nature (16 joueurs)">
+<meta property="og:description" content="Cartes de rôles, règles, fiches quests et tâches pour jouer à Among Us en vrai.">
+<meta property="og:image" content="og-image.svg">
+<meta property="og:url" content="https://among-us-grandeur-nature-2.vercel.app/">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Among Us — Grandeur Nature (16 joueurs)">
+<meta name="twitter:description" content="Cartes de rôles, règles, fiches quests et tâches pour jouer à Among Us en vrai.">
+<meta name="twitter:image" content="og-image.svg">
+
+<!-- Icônes & PWA (« ajouter à l'écran d'accueil » + mode hors ligne) -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon-512.svg">
+<link rel="manifest" href="manifest.json">
+
+<!-- Google Fonts en preconnect (chargement plus rapide qu'avec @import) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap">
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap');
 
   :root {
     --space-dark: #0a0e1a;
@@ -2833,6 +2859,13 @@ function buildDefis() {
 populateGrids();
 buildQuestSheet();
 buildDefis();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
 </script>
 </body>
 </html>
