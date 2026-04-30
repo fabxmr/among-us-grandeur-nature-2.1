@@ -1806,6 +1806,151 @@
     .tracker-circle.red { border-color: #ff224455 !important; }
     .tracker-line { border-bottom-color: #2a3a66 !important; }
   }
+
+  /* ──────────────────────────────────────────────
+     IMMERSION : animations & ambiance spatiale
+     ────────────────────────────────────────────── */
+
+  /* Étoiles qui scintillent doucement */
+  .stars { animation: starsTwinkle 7s ease-in-out infinite; }
+  @keyframes starsTwinkle {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+  }
+
+  /* Halo nébuleux animé (rouge/cyan/violet) qui dérive lentement */
+  body { position: relative; }
+  body::before {
+    content: '';
+    position: fixed; inset: -25%;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(196,0,255,0.07) 0%, transparent 45%),
+      radial-gradient(ellipse at 80% 70%, rgba(0,229,255,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(255,34,68,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+    animation: nebulaDrift 80s linear infinite;
+  }
+  @keyframes nebulaDrift {
+    0%   { transform: rotate(0deg)   scale(1); }
+    50%  { transform: rotate(180deg) scale(1.08); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  /* Scanlines très subtiles, comme un terminal CRT */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.018) 0px,
+      rgba(255,255,255,0.018) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: overlay;
+  }
+
+  /* Cartes : effet de tilt 3D au survol */
+  .cards-grid { perspective: 1400px; }
+  .card { transform-style: preserve-3d; }
+  .card:hover {
+    transform: translateY(-8px) scale(1.04) rotateX(4deg) rotateY(-3deg);
+  }
+
+  /* Imposteurs : pulsation rouge subtile en permanence */
+  .card.impostor:not(:hover) {
+    animation: impostorPulse 3.6s ease-in-out infinite;
+  }
+  @keyframes impostorPulse {
+    0%, 100% { box-shadow: 0 0 15px #ff224433, 0 8px 32px #00000088; }
+    50%      { box-shadow: 0 0 26px #ff224466, 0 8px 32px #00000088; }
+  }
+
+  /* Apparition fluide quand on change d'onglet */
+  .section.active {
+    animation: sectionFadeIn .35s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes sectionFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Apparition échelonnée des cartes (effet "deal") */
+  .section.active .card {
+    animation: cardReveal .45s cubic-bezier(.2,.8,.2,1) backwards;
+  }
+  .section.active .card:nth-child(1)  { animation-delay: .00s; }
+  .section.active .card:nth-child(2)  { animation-delay: .04s; }
+  .section.active .card:nth-child(3)  { animation-delay: .08s; }
+  .section.active .card:nth-child(4)  { animation-delay: .12s; }
+  .section.active .card:nth-child(5)  { animation-delay: .16s; }
+  .section.active .card:nth-child(6)  { animation-delay: .20s; }
+  .section.active .card:nth-child(7)  { animation-delay: .24s; }
+  .section.active .card:nth-child(8)  { animation-delay: .28s; }
+  .section.active .card:nth-child(9)  { animation-delay: .32s; }
+  .section.active .card:nth-child(10) { animation-delay: .36s; }
+  .section.active .card:nth-child(11) { animation-delay: .40s; }
+  .section.active .card:nth-child(12) { animation-delay: .44s; }
+  .section.active .card:nth-child(13) { animation-delay: .48s; }
+  .section.active .card:nth-child(14) { animation-delay: .52s; }
+  .section.active .card:nth-child(15) { animation-delay: .56s; }
+  .section.active .card:nth-child(16) { animation-delay: .60s; }
+  .section.active .card:nth-child(17) { animation-delay: .64s; }
+  .section.active .card:nth-child(18) { animation-delay: .68s; }
+  @keyframes cardReveal {
+    from { opacity: 0; transform: translateY(20px) scale(.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Titre principal : pulsation lente du glow */
+  .header h1 {
+    animation: headerGlow 5s ease-in-out infinite;
+  }
+  @keyframes headerGlow {
+    0%, 100% { text-shadow: 0 0 20px #ff224488, 0 0 40px #ff224444; }
+    50%      { text-shadow: 0 0 32px #ff2244cc, 0 0 64px #ff224488; }
+  }
+
+  /* Numéros de mission : léger scale au survol de la carte */
+  .mission-num { transition: transform .2s; }
+  .card:hover .mission-num { transform: scale(1.08); }
+
+  /* Boutons d'onglets : scan-line discrète sur l'onglet actif */
+  .tab-btn.active::after {
+    content: '';
+    position: absolute; left: 0; right: 0; bottom: -1px;
+    height: 2px;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+    animation: tabUnderline .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .tab-btn { position: relative; overflow: hidden; }
+  @keyframes tabUnderline {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* Respect des préférences d'accessibilité */
+  @media (prefers-reduced-motion: reduce) {
+    .stars, body::before, .card.impostor, .section.active,
+    .section.active .card, .header h1, .tab-btn.active::after {
+      animation: none !important;
+    }
+    .card:hover { transform: none !important; }
+  }
+
+  /* Mode impression : aucune animation, pas de nébuleuse, pas de scanlines */
+  @media print {
+    .stars, body::before, body::after, .card.impostor,
+    .section.active, .section.active .card, .header h1,
+    .tab-btn.active::after {
+      animation: none !important;
+    }
+    body::before, body::after { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -2557,8 +2702,7 @@ function populateGrids() {
   });
 
   impostorsData.forEach(c => {
-    const extra = c.swing ? `⚡ CONFIG B` : '';
-    const html = buildCard('impostor', c.color, c.missions, extra);
+    const html = buildCard('impostor', c.color, c.missions);
     impCards.push(html);
     allCards.push(html);
   });
