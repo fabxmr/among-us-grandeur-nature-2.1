@@ -1,4 +1,4 @@
-const CACHE = 'among-us-v5';
+const CACHE = 'among-us-v6';
 const PRECACHE = [
   './',
   './index.html',
