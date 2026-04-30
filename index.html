@@ -112,6 +112,7 @@
   .tab-btn.sabotage { background: #2a1a3a; color: var(--neon-purple); border: 1px solid var(--neon-purple); }
   .tab-btn.quests   { background: #1a2a2a; color: #a0e0cc; border: 1px solid #4a8877; }
   .tab-btn.backs    { background: #2a2a2a; color: #ccc; border: 1px solid #666; }
+  .tab-btn.printtab { background: #001a2a; color: #00e5ff; border: 1px solid #00aabb; }
   .tab-btn.defis    { background: #2a1a10; color: #ff9966; border: 1px solid #c66a3c; }
   .tab-btn.rules    { background: #1a1a2a; color: #aabbff; border: 1px solid #445599; }
   .tab-btn.all      { background: #1a2340; color: white; border: 1px solid #445577; }
@@ -1951,6 +1952,131 @@
     }
     body::before, body::after { display: none !important; }
   }
+
+  /* ──────────────────────────────────────────────
+     ONGLET IMPRESSION RECTO/VERSO
+     ────────────────────────────────────────────── */
+  #tab-print .print-info {
+    max-width: 700px;
+    margin: 0 auto 28px;
+    padding: 18px 22px;
+    background: #0e1a2a;
+    border: 1px solid #00aabb55;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #cce8ff;
+  }
+  #tab-print .print-info p { margin-bottom: 8px; }
+  #tab-print .print-info ol { margin: 8px 0 12px 22px; }
+  #tab-print .print-info li { margin-bottom: 4px; }
+  #tab-print .print-info-tip {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #00aabb44;
+    color: #88ccff;
+    font-size: 12px;
+  }
+
+  .print-pages-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 10px 0 40px;
+  }
+  .print-page {
+    background: #f4f6fa;
+    width: 210mm;
+    height: 297mm;
+    padding: 12mm;
+    box-sizing: border-box;
+    box-shadow: 0 8px 32px #00000099, 0 0 0 1px #00000044;
+    color: #0a0e1a;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    max-width: 100%;
+  }
+  .print-page-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 6mm;
+    color: #556;
+  }
+  .print-page.recto .print-page-label { color: #1a6b3a; }
+  .print-page.verso .print-page-label { color: #b85500; }
+  .print-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 62mm);
+    grid-template-rows: repeat(3, 87mm);
+    justify-content: center;
+    align-content: start;
+    gap: 0;
+    flex: 1;
+  }
+  /* Cartes redimensionnées dans le contexte d'impression */
+  .print-page .card,
+  .print-page .card-back {
+    width: 62mm !important;
+    height: 87mm !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    animation: none !important;
+  }
+  .print-page .card { padding: 8px 6px 6px !important; }
+  .print-page .card .char-area { width: 70px; height: 70px; }
+  .print-page .card-title { font-size: 9px !important; margin-bottom: 2px !important; }
+  .print-page .missions { padding: 4px 6px !important; font-size: 6px !important; }
+  .print-page .mission-num { min-width: 18px; height: 18px; font-size: 7px !important; }
+  .print-page .missions-label { font-size: 5px !important; margin-bottom: 3px !important; }
+  /* Pas d'animation sur les cartes en mode print-page (override des animations globales) */
+  .print-page .card:hover { transform: none !important; }
+  .print-page .card { transition: none !important; }
+
+  /* Impression réelle : chaque .print-page = une page A4 */
+  @media print {
+    #tab-print.print-active { padding: 0 !important; }
+    #tab-print.print-active > .section-title,
+    #tab-print.print-active > .print-info,
+    #tab-print.print-active .print-page-label {
+      display: none !important;
+    }
+    #tab-print.print-active .print-pages-container {
+      display: block !important;
+      gap: 0 !important;
+      padding: 0 !important;
+    }
+    #tab-print.print-active .print-page {
+      background: white !important;
+      box-shadow: none !important;
+      width: 210mm !important;
+      height: 297mm !important;
+      padding: 8mm !important;
+      margin: 0 !important;
+      page-break-after: always !important;
+      break-after: page !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    #tab-print.print-active .print-page:last-child {
+      page-break-after: auto !important;
+      break-after: auto !important;
+    }
+    #tab-print.print-active .print-grid {
+      grid-template-columns: repeat(3, 62mm) !important;
+      grid-template-rows: repeat(3, 87mm) !important;
+    }
+    #tab-print.print-active .card,
+    #tab-print.print-active .card-back {
+      width: 62mm !important;
+      height: 87mm !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1969,6 +2095,7 @@
   <button class="tab-btn sabotage"       onclick="showTab('sabotage')">SABOTAGE</button>
   <button class="tab-btn quests"         onclick="showTab('quests')">FICHE QUESTS</button>
   <button class="tab-btn backs"          onclick="showTab('backs')">DOS DE CARTES</button>
+  <button class="tab-btn printtab"       onclick="showTab('print')">🖨 IMPRESSION</button>
   <button class="tab-btn defis"          onclick="showTab('defis')">DÉFIS &amp; TÂCHES</button>
   <button class="tab-btn rules"          onclick="showTab('rules')">RÈGLES</button>
 </div>
@@ -2159,10 +2286,27 @@
 <div class="section" id="tab-backs">
   <div class="section-title" style="color:#ff6b00">DOS DE CARTES — 17 COPIES</div>
   <div style="text-align:center; color:#8899bb; font-size:12px; margin-bottom:20px; max-width:600px; margin-left:auto; margin-right:auto">
-    Imprime cette page sur le <strong>verso</strong> de la feuille contenant les cartes de rôles.
-    17 dos identiques pour les 17 cartes du jeu.
+    Aperçu seul des 17 dos identiques. Pour imprimer recto/verso aligné, utilise plutôt l'onglet <strong>🖨 IMPRESSION</strong>.
   </div>
   <div class="cards-grid" id="backs-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     IMPRESSION RECTO/VERSO (duplex)
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-print">
+  <div class="section-title" style="color:#00e5ff">🖨 IMPRESSION RECTO/VERSO</div>
+  <div class="print-info">
+    <p><strong>Comment imprimer les cartes correctement :</strong></p>
+    <ol>
+      <li>Clique sur <strong>🖨 IMPRIMER LA VUE ACTUELLE</strong> en bas de page.</li>
+      <li>Dans la fenêtre d'impression, active l'option <strong>« Recto-verso »</strong> (ou « Duplex », « Two-sided »).</li>
+      <li>Choisis le retournement <strong>« sur le bord long »</strong> (long edge) — c'est le défaut sur la plupart des imprimantes.</li>
+      <li>Imprime. Les pages sortent dans l'ordre : Recto 1 → Verso 1 → Recto 2 → Verso 2.</li>
+    </ol>
+    <p class="print-info-tip">💡 Les <strong>17 cartes</strong> tiennent sur <strong>2 feuilles A4</strong> (9 cartes par page, 8 sur la dernière). Découpe ensuite chaque carte aux ciseaux.</p>
+  </div>
+  <div class="print-pages-container" id="print-pages-container"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -2711,70 +2855,85 @@ function populateGrids() {
   document.getElementById('sheriff-grid').innerHTML= sherCards.join('');
   document.getElementById('eng-grid').innerHTML    = engCards.join('');
 
-  // Dos de cartes : 17 copies identiques
-  const backCard = `<div class="card-back">
-    <!-- Équerres proches du texte "AMONG US" (haut) -->
-    <div class="back-inner-corner back-tl"></div>
-    <div class="back-inner-corner back-tr"></div>
-    <div class="card-back-logo card-back-logo-top">AMONG US</div>
-    <svg class="card-back-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <!-- Halo de fond (cercles concentriques au lieu de gradient) -->
-      <circle cx="50" cy="50" r="46" fill="#ff6b00" opacity="0.08"/>
-      <circle cx="50" cy="50" r="38" fill="#ff6b00" opacity="0.12"/>
-      <circle cx="50" cy="50" r="30" fill="#ff6b00" opacity="0.18"/>
-      <!-- Rayons lumineux -->
-      <g stroke="#ff6b00" stroke-width="2" opacity="0.5" stroke-linecap="round">
-        <line x1="50" y1="6"  x2="50" y2="14"/>
-        <line x1="50" y1="86" x2="50" y2="94"/>
-        <line x1="6"  y1="50" x2="14" y2="50"/>
-        <line x1="86" y1="50" x2="94" y2="50"/>
-        <line x1="18" y1="18" x2="24" y2="24"/>
-        <line x1="76" y1="76" x2="82" y2="82"/>
-        <line x1="82" y1="18" x2="76" y2="24"/>
-        <line x1="24" y1="76" x2="18" y2="82"/>
-      </g>
-      <!-- Crewmate silhouette -->
-      <g transform="translate(50, 54)">
-        <!-- Corps -->
-        <path d="M -18 -14
-                 Q -18 -26 0 -26
-                 Q 18 -26 18 -14
-                 L 18 18
-                 Q 18 24 12 24
-                 L 10 24
-                 L 10 30
-                 L 3 30
-                 L 3 24
-                 L -3 24
-                 L -3 30
-                 L -10 30
-                 L -10 24
-                 L -12 24
-                 Q -18 24 -18 18 Z"
-              fill="#1a0800" stroke="#ff6b00" stroke-width="2"/>
-        <!-- Sac à dos -->
-        <path d="M 16 -4
-                 Q 25 -4 25 4
-                 L 25 14
-                 Q 25 19 18 19
-                 L 16 19 Z"
-              fill="#1a0800" stroke="#ff6b00" stroke-width="2"/>
-        <!-- Visière -->
-        <rect x="-13" y="-21" width="26" height="13" rx="5" fill="#ff6b00"/>
-        <rect x="-10" y="-19" width="10" height="7" rx="2" fill="#ffcc88" opacity="0.6"/>
-        <!-- Bras/main avec doigt "chut" -->
-        <rect x="-3" y="-8" width="6" height="5" rx="2" fill="#ff6b00"/>
-        <rect x="-1.5" y="-20" width="3" height="12" rx="1.5" fill="#ff6b00"/>
-      </g>
-    </svg>
-    <div class="card-back-logo card-back-logo-bottom">SHHHH...</div>
-    <!-- Équerres proches du texte "SHHHH..." (bas) -->
-    <div class="back-inner-corner back-bl"></div>
-    <div class="back-inner-corner back-br"></div>
-  </div>`;
-
-  const backsHTML = Array(17).fill(backCard).join('');
+  // Dos de cartes : 17 copies identiques (utilise BACK_CARD_HTML défini plus bas)
+  const backsHTML = Array(17).fill(BACK_CARD_HTML).join('');
   document.getElementById('backs-grid').innerHTML = backsHTML;
+}
+
+const BACK_CARD_HTML = `<div class="card-back">
+  <div class="back-inner-corner back-tl"></div>
+  <div class="back-inner-corner back-tr"></div>
+  <div class="card-back-logo card-back-logo-top">AMONG US</div>
+  <svg class="card-back-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="46" fill="#ff6b00" opacity="0.08"/>
+    <circle cx="50" cy="50" r="38" fill="#ff6b00" opacity="0.12"/>
+    <circle cx="50" cy="50" r="30" fill="#ff6b00" opacity="0.18"/>
+    <g stroke="#ff6b00" stroke-width="2" opacity="0.5" stroke-linecap="round">
+      <line x1="50" y1="6"  x2="50" y2="14"/>
+      <line x1="50" y1="86" x2="50" y2="94"/>
+      <line x1="6"  y1="50" x2="14" y2="50"/>
+      <line x1="86" y1="50" x2="94" y2="50"/>
+      <line x1="18" y1="18" x2="24" y2="24"/>
+      <line x1="76" y1="76" x2="82" y2="82"/>
+      <line x1="82" y1="18" x2="76" y2="24"/>
+      <line x1="24" y1="76" x2="18" y2="82"/>
+    </g>
+    <g transform="translate(50, 54)">
+      <path d="M -18 -14 Q -18 -26 0 -26 Q 18 -26 18 -14 L 18 18 Q 18 24 12 24 L 10 24 L 10 30 L 3 30 L 3 24 L -3 24 L -3 30 L -10 30 L -10 24 L -12 24 Q -18 24 -18 18 Z" fill="#1a0800" stroke="#ff6b00" stroke-width="2"/>
+      <path d="M 16 -4 Q 25 -4 25 4 L 25 14 Q 25 19 18 19 L 16 19 Z" fill="#1a0800" stroke="#ff6b00" stroke-width="2"/>
+      <rect x="-13" y="-21" width="26" height="13" rx="5" fill="#ff6b00"/>
+      <rect x="-10" y="-19" width="10" height="7" rx="2" fill="#ffcc88" opacity="0.6"/>
+      <rect x="-3" y="-8" width="6" height="5" rx="2" fill="#ff6b00"/>
+      <rect x="-1.5" y="-20" width="3" height="12" rx="1.5" fill="#ff6b00"/>
+    </g>
+  </svg>
+  <div class="card-back-logo card-back-logo-bottom">SHHHH...</div>
+  <div class="back-inner-corner back-bl"></div>
+  <div class="back-inner-corner back-br"></div>
+</div>`;
+
+// ═══════════════════════════════════════════════════
+// IMPRESSION RECTO/VERSO — pages alternées pour duplex
+// ═══════════════════════════════════════════════════
+function buildPrintPages() {
+  const container = document.getElementById('print-pages-container');
+  if (!container) return;
+
+  // Collecte des 17 cartes (recto) dans l'ordre Crewmates → Imposteurs → Sheriff → Ingénieur
+  const allCards = [];
+  crewmatesData.forEach(c => allCards.push(buildCard('crewmate', c.color, c.missions)));
+  impostorsData.forEach(c => allCards.push(buildCard('impostor', c.color, c.missions)));
+  allCards.push(buildCard('sheriff',  sheriffData.color,  sheriffData.missions,  '🔫 1 BALLE'));
+  allCards.push(buildCard('engineer', engineerData.color, engineerData.missions, '🔧 RÉPARATION'));
+
+  const PER_PAGE = 9;
+  let html = '';
+  let pageNum = 1;
+
+  for (let i = 0; i < allCards.length; i += PER_PAGE) {
+    const chunk = allCards.slice(i, i + PER_PAGE);
+    const backsForChunk = Array(chunk.length).fill(BACK_CARD_HTML).join('');
+
+    // Recto
+    html += `
+      <div class="print-page recto">
+        <div class="print-page-label">RECTO — PAGE ${pageNum} (${chunk.length} cartes)</div>
+        <div class="print-grid">${chunk.join('')}</div>
+      </div>
+    `;
+    pageNum++;
+
+    // Verso (même nombre de dos identiques, alignés sur les rectos)
+    html += `
+      <div class="print-page verso">
+        <div class="print-page-label">VERSO — PAGE ${pageNum} (${chunk.length} dos)</div>
+        <div class="print-grid">${backsForChunk}</div>
+      </div>
+    `;
+    pageNum++;
+  }
+
+  container.innerHTML = html;
 }
 
 // ═══════════════════════════════════════════════════
@@ -2994,6 +3153,7 @@ function buildDefis() {
 populateGrids();
 buildQuestSheet();
 buildDefis();
+buildPrintPages();
 </script>
 <script>
   if ('serviceWorker' in navigator) {
