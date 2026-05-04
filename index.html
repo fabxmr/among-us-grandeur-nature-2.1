@@ -49,12 +49,25 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html { scroll-behavior: smooth; }
+
   body {
     background: var(--space-dark);
     font-family: 'Nunito', sans-serif;
     color: white;
     min-height: 100vh;
+    line-height: 1.65;
   }
+
+  /* Focus ring moderne pour navigation clavier */
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--neon-cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  button:focus:not(:focus-visible) { outline: none; }
 
   /* ── HEADER ── */
   .header {
@@ -119,8 +132,80 @@
   .tab-btn.all      { background: #1a2340; color: white; border: 1px solid #445577; }
   .tab-btn:hover, .tab-btn.active { filter: brightness(1.4); transform: translateY(-2px); box-shadow: 0 4px 20px #00000088; }
 
+  /* Titre sidebar (visible desktop uniquement) */
+  .sidebar-title { display: none; }
+
+  /* ── SIDEBAR DESKTOP (≥1024px) ── */
+  @media (min-width: 1024px) {
+    body { padding-left: 240px; }
+
+    .header { display: none; }
+
+    .tabs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 4px;
+      padding: 26px 14px 26px;
+      background: rgba(10, 14, 26, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: none;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    /* Scrollbar discrète sur la sidebar */
+    .tabs::-webkit-scrollbar { width: 6px; }
+    .tabs::-webkit-scrollbar-track { background: transparent; }
+    .tabs::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+    .tabs::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+    .sidebar-title {
+      display: block;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: var(--neon-red);
+      text-align: center;
+      text-shadow: 0 0 16px #ff224488, 0 0 32px #ff224433;
+      letter-spacing: 3px;
+      padding: 6px 0 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .tab-btn {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 9.5px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+      line-height: 1.3;
+    }
+    .tab-btn:hover, .tab-btn.active {
+      filter: brightness(1.35);
+      transform: translateX(2px);
+      box-shadow: 0 2px 14px rgba(0,0,0,0.45), inset 3px 0 0 currentColor;
+    }
+
+    /* Plus d'air sur desktop */
+    .section { padding: 48px 36px; }
+    .section-title { font-size: 15px; margin-bottom: 40px; padding-bottom: 18px; }
+    .section-title::after { width: 64px; height: 2px; }
+
+    /* En sidebar, l'underline horizontal du tab-btn actif n'a plus de sens */
+    .tab-btn.active::after { display: none; }
+  }
+
   /* ── GRID ── */
-  .section { display: none; padding: 30px 20px; }
+  .section { display: none; padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
   .section.active { display: block; }
   .cards-grid {
     display: flex; flex-wrap: wrap; gap: 20px;
@@ -287,9 +372,24 @@
   .section-title {
     font-family: 'Press Start 2P', monospace;
     font-size: 13px;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     text-align: center;
     letter-spacing: 2px;
+    position: relative;
+    padding-bottom: 16px;
+  }
+  .section-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 2px;
+    background: currentColor;
+    box-shadow: 0 0 14px currentColor, 0 0 24px currentColor;
+    opacity: 0.55;
+    border-radius: 2px;
   }
 
   /* ── SABOTAGE SECTION ── */
@@ -538,8 +638,11 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
-    padding: 20px;
-    border-top: 1px solid #1e2a44;
+    padding: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(10, 14, 26, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   .print-btn {
     font-family: 'Press Start 2P', monospace;
@@ -2234,6 +2337,7 @@
 </div>
 
 <div class="tabs">
+  <div class="sidebar-title">AMONG US</div>
   <button class="tab-btn all active"     onclick="showTab('all')">TOUTES</button>
   <button class="tab-btn crewmate"       onclick="showTab('crewmate')">CREWMATES</button>
   <button class="tab-btn impostor"       onclick="showTab('impostor')">IMPOSTORS</button>
