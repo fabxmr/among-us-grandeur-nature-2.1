@@ -114,7 +114,6 @@
   .tab-btn.backs    { background: #2a2a2a; color: #ccc; border: 1px solid #666; }
   .tab-btn.printtab { background: #001a2a; color: #00e5ff; border: 1px solid #00aabb; }
   .tab-btn.timer    { background: #002a2a; color: #00ffcc; border: 1px solid #00aa88; }
-  .tab-btn.distrib  { background: #2a0a2a; color: #ff66ff; border: 1px solid #aa44aa; }
   .tab-btn.defis    { background: #2a1a10; color: #ff9966; border: 1px solid #c66a3c; }
   .tab-btn.rules    { background: #1a1a2a; color: #aabbff; border: 1px solid #445599; }
   .tab-btn.all      { background: #1a2340; color: white; border: 1px solid #445577; }
@@ -535,7 +534,10 @@
 
   /* ── PRINT BTN ── */
   .print-bar {
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
     padding: 20px;
     border-top: 1px solid #1e2a44;
   }
@@ -552,6 +554,8 @@
     letter-spacing: 2px;
   }
   .print-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px #00e5ff33; }
+  .print-btn.pdf-btn { border-color: #ff66ff88; color: #ff66ff; }
+  .print-btn.pdf-btn:hover { border-color: #ff66ff; color: #ff66ff; box-shadow: 0 0 20px #ff66ff33; }
 
   /* ═══════════════════════════════════════════════════
      DOS DE CARTE
@@ -2150,113 +2154,7 @@
   .timer-info p { margin: 4px 0; }
 
   /* ──────────────────────────────────────────────
-     🎲 DISTRIBUTION
-     ────────────────────────────────────────────── */
-  #tab-distrib { padding: 30px 20px 80px; max-width: 760px; margin: 0 auto; }
-  .dist-section {
-    background: #0e1525;
-    border: 1px solid #aa44aa55;
-    border-radius: 10px;
-    padding: 24px;
-    margin-bottom: 20px;
-    color: #cce8ff;
-  }
-  .dist-section h3 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 12px;
-    margin-bottom: 14px;
-    color: #ff66ff;
-    letter-spacing: 1px;
-  }
-  .dist-hint { font-size: 13px; color: #88aaff; margin-bottom: 14px; line-height: 1.5; }
-  #dist-names {
-    width: 100%;
-    height: 220px;
-    background: #0a0e1a;
-    color: white;
-    border: 1px solid #335;
-    border-radius: 6px;
-    padding: 14px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-    resize: vertical;
-    box-sizing: border-box;
-  }
-  #dist-names:focus { outline: none; border-color: #ff66ff; box-shadow: 0 0 0 2px #ff66ff33; }
-  .dist-btn {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    padding: 14px 24px;
-    border: 1.5px solid currentColor;
-    border-radius: 4px;
-    cursor: pointer;
-    background: transparent;
-    letter-spacing: 1px;
-    transition: all .2s;
-    margin-top: 14px;
-  }
-  .dist-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px #00000066; }
-  .dist-btn.primary { color: #ff66ff; background: #ff66ff22; }
-  .dist-btn.primary:hover { background: #ff66ff44; }
-  .dist-btn.danger  { color: #ff7788; background: #ff224422; border-color: #ff7788; }
-  .dist-btn.success { color: #39ff14; background: #39ff1422; border-color: #39ff14; font-size: 13px; padding: 16px 28px; }
-
-  .dist-names-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
-    margin-top: 18px;
-  }
-  .dist-name-btn {
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    padding: 16px 14px;
-    background: #1a2340;
-    color: white;
-    border: 2px solid #4a6088;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all .2s;
-    text-align: left;
-  }
-  .dist-name-btn:hover:not(:disabled) {
-    background: #2a3a60;
-    border-color: #ff66ff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px #00000066;
-  }
-  .dist-name-btn.viewed {
-    background: #0a1015;
-    color: #4a5566;
-    border-color: #2a3344;
-    text-decoration: line-through;
-    cursor: default;
-  }
-  .dist-name-btn:disabled { opacity: 0.55; }
-  .dist-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
-
-  .dist-reveal { text-align: center; padding: 20px; }
-  .dist-reveal-name {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 16px;
-    color: #ff66ff;
-    margin-bottom: 22px;
-    text-shadow: 0 0 18px #ff66ff66;
-    letter-spacing: 2px;
-  }
-  .dist-reveal-card { display: flex; justify-content: center; margin-bottom: 26px; }
-  .dist-reveal-card .card {
-    width: 240px !important;
-    height: 360px !important;
-    cursor: default !important;
-    animation: none !important;
-  }
-  .dist-reveal-card .card:hover { transform: none !important; }
-
-  /* ──────────────────────────────────────────────
-     🖥 OVERLAY PLEIN ÉCRAN (cartes + révélation rôles)
+     🖥 OVERLAY PLEIN ÉCRAN (cartes)
      ────────────────────────────────────────────── */
   .fullscreen-overlay {
     position: fixed; inset: 0;
@@ -2324,7 +2222,7 @@
   .section.active .card { cursor: pointer; }
 
   @media print {
-    .fullscreen-overlay, #tab-timer, #tab-distrib { display: none !important; }
+    .fullscreen-overlay, #tab-timer { display: none !important; }
   }
 </style>
 </head>
@@ -2348,7 +2246,6 @@
   <button class="tab-btn defis"          onclick="showTab('defis')">DÉFIS &amp; TÂCHES</button>
   <button class="tab-btn rules"          onclick="showTab('rules')">RÈGLES</button>
   <button class="tab-btn timer"          onclick="showTab('timer')">⏱ TIMER</button>
-  <button class="tab-btn distrib"        onclick="showTab('distrib')">🎲 DISTRIBUER</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -2798,31 +2695,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════
-     🎲 DISTRIBUTION DES RÔLES
-════════════════════════════════════════════════════ -->
-<div class="section" id="tab-distrib">
-  <div class="section-title" style="color:#c400ff">🎲 DISTRIBUTION DES RÔLES</div>
-
-  <div id="dist-setup" class="dist-section">
-    <h3>1. ENTRER LES 16 PRÉNOMS</h3>
-    <p class="dist-hint">Un prénom par ligne. À la fin, clique sur "Distribuer" → chaque carte sera assignée aléatoirement à un prénom.</p>
-    <textarea id="dist-names" placeholder="Alex&#10;Marie&#10;Tom&#10;...&#10;(16 lignes)"></textarea>
-    <button class="dist-btn primary" onclick="startDistribution()">🎲 DISTRIBUER LES RÔLES</button>
-  </div>
-
-  <div id="dist-play" class="dist-section" style="display:none">
-    <h3>2. CHAQUE JOUEUR TAPE SON NOM</h3>
-    <p class="dist-hint">Passe le téléphone au joueur. Il tape son prénom, voit son rôle, ferme. Personne ne peut revoir un rôle déjà consulté.</p>
-    <div id="dist-names-list" class="dist-names-grid"></div>
-    <div class="dist-actions">
-      <button class="dist-btn danger" onclick="resetDistribution()">↻ Recommencer</button>
-      <button id="dist-launch" class="dist-btn success" style="display:none" onclick="goToTimer()">⏱ LANCER LE TIMER</button>
-    </div>
-  </div>
-</div>
-
-<!-- Overlay plein écran pour cartes & révélation rôles -->
+<!-- Overlay plein écran pour cartes -->
 <div id="fullscreen-overlay" class="fullscreen-overlay" style="display:none">
   <button class="fullscreen-close" onclick="closeFullscreen()" aria-label="Fermer">✕</button>
   <div class="fullscreen-content"></div>
@@ -2830,6 +2703,7 @@
 
 <div class="print-bar">
   <button class="print-btn" onclick="printCurrent()">🖨 IMPRIMER LA VUE ACTUELLE</button>
+  <button class="print-btn pdf-btn" onclick="exportRoleCardsPDF()">📄 EXPORTER CARTES EN PDF</button>
 </div>
 
 <script>
@@ -3427,6 +3301,11 @@ function printCurrent() {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('print-active'));
 }
 
+function exportRoleCardsPDF() {
+  showTab('all');
+  setTimeout(() => printCurrent(), 200);
+}
+
 // ═══════════════════════════════════════════════════
 // DÉFIS & TÂCHES
 // ═══════════════════════════════════════════════════
@@ -3658,104 +3537,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ═══════════════════════════════════════════════════
-// 🎲 DISTRIBUTEUR DE RÔLES
-// ═══════════════════════════════════════════════════
-const DIST_KEY = 'among-us:distribution:v1';
-
-function getAllRoleCards() {
-  const cards = [];
-  crewmatesData.forEach(c => cards.push({ role: 'crewmate', color: c.color, missions: c.missions }));
-  impostorsData.forEach(c => cards.push({ role: 'impostor', color: c.color, missions: c.missions }));
-  cards.push({ role: 'sheriff',  color: sheriffData.color,  missions: sheriffData.missions });
-  cards.push({ role: 'engineer', color: engineerData.color, missions: engineerData.missions });
-  return cards;
-}
-function shuffleArray(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-function loadDistribution() {
-  try { return JSON.parse(localStorage.getItem(DIST_KEY) || 'null'); }
-  catch { return null; }
-}
-function saveDistribution(state) { localStorage.setItem(DIST_KEY, JSON.stringify(state)); }
-function clearDistributionState() { localStorage.removeItem(DIST_KEY); }
-
-function startDistribution() {
-  const namesText = document.getElementById('dist-names').value;
-  const names = namesText.split('\n').map(n => n.trim()).filter(Boolean);
-  const expected = getAllRoleCards().length; // 16
-  if (names.length !== expected) {
-    alert(`Il faut exactement ${expected} prénoms (tu en as ${names.length}).`);
-    return;
-  }
-  const cards = shuffleArray(getAllRoleCards());
-  const assignments = names.map((name, i) => ({ name, cardIdx: i, viewed: false }));
-  saveDistribution({ names, cards, assignments });
-  renderDistribution();
-}
-function renderDistribution() {
-  const state = loadDistribution();
-  const setupEl = document.getElementById('dist-setup');
-  const playEl  = document.getElementById('dist-play');
-  if (!setupEl || !playEl) return;
-  if (!state) {
-    setupEl.style.display = '';
-    playEl.style.display  = 'none';
-    return;
-  }
-  setupEl.style.display = 'none';
-  playEl.style.display  = '';
-  const list = document.getElementById('dist-names-list');
-  list.innerHTML = state.assignments.map((a, i) => `
-    <button class="dist-name-btn ${a.viewed ? 'viewed' : ''}" data-idx="${i}" ${a.viewed ? 'disabled' : ''}>
-      ${a.viewed ? '✓ ' : '👁 '}${a.name}
-    </button>
-  `).join('');
-  list.querySelectorAll('.dist-name-btn:not([disabled])').forEach(btn => {
-    btn.addEventListener('click', () => revealRole(parseInt(btn.dataset.idx)));
-  });
-  const allViewed = state.assignments.every(a => a.viewed);
-  document.getElementById('dist-launch').style.display = allViewed ? '' : 'none';
-}
-function revealRole(idx) {
-  const state = loadDistribution();
-  if (!state) return;
-  const assignment = state.assignments[idx];
-  const card = state.cards[assignment.cardIdx];
-  const cardHTML = buildCard(card.role, card.color, card.missions);
-  showFullscreen(`
-    <div class="dist-reveal">
-      <div class="dist-reveal-name">${assignment.name}</div>
-      <div class="dist-reveal-card">${cardHTML}</div>
-      <button class="dist-btn primary" id="dist-confirm-btn">J'AI VU MON RÔLE — FERMER</button>
-    </div>
-  `);
-  document.getElementById('dist-confirm-btn').addEventListener('click', () => {
-    const s = loadDistribution();
-    if (s) { s.assignments[idx].viewed = true; saveDistribution(s); }
-    closeFullscreen();
-    renderDistribution();
-  });
-}
-function resetDistribution() {
-  if (confirm('Effacer la distribution actuelle ?')) {
-    clearDistributionState();
-    document.getElementById('dist-names').value = '';
-    renderDistribution();
-  }
-}
-function goToTimer() {
-  const btn = document.querySelector('.tab-btn.timer');
-  if (btn) btn.click();
-}
-
-// ═══════════════════════════════════════════════════
-// 🖥 OVERLAY PLEIN ÉCRAN (cartes + révélation rôle)
+// 🖥 OVERLAY PLEIN ÉCRAN (cartes)
 // ═══════════════════════════════════════════════════
 function showFullscreen(content) {
   const overlay = document.getElementById('fullscreen-overlay');
@@ -3781,7 +3563,6 @@ function initCardClicks() {
     const card = e.target.closest('.card');
     if (!card) return;
     if (card.closest('.print-page')) return;     // pas en mode impression
-    if (card.closest('.dist-reveal')) return;    // pas dans la révélation
     if (card.closest('.fullscreen-content')) return; // pas dans l'overlay
     if (card.classList.contains('card-back')) return;
     showFullscreen(`<div class="fullscreen-card-wrap">${card.outerHTML}</div>`);
@@ -3817,7 +3598,6 @@ buildDefis();
 buildPrintPages();
 initTrackers();
 loadTimerState();
-renderDistribution();
 initCardClicks();
 </script>
 <script>
