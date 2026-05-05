@@ -29,454 +29,564 @@
 <!-- Google Fonts en preconnect (chargement plus rapide qu'avec @import) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Press+Start+2P&display=swap">
 
 <style>
+  /* ═══════════════════════════════════════════════════
+     MODERN NEON — refonte visuelle 2026
+     (contenu inchangé, pure réécriture esthétique)
+  ═══════════════════════════════════════════════════ */
 
   :root {
-    --space-dark: #0a0e1a;
-    --space-blue: #1a2340;
-    --neon-red: #ff2244;
-    --neon-cyan: #00e5ff;
-    --neon-green: #39ff14;
-    --neon-yellow: #ffe600;
-    --neon-orange: #ff8c00;
-    --neon-purple: #c400ff;
-    --neon-pink: #ff00aa;
-    --card-w: 210px;
-    --card-h: 320px;
+    /* Backgrounds — bleu nuit profond, plus subtil */
+    --bg-0: #06070d;
+    --bg-1: #0b0d18;
+    --bg-2: #11142a;
+    --surface: rgba(18, 22, 42, 0.55);
+    --surface-2: rgba(24, 28, 52, 0.7);
+    --line: rgba(140, 160, 220, 0.10);
+    --line-2: rgba(140, 160, 220, 0.18);
+    --text: #e8ecff;
+    --text-dim: #8a93b8;
+    --text-mute: #5a6388;
+
+    /* Néons — saturés mais raffinés */
+    --neon-red: #ff3860;
+    --neon-cyan: #29e7ff;
+    --neon-green: #4cff9d;
+    --neon-yellow: #ffe055;
+    --neon-orange: #ff9b3b;
+    --neon-purple: #b86bff;
+    --neon-pink: #ff5cc4;
+    --neon-blue: #6ba6ff;
+
+    /* Glow helpers */
+    --glow-red: 0 0 24px rgba(255, 56, 96, .45), 0 0 60px rgba(255, 56, 96, .15);
+    --glow-cyan: 0 0 24px rgba(41, 231, 255, .45), 0 0 60px rgba(41, 231, 255, .15);
+    --glow-green: 0 0 24px rgba(76, 255, 157, .45), 0 0 60px rgba(76, 255, 157, .15);
+    --glow-yellow: 0 0 24px rgba(255, 224, 85, .45), 0 0 60px rgba(255, 224, 85, .15);
+    --glow-purple: 0 0 24px rgba(184, 107, 255, .45), 0 0 60px rgba(184, 107, 255, .15);
+
+    --card-w: 230px;
+    --card-h: 340px;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 22px;
+
+    /* Compat anciennes variables */
+    --space-dark: var(--bg-0);
+    --space-blue: var(--bg-2);
+    --neon-pink: #ff5cc4;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--space-dark);
-    font-family: 'Nunito', sans-serif;
-    color: white;
+    background: var(--bg-0);
+    background-image:
+      radial-gradient(ellipse 90% 60% at 80% -10%, rgba(184, 107, 255, 0.18), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 10% 110%, rgba(41, 231, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255, 56, 96, 0.06), transparent 70%),
+      linear-gradient(180deg, #06070d 0%, #08091a 50%, #06070d 100%);
+    background-attachment: fixed;
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    color: var(--text);
     min-height: 100vh;
-    line-height: 1.65;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.01em;
   }
 
-  /* Focus ring moderne pour navigation clavier */
+  /* Grille subtile en fond */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(140,160,220,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(140,160,220,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Étoiles fines en fond */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, #fff 0, transparent 100%),
+      radial-gradient(1px 1px at 33% 47%, #aab 0, transparent 100%),
+      radial-gradient(1px 1px at 64% 13%, #fff 0, transparent 100%),
+      radial-gradient(1px 1px at 82% 71%, #ccd 0, transparent 100%),
+      radial-gradient(1px 1px at 91% 28%, #fff 0, transparent 100%),
+      radial-gradient(1px 1px at 49% 82%, #aab 0, transparent 100%);
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body > * { position: relative; z-index: 1; }
+
   button:focus-visible,
   [role="button"]:focus-visible,
   a:focus-visible {
     outline: 2px solid var(--neon-cyan);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 6px;
   }
   button:focus:not(:focus-visible) { outline: none; }
 
-  /* ── HEADER ── */
+  /* ── HEADER (mobile) ── */
   .header {
     text-align: center;
-    padding: 40px 20px 20px;
+    padding: 36px 20px 20px;
     position: relative;
   }
   .header h1 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(18px, 4vw, 36px);
-    color: var(--neon-red);
-    text-shadow: 0 0 20px #ff224488, 0 0 40px #ff224444;
-    letter-spacing: 4px;
-    margin-bottom: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 9vw, 72px);
+    white-space: nowrap;
+    color: var(--text);
+    letter-spacing: 8px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #fff, #ffd0d8 40%, #ff3860 60%, #ffb1c0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 18px rgba(255, 56, 96, 0.35));
   }
   .header p {
-    color: #8899bb;
-    font-size: 14px;
-    font-family: 'Press Start 2P', monospace;
-  }
-  .stars {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    overflow: hidden; pointer-events: none;
-    background-image:
-      radial-gradient(1px 1px at 10% 20%, #fff 0%, transparent 100%),
-      radial-gradient(1px 1px at 30% 50%, #aaa 0%, transparent 100%),
-      radial-gradient(1px 1px at 60% 15%, #fff 0%, transparent 100%),
-      radial-gradient(1px 1px at 80% 70%, #ccc 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 30%, #fff 0%, transparent 100%),
-      radial-gradient(1px 1px at 50% 80%, #aaa 0%, transparent 100%),
-      radial-gradient(1px 1px at 20% 90%, #fff 0%, transparent 100%);
-  }
-
-  /* ── TABS ── */
-  .tabs {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    justify-content: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #1e2a44;
-  }
-  .tab-btn {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all .2s;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', 'Press Start 2P', monospace;
+    letter-spacing: 2px;
     text-transform: uppercase;
   }
-  .tab-btn.crewmate { background: #1a3a2a; color: var(--neon-green); border: 1px solid var(--neon-green); }
-  .tab-btn.impostor { background: #3a1a1a; color: var(--neon-red); border: 1px solid var(--neon-red); }
-  .tab-btn.sheriff  { background: #2a2a10; color: var(--neon-yellow); border: 1px solid var(--neon-yellow); }
-  .tab-btn.engineer { background: #1a1a3a; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); }
-  .tab-btn.sabotage { background: #2a1a3a; color: var(--neon-purple); border: 1px solid var(--neon-purple); }
-  .tab-btn.quests   { background: #1a2a2a; color: #a0e0cc; border: 1px solid #4a8877; }
-  .tab-btn.backs    { background: #2a2a2a; color: #ccc; border: 1px solid #666; }
-  .tab-btn.printtab { background: #001a2a; color: #00e5ff; border: 1px solid #00aabb; }
-  .tab-btn.timer    { background: #002a2a; color: #00ffcc; border: 1px solid #00aa88; }
-  .tab-btn.defis    { background: #2a1a10; color: #ff9966; border: 1px solid #c66a3c; }
-  .tab-btn.rules    { background: #1a1a2a; color: #aabbff; border: 1px solid #445599; }
-  .tab-btn.all      { background: #1a2340; color: white; border: 1px solid #445577; }
-  .tab-btn:hover, .tab-btn.active { filter: brightness(1.4); transform: translateY(-2px); box-shadow: 0 4px 20px #00000088; }
+  .stars { display: none; }
 
-  /* Titre sidebar (visible desktop uniquement) */
+  /* ── TABS (mobile : ligne en haut) ── */
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    justify-content: center;
+    padding: 14px 16px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    padding: 9px 14px;
+    border: 1px solid;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(.2,.7,.3,1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(20, 24, 44, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .tab-btn.crewmate { color: var(--neon-green);  border-color: rgba(76, 255, 157, .35); }
+  .tab-btn.impostor { color: var(--neon-red);    border-color: rgba(255, 56, 96, .35); }
+  .tab-btn.sheriff  { color: var(--neon-yellow); border-color: rgba(255, 224, 85, .35); }
+  .tab-btn.engineer { color: var(--neon-cyan);   border-color: rgba(41, 231, 255, .35); }
+  .tab-btn.sabotage { color: var(--neon-purple); border-color: rgba(184, 107, 255, .35); }
+  .tab-btn.quests   { color: #6ee7c7;            border-color: rgba(110, 231, 199, .3); }
+  .tab-btn.backs    { color: #ffb37a;            border-color: rgba(255, 179, 122, .3); }
+  .tab-btn.printtab { color: var(--neon-cyan);   border-color: rgba(41, 231, 255, .35); }
+  .tab-btn.timer    { color: #5cf2d6;            border-color: rgba(92, 242, 214, .35); }
+  .tab-btn.defis    { color: var(--neon-orange); border-color: rgba(255, 155, 59, .35); }
+  .tab-btn.rules    { color: var(--neon-blue);   border-color: rgba(107, 166, 255, .35); }
+  .tab-btn.livret   { color: var(--neon-pink);   border-color: rgba(255, 90, 170, .35); }
+  .tab-btn.all      { color: #fff;               border-color: rgba(255, 255, 255, .25); }
+
+  .tab-btn:hover {
+    transform: translateY(-1px);
+    background: rgba(28, 34, 60, 0.75);
+    box-shadow: 0 0 0 1px currentColor inset, 0 6px 24px rgba(0,0,0,.4);
+  }
+  .tab-btn.active {
+    background: color-mix(in oklab, currentColor 14%, rgba(20,24,44,0.85));
+    box-shadow: 0 0 0 1px currentColor inset, 0 0 22px color-mix(in oklab, currentColor 35%, transparent);
+    color: #fff;
+  }
+
   .sidebar-title { display: none; }
 
-  /* ── SIDEBAR DESKTOP (≥1024px) ── */
+  /* ── SIDEBAR DESKTOP ── */
   @media (min-width: 1024px) {
-    body { padding-left: 240px; }
-
+    body { padding-left: 260px; }
     .header { display: none; }
 
     .tabs {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 240px;
+      top: 0; left: 0;
+      width: 260px;
       height: 100vh;
       flex-direction: column;
       flex-wrap: nowrap;
       align-items: stretch;
       justify-content: flex-start;
       gap: 4px;
-      padding: 26px 14px 26px;
-      background: rgba(10, 14, 26, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 26px 16px;
+      background: linear-gradient(180deg, rgba(11, 13, 24, 0.92), rgba(8, 10, 20, 0.96));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--line);
       border-bottom: none;
       overflow-y: auto;
       z-index: 100;
     }
-    /* Scrollbar discrète sur la sidebar */
     .tabs::-webkit-scrollbar { width: 6px; }
     .tabs::-webkit-scrollbar-track { background: transparent; }
-    .tabs::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
-    .tabs::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+    .tabs::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
 
     .sidebar-title {
       display: block;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 14px;
-      color: var(--neon-red);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 30px;
+      letter-spacing: 4px;
       text-align: center;
-      text-shadow: 0 0 16px #ff224488, 0 0 32px #ff224433;
-      letter-spacing: 3px;
-      padding: 6px 0 20px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 12px 0 26px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+      line-height: 1.1;
+      white-space: nowrap;
+      background: linear-gradient(90deg, #fff, #ff3860 60%, #ff8aa3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 10px rgba(255, 56, 96, 0.4));
     }
 
     .tab-btn {
       width: 100%;
       text-align: left;
-      padding: 12px 14px;
-      font-size: 9.5px;
-      border-radius: 6px;
-      letter-spacing: 1px;
+      padding: 11px 14px;
+      font-size: 11px;
+      border-radius: 10px;
+      letter-spacing: 1.2px;
       line-height: 1.3;
+      position: relative;
     }
-    .tab-btn:hover, .tab-btn.active {
-      filter: brightness(1.35);
-      transform: translateX(2px);
-      box-shadow: 0 2px 14px rgba(0,0,0,0.45), inset 3px 0 0 currentColor;
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      width: 3px; height: 0;
+      transform: translateY(-50%);
+      background: currentColor;
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 0 12px currentColor;
+      transition: height .25s;
     }
-
-    /* Plus d'air sur desktop */
-    .section { padding: 48px 36px; }
-    .section-title { font-size: 15px; margin-bottom: 40px; padding-bottom: 18px; }
-    .section-title::after { width: 64px; height: 2px; }
-
-    /* En sidebar, l'underline horizontal du tab-btn actif n'a plus de sens */
+    .tab-btn.active::before { height: 22px; }
+    .tab-btn:hover { transform: translateX(2px); }
     .tab-btn.active::after { display: none; }
+
+    .section { padding: 56px 44px; }
   }
 
-  /* ── GRID ── */
-  .section { display: none; padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 32px 20px; max-width: 1400px; margin: 0 auto; }
   .section.active { display: block; }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(22px, 3vw, 32px);
+    margin-bottom: 36px;
+    text-align: center;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 18px;
+  }
+  .section-title::before {
+    content: '';
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-mute);
+    margin-bottom: 8px;
+    opacity: .65;
+  }
+  .section-title::after {
+    content: '';
+    position: absolute;
+    left: 50%; bottom: 0;
+    transform: translateX(-50%);
+    width: 56px; height: 2px;
+    background: currentColor;
+    box-shadow: 0 0 16px currentColor;
+    opacity: .8;
+    border-radius: 2px;
+  }
+
   .cards-grid {
-    display: flex; flex-wrap: wrap; gap: 20px;
+    display: flex; flex-wrap: wrap; gap: 22px;
     justify-content: center;
   }
 
-  /* ── BASE CARD ── */
+  /* ═══════════ CARTES (recto) ═══════════ */
   .card {
     width: var(--card-w);
     height: var(--card-h);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     display: flex; flex-direction: column;
     align-items: center; justify-content: space-between;
     padding: 18px 14px 14px;
     position: relative;
     overflow: hidden;
-    transition: transform .25s, box-shadow .25s;
     cursor: pointer;
+    background: linear-gradient(160deg, rgba(40, 46, 78, 0.85), rgba(22, 26, 50, 0.92));
+    border: 1px solid var(--line-2);
+    box-shadow: 0 12px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+    transition: transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .35s, border-color .25s;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
-  .card:hover { transform: translateY(-6px) scale(1.03); }
 
-  /* ── CARD THEMES ── */
-  .card.crewmate {
-    background: linear-gradient(145deg, #0d2a1a, #0a1f2a);
-    border: 2px solid var(--neon-green);
-    box-shadow: 0 0 15px #39ff1433, 0 8px 32px #00000088;
+  /* Halo lumineux qui suit la couleur du rôle */
+  .card::after {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg, transparent, transparent);
+    pointer-events: none;
+    transition: background .3s;
   }
-  .card.crewmate:hover { box-shadow: 0 0 30px #39ff1466, 0 12px 40px #00000099; }
+  /* Anneau gradient via mask hack */
+  .card.crewmate { border-color: rgba(76, 255, 157, .35); box-shadow: 0 12px 40px rgba(0,0,0,.45), 0 0 28px rgba(76, 255, 157, .12), inset 0 1px 0 rgba(255,255,255,.04); }
+  .card.impostor { border-color: rgba(255, 56, 96, .35); box-shadow: 0 12px 40px rgba(0,0,0,.45), 0 0 28px rgba(255, 56, 96, .14), inset 0 1px 0 rgba(255,255,255,.04); }
+  .card.sheriff  { border-color: rgba(255, 224, 85, .35); box-shadow: 0 12px 40px rgba(0,0,0,.45), 0 0 28px rgba(255, 224, 85, .12), inset 0 1px 0 rgba(255,255,255,.04); }
+  .card.engineer { border-color: rgba(41, 231, 255, .35); box-shadow: 0 12px 40px rgba(0,0,0,.45), 0 0 28px rgba(41, 231, 255, .12), inset 0 1px 0 rgba(255,255,255,.04); }
 
-  .card.impostor {
-    background: linear-gradient(145deg, #2a0d0d, #1a0a0a);
-    border: 2px solid var(--neon-red);
-    box-shadow: 0 0 15px #ff224433, 0 8px 32px #00000088;
-  }
-  .card.impostor:hover { box-shadow: 0 0 30px #ff224466, 0 12px 40px #00000099; }
+  .card:hover { transform: translateY(-8px); }
+  .card.crewmate:hover { box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 40px rgba(76, 255, 157, .35); border-color: var(--neon-green); }
+  .card.impostor:hover { box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 40px rgba(255, 56, 96, .4); border-color: var(--neon-red); }
+  .card.sheriff:hover  { box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 40px rgba(255, 224, 85, .35); border-color: var(--neon-yellow); }
+  .card.engineer:hover { box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 40px rgba(41, 231, 255, .35); border-color: var(--neon-cyan); }
 
-  .card.sheriff {
-    background: linear-gradient(145deg, #2a2000, #1a1500);
-    border: 2px solid var(--neon-yellow);
-    box-shadow: 0 0 15px #ffe60033, 0 8px 32px #00000088;
+  /* Glow d'accent radial en bas */
+  .card::before {
+    content: '';
+    position: absolute; left: 50%; bottom: -40%;
+    width: 140%; height: 80%;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, currentColor, transparent 70%);
+    opacity: .12;
+    pointer-events: none;
+    filter: blur(8px);
   }
-  .card.sheriff:hover { box-shadow: 0 0 30px #ffe60066, 0 12px 40px #00000099; }
-
-  .card.engineer {
-    background: linear-gradient(145deg, #00152a, #000d1a);
-    border: 2px solid var(--neon-cyan);
-    box-shadow: 0 0 15px #00e5ff33, 0 8px 32px #00000088;
-  }
-  .card.engineer:hover { box-shadow: 0 0 30px #00e5ff66, 0 12px 40px #00000099; }
+  .card.crewmate::before { color: var(--neon-green); }
+  .card.impostor::before { color: var(--neon-red); }
+  .card.sheriff::before  { color: var(--neon-yellow); }
+  .card.engineer::before { color: var(--neon-cyan); }
 
   /* ── CARD INNER ── */
   .card-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    letter-spacing: 1px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 4px;
     text-align: center;
-    line-height: 1.6;
-    z-index: 1;
+    text-transform: uppercase;
+    line-height: 1.4;
+    z-index: 2;
     margin-bottom: 4px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.25);
+    border: 1px solid currentColor;
+    backdrop-filter: blur(4px);
   }
-  .crewmate .card-title { color: var(--neon-green); text-shadow: 0 0 8px #39ff1466; }
-  .impostor .card-title { color: var(--neon-red);   text-shadow: 0 0 8px #ff224466; }
-  .sheriff  .card-title { color: var(--neon-yellow); text-shadow: 0 0 8px #ffe60066; }
-  .engineer .card-title { color: var(--neon-cyan);  text-shadow: 0 0 8px #00e5ff66; }
+  .crewmate .card-title { color: var(--neon-green); border-color: rgba(76, 255, 157, .5); }
+  .impostor .card-title { color: var(--neon-red);   border-color: rgba(255, 56, 96, .5); }
+  .sheriff  .card-title { color: var(--neon-yellow); border-color: rgba(255, 224, 85, .5); }
+  .engineer .card-title { color: var(--neon-cyan);  border-color: rgba(41, 231, 255, .5); }
 
-  /* Among Us character SVG area */
   .char-area {
-    width: 140px; height: 140px;
+    width: 150px; height: 150px;
     display: flex; align-items: center; justify-content: center;
-    z-index: 1;
+    z-index: 2;
     flex-shrink: 0;
   }
-  .char-area svg {
-    width: 100%; height: 100%;
-    overflow: visible;
-  }
-
-  /* Glow effect autour du personnage selon le rôle */
-  .crewmate .char-area { filter: drop-shadow(0 0 8px #39ff1433) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
-  .impostor .char-area { filter: drop-shadow(0 0 8px #ff224455) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
-  .sheriff  .char-area { filter: drop-shadow(0 0 8px #ffe60044) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
-  .engineer .char-area { filter: drop-shadow(0 0 8px #00e5ff44) drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+  .char-area svg { width: 100%; height: 100%; overflow: visible; }
+  .crewmate .char-area { filter: drop-shadow(0 0 14px rgba(76,255,157,.35)) drop-shadow(0 6px 12px rgba(0,0,0,0.6)); }
+  .impostor .char-area { filter: drop-shadow(0 0 14px rgba(255,56,96,.5)) drop-shadow(0 6px 12px rgba(0,0,0,0.6)); }
+  .sheriff  .char-area { filter: drop-shadow(0 0 14px rgba(255,224,85,.45)) drop-shadow(0 6px 12px rgba(0,0,0,0.6)); }
+  .engineer .char-area { filter: drop-shadow(0 0 14px rgba(41,231,255,.45)) drop-shadow(0 6px 12px rgba(0,0,0,0.6)); }
 
   /* missions badge */
   .missions {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    z-index: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    z-index: 2;
     width: 100%;
     text-align: center;
+    background: rgba(0,0,0,.35);
+    border: 1px solid;
+    backdrop-filter: blur(8px);
   }
   .missions-label {
-    opacity: .6;
-    font-size: 6px;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
+    opacity: .7;
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
     text-align: center;
     line-height: 1.5;
-    word-wrap: break-word;
-    white-space: normal;
+    text-transform: uppercase;
+    font-weight: 600;
   }
   .missions-nums {
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     margin-top: 4px;
   }
   .mission-num {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 28px;
-    height: 28px;
-    padding: 0 6px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
     border-radius: 50%;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    font-weight: bold;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
     border: 1.5px solid currentColor;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,.4);
+    transition: transform .2s;
   }
+  .mission-extra { font-size: 9px; margin-top: 8px; opacity: .8; letter-spacing: 1px; }
 
-  .mission-extra {
-    font-size: 7px;
-    margin-top: 6px;
-    opacity: .75;
-    letter-spacing: .5px;
-  }
+  .crewmate .missions { color: var(--neon-green); border-color: rgba(76,255,157,.3); }
+  .impostor .missions { color: var(--neon-red);   border-color: rgba(255,56,96,.3); }
+  .sheriff  .missions { color: var(--neon-yellow); border-color: rgba(255,224,85,.3); }
+  .engineer .missions { color: var(--neon-cyan);  border-color: rgba(41,231,255,.3); }
 
-  .crewmate .missions { color: var(--neon-green); background: #39ff1411; border: 1px solid #39ff1433; }
-  .impostor .missions { color: var(--neon-red);   background: #ff224411; border: 1px solid #ff224433; }
-  .sheriff  .missions { color: var(--neon-yellow); background: #ffe60011; border: 1px solid #ffe60033; }
-  .engineer .missions { color: var(--neon-cyan);  background: #00e5ff11; border: 1px solid #00e5ff33; }
-
-  /* color label */
   .color-dot {
-    position: absolute; top: 10px; right: 12px;
-    width: 10px; height: 10px; border-radius: 50%;
+    position: absolute; top: 14px; right: 14px;
+    width: 12px; height: 12px; border-radius: 50%;
+    box-shadow: 0 0 10px currentColor, 0 0 0 2px rgba(0,0,0,0.4);
+    z-index: 3;
   }
 
-  /* card back (secret) */
   .card-back-hint {
     position: absolute; bottom: 0; left: 0; right: 0;
-    height: 4px;
-    border-radius: 0 0 14px 14px;
-  }
-  .crewmate .card-back-hint { background: var(--neon-green); opacity: .4; }
-  .impostor .card-back-hint { background: var(--neon-red);   opacity: .6; }
-  .sheriff  .card-back-hint { background: var(--neon-yellow); opacity: .5; }
-  .engineer .card-back-hint { background: var(--neon-cyan);  opacity: .5; }
-
-  /* grid noise overlay on card */
-  .card::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, #ffffff04 3px, #ffffff04 4px),
-                      repeating-linear-gradient(90deg, transparent, transparent 3px, #ffffff04 3px, #ffffff04 4px);
-    pointer-events: none;
-  }
-
-  /* ── SECTION TITLES ── */
-  .section-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 13px;
-    margin-bottom: 32px;
-    text-align: center;
-    letter-spacing: 2px;
-    position: relative;
-    padding-bottom: 16px;
-  }
-  .section-title::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-    width: 56px;
-    height: 2px;
+    height: 3px;
     background: currentColor;
-    box-shadow: 0 0 14px currentColor, 0 0 24px currentColor;
-    opacity: 0.55;
-    border-radius: 2px;
+    opacity: .55;
+    box-shadow: 0 0 12px currentColor;
   }
+  .crewmate .card-back-hint { color: var(--neon-green); }
+  .impostor .card-back-hint { color: var(--neon-red); }
+  .sheriff  .card-back-hint { color: var(--neon-yellow); }
+  .engineer .card-back-hint { color: var(--neon-cyan); }
 
-  /* ── SABOTAGE SECTION ── */
+  /* ═══════════ SABOTAGE ═══════════ */
   .sabotage-container {
-    max-width: 900px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    max-width: 1000px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
   }
   .sabotage-card {
-    border-radius: 16px;
-    padding: 24px 20px;
-    border: 2px solid var(--neon-purple);
-    background: linear-gradient(145deg, #1a0a2a, #0d0617);
-    box-shadow: 0 0 15px #c400ff22;
+    border-radius: var(--radius-md);
+    padding: 26px 22px;
+    border: 1px solid rgba(184,107,255,.35);
+    background: linear-gradient(160deg, rgba(28, 14, 50, 0.7), rgba(14, 8, 28, 0.85));
+    box-shadow: 0 12px 40px rgba(0,0,0,.4), 0 0 28px rgba(184, 107, 255, .12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
   .sabotage-card h3 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
     color: var(--neon-purple);
     margin-bottom: 14px;
-    text-shadow: 0 0 8px #c400ff66;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    filter: drop-shadow(0 0 8px rgba(184,107,255,.4));
   }
   .sabotage-card p, .sabotage-card li {
-    font-size: 12px;
-    color: #ccd;
+    font-size: 13.5px;
+    color: var(--text);
     line-height: 1.7;
   }
   .sabotage-card ul { padding-left: 18px; }
   .sabotage-card .tag {
     display: inline-block;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
   }
-  .tag.green  { background: #39ff1422; color: var(--neon-green);  border: 1px solid #39ff1444; }
-  .tag.red    { background: #ff224422; color: var(--neon-red);    border: 1px solid #ff224444; }
-  .tag.cyan   { background: #00e5ff22; color: var(--neon-cyan);   border: 1px solid #00e5ff44; }
-  .tag.purple { background: #c400ff22; color: var(--neon-purple); border: 1px solid #c400ff44; }
+  .tag.green  { background: rgba(76,255,157,.13);  color: var(--neon-green);  border: 1px solid rgba(76,255,157,.35); }
+  .tag.red    { background: rgba(255,56,96,.13);   color: var(--neon-red);    border: 1px solid rgba(255,56,96,.35); }
+  .tag.cyan   { background: rgba(41,231,255,.13);  color: var(--neon-cyan);   border: 1px solid rgba(41,231,255,.35); }
+  .tag.purple { background: rgba(184,107,255,.13); color: var(--neon-purple); border: 1px solid rgba(184,107,255,.35); }
 
-  /* pancarte visuelle (mini-démo) */
   .pancarte-demo {
-    display: flex; gap: 16px; margin: 16px 0;
+    display: flex; gap: 16px; margin: 18px 0 0;
     justify-content: center;
   }
   .pancarte {
-    width: 70px; height: 80px;
-    border-radius: 8px;
-    border: 3px solid;
+    width: 80px; height: 88px;
+    border-radius: 12px;
+    border: 2px solid;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 4px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    font-weight: bold;
+    gap: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
   }
-  .pancarte.open    { border-color: var(--neon-green); color: var(--neon-green); background: #39ff1411; }
-  .pancarte.saboted { border-color: var(--neon-red);   color: var(--neon-red);   background: #ff224411; }
-  .pancarte svg { width: 28px; height: 28px; }
+  .pancarte.open    { border-color: var(--neon-green); color: var(--neon-green); background: rgba(76,255,157,.08); box-shadow: 0 0 20px rgba(76,255,157,.2); }
+  .pancarte.saboted { border-color: var(--neon-red);   color: var(--neon-red);   background: rgba(255,56,96,.08); box-shadow: 0 0 20px rgba(255,56,96,.25); }
+  .pancarte svg { width: 32px; height: 32px; }
 
-  /* ── PANCARTES IMPRIMABLES ── */
+  /* PANCARTES IMPRIMABLES */
   .pancartes-print-section {
-    margin-top: 40px;
-    padding-top: 32px;
-    border-top: 2px dashed #2a3060;
+    margin-top: 48px;
+    padding-top: 36px;
+    border-top: 1px dashed var(--line-2);
   }
   .pancartes-print-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    color: #8899bb;
-    letter-spacing: 2px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 4px;
+    text-transform: uppercase;
     text-align: center;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
   }
   .pancartes-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 28px;
-    max-width: 820px;
+    max-width: 880px;
     margin: 0 auto;
   }
 
-  /* La pancarte elle-même — format A5 paysage simulé */
   .pancarte-big {
     aspect-ratio: 1.41 / 1;
-    border-radius: 20px;
+    border-radius: 22px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -486,68 +596,67 @@
     position: relative;
     overflow: hidden;
     cursor: default;
-    transition: transform .25s;
+    transition: transform .3s;
   }
   .pancarte-big:hover { transform: scale(1.02); }
-
   .pancarte-big.libre {
-    background: linear-gradient(145deg, #061a0c, #021008);
-    border: 4px solid var(--neon-green);
-    box-shadow: 0 0 40px #39ff1433, 0 0 80px #39ff1411, inset 0 0 40px #39ff1408;
+    background: linear-gradient(160deg, rgba(8, 32, 18, 0.95), rgba(2, 16, 8, 0.98));
+    border: 3px solid var(--neon-green);
+    box-shadow: 0 0 40px rgba(76, 255, 157, .25), 0 0 80px rgba(76, 255, 157, .08), inset 0 0 60px rgba(76, 255, 157, .04);
   }
   .pancarte-big.sabotee {
-    background: linear-gradient(145deg, #1a0606, #100202);
-    border: 4px solid var(--neon-red);
-    box-shadow: 0 0 40px #ff224433, 0 0 80px #ff224411, inset 0 0 40px #ff224408;
+    background: linear-gradient(160deg, rgba(32, 8, 12, 0.95), rgba(16, 2, 4, 0.98));
+    border: 3px solid var(--neon-red);
+    box-shadow: 0 0 40px rgba(255, 56, 96, .25), 0 0 80px rgba(255, 56, 96, .08), inset 0 0 60px rgba(255, 56, 96, .04);
   }
-
-  /* Fond étoiles */
   .pancarte-big::before {
     content: '';
     position: absolute; inset: 0;
     background-image:
-      radial-gradient(1px 1px at 15% 20%, #ffffff44, transparent),
-      radial-gradient(1px 1px at 80% 15%, #ffffff33, transparent),
-      radial-gradient(1px 1px at 40% 75%, #ffffff33, transparent),
-      radial-gradient(1px 1px at 70% 60%, #ffffff22, transparent),
-      radial-gradient(1px 1px at 25% 55%, #ffffff22, transparent),
-      radial-gradient(1px 1px at 90% 80%, #ffffff22, transparent);
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.27), transparent),
+      radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,.2), transparent),
+      radial-gradient(1px 1px at 40% 75%, rgba(255,255,255,.2), transparent),
+      radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,.13), transparent),
+      radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,.13), transparent),
+      radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,.13), transparent);
     pointer-events: none;
   }
 
   .pancarte-big-icon {
-    width: 90px; height: 90px;
+    width: 96px; height: 96px;
     position: relative; z-index: 1;
-    filter: drop-shadow(0 0 12px currentColor);
+    filter: drop-shadow(0 0 14px currentColor);
   }
   .pancarte-big.libre   .pancarte-big-icon { color: var(--neon-green); }
   .pancarte-big.sabotee .pancarte-big-icon { color: var(--neon-red); }
 
   .pancarte-big-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 28px;
-    letter-spacing: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 36px;
+    letter-spacing: 8px;
     position: relative; z-index: 1;
-    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    text-shadow: 0 0 22px currentColor, 0 0 40px currentColor;
   }
   .pancarte-big.libre   .pancarte-big-label { color: var(--neon-green); }
   .pancarte-big.sabotee .pancarte-big-label { color: var(--neon-red); }
 
   .pancarte-big-sub {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
     position: relative; z-index: 1;
     text-align: center;
     line-height: 1.8;
   }
-  .pancarte-big.libre   .pancarte-big-sub { color: #39ff1488; }
-  .pancarte-big.sabotee .pancarte-big-sub { color: #ff224488; }
+  .pancarte-big.libre   .pancarte-big-sub { color: rgba(76, 255, 157, .65); }
+  .pancarte-big.sabotee .pancarte-big-sub { color: rgba(255, 56, 96, .65); }
 
-  /* Coins décoratifs */
   .pancarte-big .corner {
     position: absolute;
-    width: 24px; height: 24px;
+    width: 26px; height: 26px;
     border-style: solid;
     z-index: 2;
   }
@@ -558,1441 +667,797 @@
   .pancarte-big .corner.bl { bottom: 14px; left: 14px;  border-width: 0 0 3px 3px; }
   .pancarte-big .corner.br { bottom: 14px; right: 14px; border-width: 0 3px 3px 0; }
 
-  /* ── PRINT styles pancartes ── */
+  /* Print pancartes — reprend du fichier original */
   @media print {
-    /* Masquer TOUT le contenu de l'onglet sabotage sauf les pancartes */
-    #tab-sabotage .sabotage-container { display: none !important; }
-    #tab-sabotage .pancartes-print-title { display: none !important; }
+    #tab-sabotage .sabotage-container,
+    #tab-sabotage .pancartes-print-title,
     #tab-sabotage .section-title { display: none !important; }
-    #tab-sabotage .pancartes-print-section {
-      margin: 0 !important;
-      padding: 0 !important;
-      border: none !important;
-    }
-
-    /* Grille : 2 pancartes empilées = 1 page A4 complète */
+    #tab-sabotage .pancartes-print-section { margin: 0 !important; padding: 0 !important; border: none !important; }
     .pancartes-grid {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 4mm !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      width: 194mm !important;
-      height: 281mm !important;
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
+      display: flex !important; flex-direction: column !important;
+      gap: 4mm !important; max-width: 100% !important; margin: 0 !important;
+      width: 194mm !important; height: 281mm !important;
+      page-break-inside: avoid !important; break-inside: avoid !important;
     }
-
-    /* Chaque pancarte = légèrement moins que la moitié pour laisser la place au gap */
     .pancarte-big {
-      width: 194mm !important;
-      height: 138mm !important;
-      aspect-ratio: unset !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
-      padding: 10mm 18mm !important;
-      box-sizing: border-box !important;
-      flex-shrink: 0 !important;
-      break-inside: avoid !important;
-      page-break-inside: avoid !important;
+      width: 194mm !important; height: 138mm !important;
+      aspect-ratio: unset !important; border-radius: 0 !important;
+      box-shadow: none !important; padding: 10mm 18mm !important;
+      box-sizing: border-box !important; flex-shrink: 0 !important;
+      break-inside: avoid !important; page-break-inside: avoid !important;
     }
-
-    .pancarte-big.libre {
-      background: #021008 !important;
-      border: 3px solid #39ff14 !important;
-      border-bottom: 2px dashed #39ff1455 !important;
-    }
-    .pancarte-big.sabotee {
-      background: #100202 !important;
-      border: 3px solid #ff2244 !important;
-      border-top: 2px dashed #ff224455 !important;
-    }
-
-    /* Icône et textes agrandis */
-    .pancarte-big-icon {
-      width: 120px !important;
-      height: 120px !important;
-      filter: none !important;
-    }
-    .pancarte-big-label {
-      font-size: 40px !important;
-      text-shadow: none !important;
-      letter-spacing: 10px !important;
-    }
-    .pancarte-big-sub {
-      font-size: 11px !important;
-      letter-spacing: 3px !important;
-    }
-    .pancarte-big .corner {
-      width: 18px !important;
-      height: 18px !important;
-    }
-
-    /* Masquer le texte indicatif sous les pancartes */
+    .pancarte-big.libre   { background: #021008 !important; border: 3px solid #4cff9d !important; }
+    .pancarte-big.sabotee { background: #100204 !important; border: 3px solid #ff3860 !important; }
+    .pancarte-big-icon { width: 120px !important; height: 120px !important; filter: none !important; }
+    .pancarte-big-label { font-size: 44px !important; text-shadow: none !important; letter-spacing: 12px !important; }
+    .pancarte-big-sub { font-size: 12px !important; letter-spacing: 3px !important; }
     .pancartes-print-section > p { display: none !important; }
   }
 
-  /* ── PRINT BTN ── */
+  /* ═══════════ BOUTONS PRINT ═══════════ */
   .print-bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    padding: 22px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(10, 14, 26, 0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    display: flex; flex-wrap: wrap;
+    justify-content: center; gap: 14px;
+    padding: 24px;
+    border-top: 1px solid var(--line);
+    background: rgba(8, 10, 20, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
   .print-btn {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    padding: 14px 28px;
-    background: transparent;
-    color: white;
-    border: 2px solid #445577;
-    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 14px 26px;
+    background: rgba(20, 24, 44, 0.6);
+    color: var(--text);
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
     cursor: pointer;
-    transition: all .2s;
+    transition: all .25s;
     letter-spacing: 2px;
+    text-transform: uppercase;
   }
-  .print-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px #00e5ff33; }
-  .print-btn.pdf-btn { border-color: #ff66ff88; color: #ff66ff; }
-  .print-btn.pdf-btn:hover { border-color: #ff66ff; color: #ff66ff; box-shadow: 0 0 20px #ff66ff33; }
+  .print-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px rgba(41,231,255,.25); }
+  .print-btn.pdf-btn { border-color: rgba(255, 92, 196, .4); color: var(--neon-pink); }
+  .print-btn.pdf-btn:hover { border-color: var(--neon-pink); box-shadow: 0 0 22px rgba(255, 92, 196, .3); }
 
-  /* ═══════════════════════════════════════════════════
-     DOS DE CARTE
-  ═══════════════════════════════════════════════════ */
+  /* ═══════════ DOS DE CARTE ═══════════ */
   .card-back {
     width: var(--card-w);
     height: var(--card-h);
-    border-radius: 16px;
-    border: none;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 155, 59, .35);
     background:
-      radial-gradient(circle at 30% 30%, #2a1a0a 0%, #0a0500 70%),
-      linear-gradient(145deg, #1a0f05, #0a0500);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+      radial-gradient(circle at 30% 30%, #2a1505 0%, #0a0500 70%),
+      linear-gradient(160deg, #1a0d05, #0a0400);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 32px #00000088;
-    transition: transform .25s, box-shadow .25s;
+    box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 22px rgba(255, 155, 59, .12);
+    transition: transform .35s, box-shadow .35s, border-color .25s;
     cursor: pointer;
   }
   .card-back:hover {
-    transform: translateY(-6px) scale(1.03);
-    box-shadow: 0 0 30px #ff6b0033, 0 12px 40px #00000099;
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.65), 0 0 36px rgba(255, 155, 59, .35);
+    border-color: var(--neon-orange);
   }
-
-  /* Fond avec pattern d'étoiles */
   .card-back::before {
     content: '';
     position: absolute; inset: 0;
     background-image:
-      radial-gradient(1.5px 1.5px at 20% 25%, #ffaa44aa 0%, transparent 100%),
-      radial-gradient(1px 1px at 70% 40%, #ff880088 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 40% 70%, #ffaa44aa 0%, transparent 100%),
-      radial-gradient(1px 1px at 85% 80%, #ff660066 0%, transparent 100%),
-      radial-gradient(1px 1px at 15% 85%, #ffaa4488 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 60% 15%, #ff880099 0%, transparent 100%);
+      radial-gradient(1.5px 1.5px at 20% 25%, rgba(255,179,122,.7), transparent 100%),
+      radial-gradient(1px 1px at 70% 40%, rgba(255,155,59,.55), transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 70%, rgba(255,179,122,.7), transparent 100%),
+      radial-gradient(1px 1px at 85% 80%, rgba(255,140,40,.4), transparent 100%),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,179,122,.55), transparent 100%),
+      radial-gradient(1.5px 1.5px at 60% 15%, rgba(255,155,59,.6), transparent 100%);
     pointer-events: none;
   }
-
-  /* Grille rétro */
-  .card-back::after {
-    content: '';
-    position: absolute; inset: 0;
-    background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 10px, #ff6b0008 10px, #ff6b0008 11px),
-      repeating-linear-gradient(90deg, transparent, transparent 10px, #ff6b0008 10px, #ff6b0008 11px);
-    pointer-events: none;
-  }
-
   .card-back-logo {
-    font-family: 'Press Start 2P', monospace;
-    color: #ff6b00;
-    text-shadow:
-      0 0 10px #ff6b00aa,
-      0 0 20px #ff6b0066,
-      2px 2px 0 #000,
-      -2px -2px 0 #000,
-      2px -2px 0 #000,
-      -2px 2px 0 #000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    color: var(--neon-orange);
+    text-shadow: 0 0 16px rgba(255, 155, 59, .6), 0 0 32px rgba(255, 155, 59, .35);
     z-index: 2;
     text-align: center;
   }
   .card-back-logo-top {
-    font-size: 16px;
-    letter-spacing: 2px;
-    line-height: 1.3;
+    font-size: 22px;
+    letter-spacing: 8px;
+    line-height: 1.2;
     white-space: nowrap;
   }
   .card-back-logo-bottom {
-    font-size: 11px;
-    letter-spacing: 2px;
-    margin-top: 8px;
+    font-size: 13px;
+    letter-spacing: 6px;
+    margin-top: 10px;
     opacity: .85;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
   }
-
-  /* Icône SSHHH stylisée au centre */
   .card-back-icon {
-    margin: 14px 0;
-    width: 110px;
-    height: 110px;
+    margin: 16px 0;
+    width: 120px; height: 120px;
     display: block;
-    filter: drop-shadow(0 0 12px #ff6b0088);
+    filter: drop-shadow(0 0 16px rgba(255, 155, 59, .6));
     z-index: 2;
     position: relative;
   }
+  .card-back-corner { display: none; }
+  .back-inner-corner { display: none; }
+  .back-tl, .back-tr, .back-bl, .back-br { display: none; }
 
-  /* Coins décoratifs (anciens — conservés pour compatibilité) */
-  .card-back-corner {
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: #ff6b00;
-    border-style: solid;
-    z-index: 2;
-    display: none; /* masqués — remplacés par les équerres intérieures */
-  }
-
-  /* Équerres intérieures : proches du texte AMONG US et SHHHH */
-  .back-inner-corner {
-    position: absolute;
-    width: 14px; height: 14px;
-    border-color: #ff6b00;
-    border-style: solid;
-    opacity: 0.7;
-    z-index: 3;
-  }
-  /* Coin haut-gauche : sous le logo AMONG US */
-  .back-tl {
-    top: 28px; left: 14px;
-    border-width: 2px 0 0 2px;
-  }
-  /* Coin haut-droit : sous le logo AMONG US */
-  .back-tr {
-    top: 28px; right: 14px;
-    border-width: 2px 2px 0 0;
-  }
-  /* Coin bas-gauche : au-dessus de SHHHH */
-  .back-bl {
-    bottom: 28px; left: 14px;
-    border-width: 0 0 2px 2px;
-  }
-  /* Coin bas-droit : au-dessus de SHHHH */
-  .back-br {
-    bottom: 28px; right: 14px;
-    border-width: 0 2px 2px 0;
-  }
-
-  /* ═══════════════════════════════════════════════════
-     FICHE QUESTS (à remplir à la main)
-  ═══════════════════════════════════════════════════ */
+  /* ═══════════ FICHE QUESTS ═══════════ */
   .quest-sheet {
-    max-width: 960px;
+    max-width: 1000px;
     margin: 0 auto;
-    background: #080c18;
-    color: #ccd6ee;
-    border-radius: 16px;
-    padding: 32px 28px;
-    border: 1px solid #1a2244;
-    box-shadow: 0 12px 60px #00000088;
-    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, rgba(14, 18, 38, 0.85), rgba(8, 10, 22, 0.92));
+    color: var(--text);
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    border: 1px solid var(--line-2);
+    box-shadow: 0 16px 70px rgba(0,0,0,.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
-
-  /* ── Header ── */
   .quest-sheet-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-bottom: 1px solid #1a2244;
-    padding-bottom: 16px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 16px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-bottom: 1px solid var(--line-2);
+    padding-bottom: 18px; margin-bottom: 26px;
+    flex-wrap: wrap; gap: 16px;
   }
   .quest-sheet-header h2 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 18px;
-    color: white;
-    letter-spacing: 2px;
-    text-shadow: 0 0 20px #4a9eff66;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: 4px;
+    text-transform: uppercase;
   }
   .quest-sheet-meta {
-    font-size: 12px;
-    color: #6677aa;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
     text-align: right;
     line-height: 1.9;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
+    letter-spacing: 1px;
   }
-  .quest-sheet-meta strong { color: #8899cc; }
+  .quest-sheet-meta strong { color: var(--neon-blue); }
 
-  /* ── Titres de section étage / RDC ── */
   .quest-floor-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    padding: 12px 18px;
-    margin: 22px 0 12px;
-    border-radius: 8px;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 14px 20px;
+    margin: 24px 0 14px;
+    border-radius: var(--radius-sm);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
   }
   .quest-floor-title.etage {
-    background: linear-gradient(135deg, #1a0a0a, #2a0d0d);
+    background: linear-gradient(135deg, rgba(255,56,96,.18), rgba(255,56,96,.06));
     color: var(--neon-red);
-    border: 1px solid #ff224444;
-    text-shadow: 0 0 8px #ff224466;
+    border: 1px solid rgba(255, 56, 96, .35);
+    box-shadow: 0 0 22px rgba(255, 56, 96, .12) inset;
   }
   .quest-floor-title.rdc {
-    background: linear-gradient(135deg, #0a0d1a, #0d1530);
-    color: #4a9eff;
-    border: 1px solid #4a9eff44;
-    text-shadow: 0 0 8px #4a9eff66;
+    background: linear-gradient(135deg, rgba(107,166,255,.18), rgba(107,166,255,.06));
+    color: var(--neon-blue);
+    border: 1px solid rgba(107, 166, 255, .35);
+    box-shadow: 0 0 22px rgba(107, 166, 255, .12) inset;
   }
 
-  /* ── Grille des missions ── */
-  .quest-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  .quest-rows { display: flex; flex-direction: column; gap: 8px; }
+
+  /* En-tête de page (visible uniquement à l'impression) */
+  .quest-page-header { display: none; }
+
+  @media print {
+    .quest-page-header {
+      display: flex !important;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 16px;
+      margin-bottom: 14px;
+      background: #0a0e1a !important;
+      border-radius: 8px;
+      border-bottom: none;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .quest-page-header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: #ffffff !important;
+      text-transform: uppercase;
+    }
+    .quest-page-header-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #cfd6e6 !important;
+      letter-spacing: 1px;
+    }
+    /* Masquer l'en-tête écran (le seul) */
+    .quest-sheet-header { display: none !important; }
+    /* Saut de page entre les deux blocs */
+    .quest-floor-block + .quest-floor-block {
+      page-break-before: always !important;
+      break-before: page !important;
+    }
   }
   .quest-row {
     display: grid;
-    grid-template-columns: 48px 1fr auto;
+    grid-template-columns: 64px 1fr auto;
     align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    background: #0c1020;
-    border: 1px solid #1a2244;
-    transition: border-color .2s;
+    gap: 16px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: rgba(20, 24, 44, 0.5);
+    border: 1px solid var(--line);
+    transition: border-color .2s, background .2s;
   }
-  .quest-row:hover { border-color: #2a3a66; }
+  .quest-row:hover { border-color: var(--line-2); background: rgba(28, 34, 60, 0.65); }
 
-  /* Numéro de mission */
   .quest-row-num {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
     font-size: 11px;
     text-align: center;
-    padding: 6px 4px;
-    border-radius: 6px;
-    line-height: 1.4;
+    padding: 8px 4px;
+    border-radius: 8px;
+    letter-spacing: 1px;
   }
-  .quest-row-num.etage { color: var(--neon-red);  background: #ff224415; border: 1px solid #ff224433; }
-  .quest-row-num.rdc   { color: #4a9eff;           background: #4a9eff15; border: 1px solid #4a9eff33; }
+  .quest-row-num.etage { color: var(--neon-red);  background: rgba(255,56,96,.1); border: 1px solid rgba(255, 56, 96, .35); }
+  .quest-row-num.rdc   { color: var(--neon-blue); background: rgba(107,166,255,.1); border: 1px solid rgba(107, 166, 255, .35); }
 
-  /* Nom de la pièce */
   .quest-row-room {
-    font-size: 15px;
-    font-weight: 700;
-    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
     letter-spacing: 0.3px;
   }
 
-  /* Cases à cocher — 3 joueurs anonymes + sabotage */
-  .quest-checkboxes {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+  .quest-checkboxes { display: flex; gap: 8px; align-items: center; }
   .quest-checkbox {
-    width: 34px; height: 34px;
-    border: 2px solid #2a3a66;
-    border-radius: 6px;
+    width: 36px; height: 36px;
+    border: 2px solid rgba(180, 195, 230, 0.4);
+    border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: #2a3a66;
-    background: #0a0e1a;
-    transition: border-color .15s;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-mute);
+    background: rgba(220, 228, 245, 0.92);
+    transition: border-color .15s, background .15s;
     flex-shrink: 0;
   }
-  .quest-checkbox:hover { border-color: #4a9eff66; }
+  .quest-checkbox:hover { border-color: rgba(107,166,255,.7); background: #fff; }
   .quest-checkbox.sabotage-box {
-    border-color: #ff224444;
-    background: #ff224410;
-    color: #ff224466;
-    font-size: 9px;
+    border-color: rgba(255, 56, 96, .55);
+    background: rgba(255, 200, 210, 0.85);
+    color: rgba(180, 30, 60, .7);
+    font-size: 11px;
   }
 
-  /* Légende */
   .quest-legend {
     display: flex; flex-wrap: wrap; gap: 20px;
     justify-content: center;
     margin-top: 28px;
     padding: 16px 20px;
-    border: 1px solid #2a3a66;
-    border-radius: 10px;
-    background: #0c1020;
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    background: rgba(20, 24, 44, 0.5);
     font-size: 13px;
-    color: #aabbdd;
-    font-weight: 600;
+    color: var(--text-dim);
+    font-weight: 500;
   }
   .quest-legend-item { display: flex; align-items: center; gap: 10px; }
   .legend-box {
     width: 26px; height: 26px;
-    border: 2px solid #2a3a66;
-    border-radius: 5px;
-    background: #0a0e1a;
+    border: 2px solid var(--line-2);
+    border-radius: 6px;
+    background: rgba(8, 10, 22, 0.6);
     display: inline-block;
     flex-shrink: 0;
   }
-  .legend-box.sab  {
-    border-color: #ff224466;
-    background: #ff224420;
-  }
+  .legend-box.sab  { border-color: rgba(255,56,96,.5); background: rgba(255,56,96,.18); }
   .legend-box.check {
-    background: #0a0e1a; color: #4a9eff;
+    background: rgba(8, 10, 22, 0.6); color: var(--neon-blue);
     display: flex; align-items: center; justify-content: center;
-    font-weight: bold; font-size: 16px;
+    font-weight: 700; font-size: 16px;
   }
 
-  /* Trackers Buzz / Morts / Sheriff */
   .tracker-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 22px;
   }
   .tracker-card {
-    background: #0c1020;
-    border: 1px solid #1a2244;
-    border-radius: 10px;
-    padding: 14px 16px;
+    background: rgba(20, 24, 44, 0.5);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    padding: 16px 18px;
   }
   .tracker-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: #4a9eff;
-    margin-bottom: 12px;
-    letter-spacing: 1px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--neon-blue);
+    margin-bottom: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     line-height: 1.6;
   }
   .tracker-circles { display: flex; gap: 10px; }
   .tracker-circle {
-    width: 30px; height: 30px;
-    border: 2px solid #2a3a66;
-    border-radius: 50%;
-    background: #0a0e1a;
-  }
-  .tracker-circle.red { border-color: #ff224444; }
-  .tracker-line {
-    height: 22px;
-    border-bottom: 1.5px solid #2a3a66;
-    flex: 1;
-    margin-top: 8px;
-  }
-  .tracker-lines { display: flex; flex-direction: column; gap: 8px; }
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    background: white;
-    border: 1px solid #d4c9b0;
-    border-radius: 8px;
-    min-height: 48px;
-  }
-  .quest-row-room {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1a1510;
-  }
-  .quest-row-players {
-    font-size: 11px;
-    color: #5a4e3a;
-    font-style: italic;
-  }
-
-  /* CASES À COCHER */
-  .quest-checkboxes {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
-  .quest-checkbox {
     width: 32px; height: 32px;
-    border: 2px solid #1a1510;
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: #5a4e3a;
-    background: white;
-    position: relative;
-  }
-  .quest-checkbox.sabotage-box {
-    border-color: #a02020;
-    background: #fdf2f2;
-    color: #a02020;
-  }
-
-  /* Petite croix en filigrane pour guide */
-  .quest-checkbox::before {
-    content: ""; position: absolute; inset: 0;
-    background-image:
-      linear-gradient(45deg, transparent 48%, #f5efe4 48%, #f5efe4 52%, transparent 52%);
-    opacity: .3;
-    pointer-events: none;
-  }
-
-  /* Légende */
-  .quest-legend {
-    display: flex; flex-wrap: wrap; gap: 20px;
-    justify-content: center;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 2px dashed #c0b595;
-    font-size: 12px;
-    color: #5a4e3a;
-  }
-  .quest-legend-item {
-    display: flex; align-items: center; gap: 8px;
-  }
-  .legend-box {
-    width: 20px; height: 20px;
-    border: 2px solid #1a1510;
-    border-radius: 3px;
-    display: inline-block;
-    background: white;
-  }
-  .legend-box.sab { border-color: #a02020; background: #fdf2f2; }
-  .legend-box.check {
-    background: #1a1510; color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: bold; font-size: 14px;
-  }
-
-  /* Trackers supplémentaires (Buzz, Morts, Sabotage actif) */
-  .tracker-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
-    margin-top: 24px;
-  }
-  .tracker-card {
-    background: white;
-    border: 1px solid #d4c9b0;
-    border-radius: 8px;
-    padding: 14px 16px;
-  }
-  .tracker-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: #1a1510;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
-  }
-  .tracker-circles {
-    display: flex; gap: 10px;
-  }
-  .tracker-circle {
-    width: 28px; height: 28px;
-    border: 2px solid #1a1510;
+    border: 2px solid rgba(180, 195, 230, 0.5);
     border-radius: 50%;
-    background: white;
+    background: rgba(220, 228, 245, 0.92);
   }
-  .tracker-circle.red { border-color: #a02020; }
-  .tracker-line {
-    height: 20px;
-    border-bottom: 1.5px solid #1a1510;
-    flex: 1;
-    margin-top: 8px;
-  }
-  .tracker-lines { display: flex; flex-direction: column; gap: 6px; }
+  .tracker-circle.red { border-color: rgba(255, 56, 96, .65); background: rgba(255, 200, 210, 0.85); }
+  .tracker-line { height: 22px; border-bottom: 1.5px solid var(--line-2); flex: 1; margin-top: 8px; }
+  .tracker-lines { display: flex; flex-direction: column; gap: 8px; }
 
-  /* ═══════════════════════════════════════════════════
-     DÉFIS & TÂCHES (dans le même style néon)
-  ═══════════════════════════════════════════════════ */
-  .defis-container {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+  /* ═══════════ DÉFIS & TÂCHES ═══════════ */
+  .defis-container { max-width: 1000px; margin: 0 auto; }
 
-  /* Légende */
   .defi-legend {
-    display: flex; gap: 20px; justify-content: center;
-    flex-wrap: wrap;
-    margin: 0 0 28px;
-    padding: 14px 20px;
-    background: #0a0e1a;
-    border: 1px solid #1a2244;
-    border-radius: 10px;
-    font-size: 12px;
-    color: #aab;
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    margin: 0 0 30px;
+    padding: 16px 22px;
+    background: rgba(20, 24, 44, 0.5);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+    backdrop-filter: blur(8px);
   }
-  .defi-legend-item { display: flex; align-items: center; gap: 8px; }
+  .defi-legend-item { display: flex; align-items: center; gap: 10px; }
   .defi-legend-dot {
     width: 14px; height: 14px; border-radius: 4px; border: 2px solid;
     flex-shrink: 0;
   }
-  .defi-legend-dot.red   { border-color: var(--neon-red);   background: #ff224422; }
-  .defi-legend-dot.blue  { border-color: #4a9eff;           background: #4a9eff22; }
-  .defi-legend-dot.green { border-color: var(--neon-green); background: #39ff1422; }
+  .defi-legend-dot.red   { border-color: var(--neon-red);   background: rgba(255,56,96,.18); }
+  .defi-legend-dot.blue  { border-color: var(--neon-blue);  background: rgba(107,166,255,.18); }
+  .defi-legend-dot.green { border-color: var(--neon-green); background: rgba(76,255,157,.18); }
 
-  /* Titres de section */
   .defis-section-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    margin: 28px 0 16px;
-    padding: 14px 18px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 32px 0 18px;
+    padding: 16px 22px;
+    border-radius: 12px;
+    display: flex; align-items: center; gap: 12px;
   }
-  .defis-section-title.red   { color: #ff7788; background: #2a0a10; border: 1.5px solid #ff224466; text-shadow: 0 0 10px #ff224466; }
-  .defis-section-title.blue  { color: #88ccff; background: #0a1530; border: 1.5px solid #4a9eff66; text-shadow: 0 0 10px #4a9eff44; }
-  .defis-section-title.green { color: var(--neon-green); background: #0a2015; border: 1.5px solid #39ff1466; text-shadow: 0 0 10px #39ff1444; }
+  .defis-section-title.red   { color: #ff8aa3; background: linear-gradient(135deg, rgba(255,56,96,.18), rgba(255,56,96,.04)); border: 1px solid rgba(255,56,96,.4); }
+  .defis-section-title.blue  { color: #9bc5ff; background: linear-gradient(135deg, rgba(107,166,255,.18), rgba(107,166,255,.04)); border: 1px solid rgba(107,166,255,.4); }
+  .defis-section-title.green { color: var(--neon-green); background: linear-gradient(135deg, rgba(76,255,157,.18), rgba(76,255,157,.04)); border: 1px solid rgba(76,255,157,.4); }
 
-  /* Grille des défis — 2 colonnes */
   .defis-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     margin-bottom: 8px;
   }
+  @media (max-width: 720px) {
+    .defis-grid { grid-template-columns: 1fr; }
+  }
 
-  /* Carte défi — hauteur FIXE et UNIFORME pour toutes */
   .defi-card {
-    border-radius: 14px;
-    padding: 20px 22px;
-    position: relative;
-    overflow: hidden;
-    height: 220px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: transform .2s, box-shadow .2s;
+    border-radius: 16px;
+    padding: 22px 24px;
+    position: relative; overflow: hidden;
+    height: 240px;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: transform .25s, box-shadow .25s, border-color .2s;
     box-sizing: border-box;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
-  .defi-card:hover {
-    transform: translateY(-3px);
-  }
+  .defi-card:hover { transform: translateY(-4px); }
   .defi-card.red {
-    background: linear-gradient(145deg, #2e0e0e, #1a0505);
-    border: 1.5px solid var(--neon-red);
-    box-shadow: 0 0 14px #ff224422, inset 0 0 30px #ff22440a;
+    background: linear-gradient(160deg, rgba(36, 8, 16, 0.85), rgba(16, 4, 8, 0.95));
+    border: 1px solid rgba(255, 56, 96, .35);
+    box-shadow: 0 8px 24px rgba(0,0,0,.4), 0 0 24px rgba(255,56,96,.1);
   }
-  .defi-card.red:hover { box-shadow: 0 6px 24px #ff224440; }
+  .defi-card.red:hover { border-color: var(--neon-red); box-shadow: 0 12px 36px rgba(0,0,0,.5), 0 0 36px rgba(255,56,96,.3); }
   .defi-card.blue {
-    background: linear-gradient(145deg, #0e1a2e, #050f1a);
-    border: 1.5px solid #4a9eff;
-    box-shadow: 0 0 14px #4a9eff22, inset 0 0 30px #4a9eff0a;
+    background: linear-gradient(160deg, rgba(8, 18, 36, 0.85), rgba(4, 8, 18, 0.95));
+    border: 1px solid rgba(107, 166, 255, .35);
+    box-shadow: 0 8px 24px rgba(0,0,0,.4), 0 0 24px rgba(107,166,255,.1);
   }
-  .defi-card.blue:hover { box-shadow: 0 6px 24px #4a9eff40; }
+  .defi-card.blue:hover { border-color: var(--neon-blue); box-shadow: 0 12px 36px rgba(0,0,0,.5), 0 0 36px rgba(107,166,255,.28); }
 
-  /* Header de la carte : icône + numéro */
   .defi-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 10px;
+    display: flex; align-items: center; gap: 12px;
+    padding-bottom: 12px;
     border-bottom: 1px solid;
   }
-  .defi-card.red  .defi-header { border-color: #ff224433; }
-  .defi-card.blue .defi-header { border-color: #4a9eff33; }
+  .defi-card.red  .defi-header { border-color: rgba(255,56,96,.25); }
+  .defi-card.blue .defi-header { border-color: rgba(107,166,255,.25); }
 
   .defi-icon-wrap {
-    width: 38px; height: 38px;
+    width: 42px; height: 42px;
     flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 8px;
+    border-radius: 10px;
   }
-  .defi-card.red  .defi-icon-wrap { background: #ff224415; }
-  .defi-card.blue .defi-icon-wrap { background: #4a9eff15; }
+  .defi-card.red  .defi-icon-wrap { background: rgba(255,56,96,.1); border: 1px solid rgba(255,56,96,.3); }
+  .defi-card.blue .defi-icon-wrap { background: rgba(107,166,255,.1); border: 1px solid rgba(107,166,255,.3); }
   .defi-icon-wrap svg { width: 26px; height: 26px; }
 
   .defi-number {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 12px;
-    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.5px;
   }
-  .defi-card.red  .defi-number { color: var(--neon-red); text-shadow: 0 0 8px #ff224466; }
-  .defi-card.blue .defi-number { color: #4a9eff; text-shadow: 0 0 8px #4a9eff66; }
+  .defi-card.red  .defi-number { color: var(--neon-red); }
+  .defi-card.blue .defi-number { color: var(--neon-blue); }
 
-  /* Badge de type */
   .defi-badge {
     margin-left: auto;
-    font-size: 9px;
-    font-family: 'Press Start 2P', monospace;
-    padding: 4px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 10px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    letter-spacing: 1px;
     flex-shrink: 0;
+    text-transform: uppercase;
   }
-  .defi-card.red  .defi-badge { background: #ff224422; color: #ff7788; border: 1px solid #ff224444; }
-  .defi-card.blue .defi-badge { background: #4a9eff22; color: #88ccff; border: 1px solid #4a9eff44; }
+  .defi-card.red  .defi-badge { background: rgba(255,56,96,.15); color: #ff8aa3; border: 1px solid rgba(255,56,96,.4); }
+  .defi-card.blue .defi-badge { background: rgba(107,166,255,.15); color: #9bc5ff; border: 1px solid rgba(107,166,255,.4); }
 
-  /* Texte du défi */
   .defi-text {
-    font-size: 14px;
-    line-height: 1.65;
-    color: #dde6ff;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text);
     flex: 1;
   }
 
-  /* ─── TÂCHES ─── */
   .taches-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-top: 4px;
+    margin-top: 6px;
+  }
+  @media (max-width: 720px) {
+    .taches-grid { grid-template-columns: 1fr; }
   }
   .taches-zone {
-    border-radius: 14px;
-    padding: 20px 22px;
-    background: linear-gradient(145deg, #0d2a1a, #051a0d);
-    border: 1.5px solid var(--neon-green);
-    box-shadow: 0 0 14px #39ff1422, inset 0 0 30px #39ff140a;
+    border-radius: 16px;
+    padding: 22px 24px;
+    background: linear-gradient(160deg, rgba(8, 36, 22, 0.85), rgba(4, 18, 10, 0.95));
+    border: 1px solid rgba(76, 255, 157, .35);
+    box-shadow: 0 8px 24px rgba(0,0,0,.4), 0 0 24px rgba(76,255,157,.1);
   }
   .taches-zone-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
     color: var(--neon-green);
     margin-bottom: 16px;
-    letter-spacing: 1px;
-    text-shadow: 0 0 8px #39ff1466;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     display: flex; align-items: center; gap: 10px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #39ff1422;
+    border-bottom: 1px solid rgba(76,255,157,.2);
   }
-  .taches-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+  .taches-list { display: flex; flex-direction: column; }
   .tache-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 9px 4px;
-    border-bottom: 1px solid #39ff1415;
+    display: flex; align-items: center; gap: 14px;
+    padding: 11px 6px;
+    border-bottom: 1px solid rgba(76,255,157,.12);
     transition: background .15s;
   }
   .tache-item:last-child { border-bottom: none; }
-  .tache-item:hover { background: #39ff1408; border-radius: 6px; }
+  .tache-item:hover { background: rgba(76,255,157,.06); border-radius: 8px; }
   .tache-num {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
     color: var(--neon-green);
-    min-width: 36px;
-    text-shadow: 0 0 6px #39ff1444;
+    min-width: 38px;
   }
-  .tache-nom {
-    font-size: 13px;
-    color: #c8ecd0;
-    line-height: 1.4;
-  }
+  .tache-nom { font-size: 14px; color: #c8ecd0; line-height: 1.4; }
 
-  /* ═══════════════════════════════════════════════════
-     RÈGLES DU JEU
-  ═══════════════════════════════════════════════════ */
+  /* ═══════════ RÈGLES DU JEU ═══════════ */
   .rules-container {
-    max-width: 860px;
+    max-width: 920px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: flex; flex-direction: column;
+    gap: 22px;
   }
 
-  /* Page de titre */
   .rules-title-page {
     text-align: center;
-    padding: 40px 20px 30px;
-    border-radius: 16px;
-    background: linear-gradient(145deg, #0a0e1a, #0d1225);
-    border: 1px solid #223366;
+    padding: 50px 24px 38px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, rgba(14, 18, 40, 0.85), rgba(8, 10, 24, 0.92));
+    border: 1px solid var(--line-2);
+    backdrop-filter: blur(14px);
   }
   .rules-title-page h2 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 28px;
-    color: white;
-    letter-spacing: 6px;
-    text-shadow: 0 0 30px #aabbff88;
-    margin-bottom: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 44px;
+    color: var(--text);
+    letter-spacing: 14px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, #fff, #aabbff 50%, #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 22px rgba(170, 187, 255, .4));
   }
   .rules-title-page p {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
-    color: #8899bb;
-    font-family: 'Press Start 2P', monospace;
-    letter-spacing: 2px;
+    color: var(--text-dim);
+    letter-spacing: 4px;
+    text-transform: uppercase;
   }
 
-  /* Sections de règles */
   .rules-section {
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
   .rules-section-header {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    padding: 12px 18px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 10px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
-  .rules-section-header.blue   { background: #0d1a3a; color: #4a9eff; border-left: 3px solid #4a9eff; }
-  .rules-section-header.green  { background: #0d2a1a; color: var(--neon-green); border-left: 3px solid var(--neon-green); }
-  .rules-section-header.red    { background: #2a0d0d; color: var(--neon-red); border-left: 3px solid var(--neon-red); }
-  .rules-section-header.yellow { background: #2a2000; color: var(--neon-yellow); border-left: 3px solid var(--neon-yellow); }
-  .rules-section-header.cyan   { background: #001a2a; color: var(--neon-cyan); border-left: 3px solid var(--neon-cyan); }
-  .rules-section-header.purple { background: #1a0a2a; color: var(--neon-purple); border-left: 3px solid var(--neon-purple); }
-  .rules-section-header.orange { background: #2a1200; color: #ff9944; border-left: 3px solid #ff9944; }
+  .rules-section-header.blue   { background: rgba(107, 166, 255, .12); color: var(--neon-blue);   border: 1px solid rgba(107,166,255,.35); border-bottom: none; box-shadow: inset 3px 0 0 var(--neon-blue); }
+  .rules-section-header.green  { background: rgba(76, 255, 157, .12); color: var(--neon-green);   border: 1px solid rgba(76,255,157,.35); border-bottom: none; box-shadow: inset 3px 0 0 var(--neon-green); }
+  .rules-section-header.red    { background: rgba(255, 56, 96, .12); color: var(--neon-red);     border: 1px solid rgba(255,56,96,.35); border-bottom: none; box-shadow: inset 3px 0 0 var(--neon-red); }
+  .rules-section-header.yellow { background: rgba(255, 224, 85, .12); color: var(--neon-yellow); border: 1px solid rgba(255,224,85,.35); border-bottom: none; box-shadow: inset 3px 0 0 var(--neon-yellow); }
+  .rules-section-header.cyan   { background: rgba(41, 231, 255, .12); color: var(--neon-cyan);   border: 1px solid rgba(41,231,255,.35); border-bottom: none; box-shadow: inset 3px 0 0 var(--neon-cyan); }
+  .rules-section-header.purple { background: rgba(184, 107, 255, .12); color: var(--neon-purple); border: 1px solid rgba(184,107,255,.35); border-bottom: none; box-shadow: inset 3px 0 0 var(--neon-purple); }
+  .rules-section-header.orange { background: rgba(255, 155, 59, .12); color: var(--neon-orange); border: 1px solid rgba(255,155,59,.35); border-bottom: none; box-shadow: inset 3px 0 0 var(--neon-orange); }
 
   .rules-section-body {
-    background: #080c18;
-    border: 1px solid #1a2244;
+    background: rgba(14, 18, 38, 0.7);
+    border: 1px solid var(--line-2);
     border-top: none;
-    border-radius: 0 0 12px 12px;
-    padding: 18px 20px;
-    font-size: 13px;
-    color: #ccd6ee;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: 22px 24px;
+    font-size: 14px;
+    color: var(--text);
     line-height: 1.8;
-    overflow: hidden;
-    min-width: 0;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
-  /* Cartes de rôle dans les règles */
   .rules-roles-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 1fr;
     gap: 14px;
     margin-top: 6px;
-    align-items: stretch;
+  }
+  @media (max-width: 720px) {
+    .rules-roles-grid { grid-template-columns: 1fr; }
   }
   .rules-role-card {
-    border-radius: 10px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 0;
-    height: 100%;
-    box-sizing: border-box;
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    height: 100%; box-sizing: border-box;
+    backdrop-filter: blur(6px);
   }
-  .rules-role-card.crewmate { background: linear-gradient(145deg, #0d2a1a, #0a1a10); border: 1.5px solid #39ff1466; }
-  .rules-role-card.impostor { background: linear-gradient(145deg, #2a0d0d, #1a0505); border: 1.5px solid #ff224466; }
-  .rules-role-card.sheriff  { background: linear-gradient(145deg, #2a2000, #1a1500); border: 1.5px solid #ffe60066; }
-  .rules-role-card.engineer { background: linear-gradient(145deg, #001a2a, #000d1a); border: 1.5px solid #00e5ff66; }
+  .rules-role-card.crewmate { background: linear-gradient(160deg, rgba(8, 36, 22, 0.7), rgba(4, 18, 10, 0.85)); border: 1px solid rgba(76, 255, 157, .4); }
+  .rules-role-card.impostor { background: linear-gradient(160deg, rgba(36, 8, 16, 0.7), rgba(18, 4, 8, 0.85)); border: 1px solid rgba(255, 56, 96, .4); }
+  .rules-role-card.sheriff  { background: linear-gradient(160deg, rgba(36, 28, 4, 0.7), rgba(18, 14, 2, 0.85)); border: 1px solid rgba(255, 224, 85, .4); }
+  .rules-role-card.engineer { background: linear-gradient(160deg, rgba(4, 24, 36, 0.7), rgba(2, 12, 18, 0.85)); border: 1px solid rgba(41, 231, 255, .4); }
 
   .rules-role-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    letter-spacing: 1px;
-    word-break: break-word;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
   }
   .rules-role-card.crewmate .rules-role-title { color: var(--neon-green); }
   .rules-role-card.impostor .rules-role-title { color: var(--neon-red); }
   .rules-role-card.sheriff  .rules-role-title { color: var(--neon-yellow); }
   .rules-role-card.engineer .rules-role-title { color: var(--neon-cyan); }
 
-  .rules-role-text {
-    font-size: 12px;
-    color: #ccd6ee;
-    line-height: 1.7;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
+  .rules-role-text { font-size: 13.5px; color: var(--text); line-height: 1.7; }
 
-  /* Bullet points stylisés */
   .rules-list {
-    list-style: none;
-    padding: 0;
-    margin: 8px 0 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    list-style: none; padding: 0; margin: 8px 0 0;
+    display: flex; flex-direction: column; gap: 10px;
   }
   .rules-list li {
     position: relative;
-    padding-left: 22px;
-    font-size: 12px;
-    color: #ccd6ee;
+    padding-left: 24px;
+    font-size: 13.5px;
+    color: var(--text);
     line-height: 1.65;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
   }
   .rules-list li::before {
     content: '▸';
     position: absolute;
-    left: 4px;
-    top: 0;
+    left: 6px; top: 0;
     line-height: 1.65;
-    font-size: 12px;
+    font-size: 13px;
   }
   .rules-list.green li::before { color: var(--neon-green); }
   .rules-list.red   li::before { color: var(--neon-red); }
   .rules-list.cyan  li::before { color: var(--neon-cyan); }
   .rules-list.yellow li::before { color: var(--neon-yellow); }
   .rules-list.purple li::before { color: var(--neon-purple); }
-  .rules-list.orange li::before { color: #ff9944; }
-  .rules-list.blue  li::before { color: #4a9eff; }
+  .rules-list.orange li::before { color: var(--neon-orange); }
+  .rules-list.blue  li::before { color: var(--neon-blue); }
 
-  /* Mots-clés colorés */
   .kw-green  { color: var(--neon-green);  font-weight: 700; }
   .kw-red    { color: var(--neon-red);    font-weight: 700; }
   .kw-yellow { color: var(--neon-yellow); font-weight: 700; }
   .kw-cyan   { color: var(--neon-cyan);   font-weight: 700; }
   .kw-purple { color: var(--neon-purple); font-weight: 700; }
-  .kw-orange { color: #ff9944;            font-weight: 700; }
-  .kw-blue   { color: #4a9eff;            font-weight: 700; }
-  .kw-pink   { color: #ff77cc;            font-weight: 700; }
+  .kw-orange { color: var(--neon-orange); font-weight: 700; }
+  .kw-blue   { color: var(--neon-blue);   font-weight: 700; }
+  .kw-pink   { color: var(--neon-pink);   font-weight: 700; }
 
-  /* Tableau config joueurs */
   .rules-config-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 12px;
-    margin-top: 8px;
-    align-items: stretch;
+    margin-top: 10px;
   }
   .rules-config-card {
-    background: #0a0e1a;
-    border: 1px solid #22335577;
-    border-radius: 10px;
-    padding: 14px 16px;
-    min-width: 0;
-    height: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+    background: rgba(8, 10, 22, 0.55);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    padding: 16px 18px;
   }
   .rules-config-card h4 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: #4a9eff;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--neon-blue);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
   }
   .rules-config-card ul {
     list-style: none; padding: 0;
-    display: flex; flex-direction: column; gap: 6px;
-    font-size: 12px; color: #ccd6ee;
+    display: flex; flex-direction: column; gap: 8px;
+    font-size: 13.5px; color: var(--text);
     line-height: 1.5;
   }
-  .rules-config-card ul li::before {
-    content: '·  ';
-    color: #4a9eff;
-  }
+  .rules-config-card ul li::before { content: '·  '; color: var(--neon-blue); }
 
-  /* Victoire / défaite */
   .rules-win-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: 1fr;
-    gap: 12px;
+    gap: 14px;
     margin-top: 6px;
-    align-items: stretch;
   }
+  @media (max-width: 720px) { .rules-win-grid { grid-template-columns: 1fr; } }
   .rules-win-card {
-    border-radius: 10px;
-    padding: 14px 16px;
-    min-width: 0;
-    height: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+    border-radius: 12px;
+    padding: 16px 18px;
+    height: 100%; box-sizing: border-box;
   }
-  .rules-win-card.crew     { background: #0d2a1a; border: 1.5px solid #39ff1444; }
-  .rules-win-card.impostor { background: #2a0d0d; border: 1.5px solid #ff224444; }
+  .rules-win-card.crew     { background: rgba(76,255,157,.06); border: 1px solid rgba(76,255,157,.4); }
+  .rules-win-card.impostor { background: rgba(255,56,96,.06); border: 1px solid rgba(255,56,96,.4); }
   .rules-win-card h4 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
   }
   .rules-win-card.crew h4     { color: var(--neon-green); }
   .rules-win-card.impostor h4 { color: var(--neon-red); }
 
-  /* Chrono badges */
   .rules-timers {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;
     justify-content: flex-start;
   }
   .rules-timer-badge {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    padding: 10px 14px;
-    border-radius: 6px;
-    background: #0d1225;
-    border: 1px solid #2233aa;
-    color: #4a9eff;
-    letter-spacing: 1px;
-    line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 11px 16px;
+    border-radius: 999px;
+    background: rgba(107, 166, 255, .08);
+    border: 1px solid rgba(107, 166, 255, .35);
+    color: var(--neon-blue);
+    letter-spacing: 1.5px;
   }
 
-  /* Page de fin */
   .rules-end-page {
     text-align: center;
-    padding: 30px 20px;
-    border-radius: 16px;
-    background: linear-gradient(145deg, #0a0e1a, #0d1225);
-    border: 1px solid #223366;
+    padding: 38px 24px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, rgba(14, 18, 40, 0.85), rgba(8, 10, 24, 0.92));
+    border: 1px solid var(--line-2);
+    backdrop-filter: blur(14px);
   }
   .rules-end-page h2 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 22px;
-    color: white;
-    letter-spacing: 4px;
-    text-shadow: 0 0 20px #ffffff44;
-    line-height: 1.6;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 36px;
+    letter-spacing: 12px;
+    line-height: 1.4;
+    background: linear-gradient(90deg, #fff, #4cff9d 50%, #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 18px rgba(76, 255, 157, .35));
   }
 
-  /* ═══════════════════════════════════════════════════
-     PRINT STYLES
-  ═══════════════════════════════════════════════════ */
+  /* ═══════════ PRINT ═══════════ */
   @media print {
-    /* Forcer l'impression des couleurs */
-    * {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      color-adjust: exact !important;
-    }
-
-    @page {
-      margin: 8mm;
-      size: A4 portrait;
-    }
-
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    @page { margin: 8mm; size: A4 portrait; }
     body {
       background: white !important;
-      color: black;
-      margin: 0 !important;
-      padding: 0 !important;
+      color: black; margin: 0 !important; padding: 0 !important;
     }
-
+    body::before, body::after { display: none !important; }
     .tabs, .print-bar, .header { display: none !important; }
     .section { display: none !important; padding: 0 !important; }
     .section.print-active { display: block !important; padding: 0 !important; }
-    .stars { display: none !important; }
     .section-title { display: none !important; }
 
-    /* ─── GRILLE D'IMPRESSION : 3 colonnes × 3 lignes, IDENTIQUE recto/verso ─── */
     .cards-grid {
       display: grid !important;
       grid-template-columns: repeat(3, 60mm) !important;
       grid-auto-rows: 88mm !important;
-      gap: 6mm 6mm !important;
+      gap: 6mm !important;
       justify-content: center !important;
       align-content: start !important;
       margin: 0 auto !important;
       padding: 4mm 0 0 0 !important;
     }
-
-    /* ─── CARTE RECTO : taille fixe 60×88mm ─── */
     .card {
-      width: 60mm !important;
-      height: 88mm !important;
-      max-width: 60mm !important;
-      max-height: 88mm !important;
+      width: 60mm !important; height: 88mm !important;
       box-sizing: border-box !important;
       margin: 0 !important;
-      padding: 3mm !important;
-      break-inside: avoid !important;
-      page-break-inside: avoid !important;
-      box-shadow: none !important;
-      border-radius: 4mm !important;
-      overflow: visible !important;
-      position: relative !important;
+      background: linear-gradient(160deg, #2a2f4a, #1f2238) !important;
     }
-    .card.crewmate {
-      background: linear-gradient(145deg, #0d2a1a, #0a1f2a) !important;
-      border: 2px solid #39ff14 !important;
-    }
-    .card.impostor {
-      background: linear-gradient(145deg, #2a0d0d, #1a0a0a) !important;
-      border: 2px solid #ff2244 !important;
-    }
-    .card.sheriff {
-      background: linear-gradient(145deg, #2a2000, #1a1500) !important;
-      border: 2px solid #ffe600 !important;
-    }
-    .card.engineer {
-      background: linear-gradient(145deg, #00152a, #000d1a) !important;
-      border: 2px solid #00e5ff !important;
-    }
-
-    /* ─── DOS DE CARTE : 66×94mm (avec BLEED 3mm intégré) ─── */
     .card-back {
-      width: 66mm !important;
-      height: 94mm !important;
-      max-width: 66mm !important;
-      max-height: 94mm !important;
-      box-sizing: border-box !important;
-      margin: -3mm !important;
-      padding: 6mm !important;
-      break-inside: avoid !important;
-      page-break-inside: avoid !important;
-      box-shadow: none !important;
-      border: none !important;
-      border-radius: 0 !important;
-      overflow: visible !important;
-      position: relative !important;
-      background: #1a0500 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
+      background: linear-gradient(160deg, #3a2515, #2a1810) !important;
     }
-    .card-back::before {
-      background-image: none !important;
-      display: none !important;
+    .quest-checkbox,
+    .quest-checkbox.sabotage-box,
+    .legend-box,
+    .legend-box.sab,
+    .legend-box.check,
+    .tracker-circle,
+    .tracker-circle.red {
+      background: #fff !important;
     }
-    /* Équerres intérieures : visibles en impression */
-    .back-inner-corner {
-      border-color: #ff6b00 !important;
-      opacity: 0.8 !important;
-    }
-    .card-back-logo { color: #ff6b00 !important; position: relative !important; z-index: 2 !important; }
-    .card-back-icon { position: relative !important; z-index: 2 !important; }
-
-    /* Note explicative retirée à l'impression */
-    #tab-backs > div:not(.cards-grid) { display: none !important; }
-
-    /* ─── REPÈRES DE DÉCOUPE (recto uniquement) ─── */
-    /* Petits traits noirs aux 4 coins de chaque carte recto, juste à l'extérieur.
-       Invisibles sur le verso car les dos débordent et couvrent cette zone. */
-    .card::after {
-      content: '' !important;
-      position: absolute !important;
-      inset: -1.5mm !important;
-      pointer-events: none !important;
-      background:
-        linear-gradient(#333, #333) top left    / 2mm 0.2mm no-repeat,
-        linear-gradient(#333, #333) top left    / 0.2mm 2mm no-repeat,
-        linear-gradient(#333, #333) top right   / 2mm 0.2mm no-repeat,
-        linear-gradient(#333, #333) top right   / 0.2mm 2mm no-repeat,
-        linear-gradient(#333, #333) bottom left / 2mm 0.2mm no-repeat,
-        linear-gradient(#333, #333) bottom left / 0.2mm 2mm no-repeat,
-        linear-gradient(#333, #333) bottom right/ 2mm 0.2mm no-repeat,
-        linear-gradient(#333, #333) bottom right/ 0.2mm 2mm no-repeat !important;
-    }
-    /* Désactive l'overlay de grille bruit sur le recto à l'impression */
-    .card > div::before { background-image: none !important; }
-
-    /* Note explicative retirée à l'impression */
-    #tab-backs > div:not(.cards-grid) { display: none !important; }
-
-    .crewmate .card-title { color: #39ff14 !important; }
-    .impostor .card-title { color: #ff2244 !important; }
-    .sheriff  .card-title { color: #ffe600 !important; }
-    .engineer .card-title { color: #00e5ff !important; }
-
-    .crewmate .missions { color: #39ff14 !important; background: #39ff1411 !important; border: 1px solid #39ff1433 !important; }
-    .impostor .missions { color: #ff2244 !important; background: #ff224411 !important; border: 1px solid #ff224433 !important; }
-    .sheriff  .missions { color: #ffe600 !important; background: #ffe60011 !important; border: 1px solid #ffe60033 !important; }
-    .engineer .missions { color: #00e5ff !important; background: #00e5ff11 !important; border: 1px solid #00e5ff33 !important; }
-
-    /* Drop-shadows retirés pour économiser l'encre */
-    .char-area { filter: none !important; width: 36mm !important; height: 36mm !important; }
-    .card-back-icon { filter: none !important; width: 30mm !important; height: 30mm !important; margin: 2mm 0 !important; }
-
-    /* Ajustements texte impression */
-    .card-title { font-size: 10pt !important; margin-bottom: 1mm !important; }
-    .missions { padding: 2mm !important; }
-    .missions-label { font-size: 6pt !important; margin-bottom: 2mm !important; }
-    .mission-num { min-width: 7mm !important; height: 7mm !important; font-size: 9pt !important; }
-    .card-back-logo-top { font-size: 13pt !important; }
-    .card-back-logo-bottom { font-size: 9pt !important; }
-    .color-dot { width: 3mm !important; height: 3mm !important; top: 2mm !important; right: 2mm !important; }
-
-    /* ─── RÈGLES ─── */
-    .rules-section { break-inside: avoid; page-break-inside: avoid; }
-    .rules-section-body {
-      background: #080c18 !important;
-      border: 1px solid #1a2244 !important;
-      color: #ccd6ee !important;
-    }
-    .rules-section-header.blue   { background: #0d1a3a !important; color: #4a9eff !important; }
-    .rules-section-header.green  { background: #0d2a1a !important; color: #39ff14 !important; }
-    .rules-section-header.red    { background: #2a0d0d !important; color: #ff2244 !important; }
-    .rules-section-header.yellow { background: #2a2000 !important; color: #ffe600 !important; }
-    .rules-section-header.cyan   { background: #001a2a !important; color: #00e5ff !important; }
-    .rules-section-header.purple { background: #1a0a2a !important; color: #c400ff !important; }
-    .rules-section-header.orange { background: #2a1200 !important; color: #ff9944 !important; }
-    .rules-role-card.crewmate { background: #0d2a1a !important; }
-    .rules-role-card.impostor { background: #2a0d0d !important; }
-    .rules-role-card.sheriff  { background: #2a2000 !important; }
-    .rules-role-card.engineer { background: #001a2a !important; }
-    .rules-win-card.crew      { background: #0d2a1a !important; }
-    .rules-win-card.impostor  { background: #2a0d0d !important; }
-    .rules-config-card        { background: #0a0e1a !important; border: 1px solid #223355 !important; }
-    .rules-title-page, .rules-end-page { background: #0a0e1a !important; border: 1px solid #223366 !important; }
-    .rules-timer-badge { background: #0d1225 !important; border: 1px solid #2233aa !important; }
-
-    /* ─── SECTION SABOTAGE ─── */
-    .sabotage-card {
-      background: #1a0a2a !important;
-      border: 2px solid #c400ff !important;
-      break-inside: avoid;
-    }
-    .sabotage-card h3 { color: #c400ff !important; }
-    .sabotage-card p, .sabotage-card li { color: #ddd !important; }
-
-    /* ─── DÉFIS ─── */
-    .defis-container .defi-legend { display: none !important; }
-    .defis-section-title { padding: 6px 14px !important; margin: 10px 0 6px !important; font-size: 9px !important; }
-    .defis-grid {
-      grid-template-columns: 1fr !important;
-      gap: 6px !important;
-    }
-    .defi-card {
-      break-inside: avoid;
-      page-break-inside: avoid;
-      box-shadow: none !important;
-      height: 60mm !important;
-      min-height: 60mm !important;
-      max-height: 60mm !important;
-      overflow: hidden !important;
-      padding: 12px 18px !important;
-    }
-    .defi-card.red  { background: #2e0e0e !important; border: 1.5px solid #ff2244 !important; }
-    .defi-card.blue { background: #0e1a2e !important; border: 1.5px solid #4a9eff !important; }
-    .defi-text { color: #dde6ff !important; font-size: 22px !important; line-height: 1.6 !important; text-align: center !important; }
-    .defi-number { font-size: 14px !important; }
-    .defi-icon-wrap { width: 32px !important; height: 32px !important; }
-    .defi-header { justify-content: center !important; }
-    .defi-card { align-items: center !important; justify-content: center !important; text-align: center !important; }
-    .defi-badge { display: none !important; }
-    .taches-grid { grid-template-columns: 1fr 1fr !important; }
-    .taches-zone  { background: #0d2a1a !important; border: 1.5px solid #39ff14 !important; break-inside: avoid; box-shadow: none !important; }
-    .taches-zone-title { font-size: 14px !important; margin-bottom: 12px !important; padding-bottom: 10px !important; }
-    .tache-item { padding: 12px 6px !important; }
-    .tache-num  { font-size: 14px !important; min-width: 50px !important; }
-    .tache-nom  { font-size: 18px !important; line-height: 1.4 !important; }
-
-    /* ─── FICHE QUESTS ─── */
-    /* ═══════════════════════════════════════════════════
-       IMPRESSION FICHE QUESTS — 2 pages A4 (1 par étage)
-    ═══════════════════════════════════════════════════ */
-    .quest-sheet {
-      background: #080c18 !important;
-      border: none !important;
-      box-shadow: none !important;
-      color: #ccd6ee !important;
-      padding: 0 !important;
-      max-width: 100% !important;
-    }
-
-    /* Header global masqué — chaque section a son propre header */
-    .quest-sheet-header { display: none !important; }
-    .quest-legend { break-inside: avoid; page-break-inside: avoid; }
-
-    /* Chaque section (étage / RDC) = 1 page A4 */
-    .quest-floor-block {
-      page-break-before: always;
-      break-before: page;
-      page-break-inside: avoid;
-      break-inside: avoid;
-      display: flex;
-      flex-direction: column;
-      padding: 8mm 10mm;
-      box-sizing: border-box;
-      background: #080c18 !important;
-    }
-    .quest-floor-block:first-of-type {
-      page-break-before: avoid;
-      break-before: avoid;
-    }
-
-    /* Titre de section — grand et bien visible */
-    .quest-floor-title {
-      font-size: 14px !important;
-      padding: 14px 20px !important;
-      margin: 0 0 10px 0 !important;
-      border-radius: 8px !important;
-    }
-    .quest-floor-title.etage {
-      background: #2a0d0d !important;
-      color: #ff2244 !important;
-      border: 2px solid #ff224466 !important;
-    }
-    .quest-floor-title.rdc {
-      background: #0d1530 !important;
-      color: #4a9eff !important;
-      border: 2px solid #4a9eff66 !important;
-    }
-
-    /* Mini-header sur chaque page */
-    .quest-page-header {
-      display: flex !important;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #1a2244;
-    }
-    .quest-page-header-title {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 10px;
-      color: #445577;
-      letter-spacing: 2px;
-    }
-    .quest-page-header-meta {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 8px;
-      color: #2a3a66;
-      text-align: right;
-      line-height: 1.8;
-    }
-
-    /* Lignes de missions */
-    .quest-rows { gap: 3px !important; }
-    .quest-row {
-      break-inside: avoid;
-      page-break-inside: avoid;
-      background: #0c1020 !important;
-      border: 1px solid #1a2244 !important;
-      padding: 7px 12px !important;
-      grid-template-columns: 52px 1fr auto !important;
-    }
-    .quest-row:hover { border-color: #1a2244 !important; }
-
-    /* Numéros de mission */
-    .quest-row-num.etage { color: #ff2244 !important; background: #ff224415 !important; border: 1px solid #ff224433 !important; font-size: 10px !important; }
-    .quest-row-num.rdc   { color: #4a9eff  !important; background: #4a9eff15  !important; border: 1px solid #4a9eff33  !important; font-size: 10px !important; }
-    .quest-row-room { color: #ffffff !important; font-size: 14px !important; }
-
-    /* Cases à cocher agrandies pour l'écriture à la main */
-    .quest-checkboxes { gap: 10px !important; }
-    .quest-checkbox {
-      width: 42px !important;
-      height: 42px !important;
-      background: #0a0e1a !important;
-      border: 2px solid #2a3a66 !important;
-      border-radius: 6px !important;
-    }
-    .quest-checkbox.sabotage-box {
-      background: #ff224410 !important;
-      border: 2px solid #ff224455 !important;
-    }
-
-    /* Légende */
-    .quest-legend {
-      margin-top: 14px !important;
-      padding: 10px 16px !important;
-      background: #0c1020 !important;
-      border: 1px solid #1a2244 !important;
-      color: #8899bb !important;
-      font-size: 11px !important;
-    }
-    .legend-box {
-      width: 22px !important; height: 22px !important;
-      background: #0a0e1a !important;
-      border: 2px solid #2a3a66 !important;
-    }
-    .legend-box.sab   { background: #ff224410 !important; border-color: #ff224455 !important; }
-    .legend-box.check { font-size: 14px !important; }
-
-    /* Trackers en bas de page */
-    .tracker-row {
-      margin-top: 12px !important;
-      break-inside: avoid;
-    }
-    .tracker-card {
-      background: #0c1020 !important;
-      border: 1px solid #1a2244 !important;
-      break-inside: avoid;
-    }
-    .tracker-title { color: #4a9eff !important; }
-    .tracker-circle {
-      width: 36px !important; height: 36px !important;
-      background: #0a0e1a !important;
-      border: 2px solid #2a3a66 !important;
-    }
-    .tracker-circle.red { border-color: #ff224455 !important; }
-    .tracker-line { border-bottom-color: #2a3a66 !important; }
   }
 
-  /* ──────────────────────────────────────────────
-     IMMERSION : animations & ambiance spatiale
-     ────────────────────────────────────────────── */
-
-  /* Étoiles qui scintillent doucement */
-  .stars { animation: starsTwinkle 7s ease-in-out infinite; }
-  @keyframes starsTwinkle {
-    0%, 100% { opacity: 0.55; }
-    50%      { opacity: 1; }
-  }
-
-  /* Halo nébuleux animé (rouge/cyan/violet) qui dérive lentement */
-  body { position: relative; }
-  body::before {
-    content: '';
-    position: fixed; inset: -25%;
-    background:
-      radial-gradient(ellipse at 20% 30%, rgba(196,0,255,0.07) 0%, transparent 45%),
-      radial-gradient(ellipse at 80% 70%, rgba(0,229,255,0.06) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(255,34,68,0.04) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: -1;
-    animation: nebulaDrift 80s linear infinite;
-  }
-  @keyframes nebulaDrift {
-    0%   { transform: rotate(0deg)   scale(1); }
-    50%  { transform: rotate(180deg) scale(1.08); }
-    100% { transform: rotate(360deg) scale(1); }
-  }
-
-  /* Scanlines très subtiles, comme un terminal CRT */
-  body::after {
-    content: '';
-    position: fixed; inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,0.018) 0px,
-      rgba(255,255,255,0.018) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: overlay;
-  }
-
-  /* Cartes : effet de tilt 3D au survol */
-  .cards-grid { perspective: 1400px; }
-  .card { transform-style: preserve-3d; }
-  .card:hover {
-    transform: translateY(-8px) scale(1.04) rotateX(4deg) rotateY(-3deg);
-  }
-
-  /* Imposteurs : pulsation rouge subtile en permanence */
-  .card.impostor:not(:hover) {
-    animation: impostorPulse 3.6s ease-in-out infinite;
-  }
-  @keyframes impostorPulse {
-    0%, 100% { box-shadow: 0 0 15px #ff224433, 0 8px 32px #00000088; }
-    50%      { box-shadow: 0 0 26px #ff224466, 0 8px 32px #00000088; }
-  }
-
-  /* Apparition fluide quand on change d'onglet */
-  .section.active {
-    animation: sectionFadeIn .35s cubic-bezier(.2,.8,.2,1);
-  }
-  @keyframes sectionFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Apparition échelonnée des cartes (effet "deal") */
+  /* ═══════════ ANIMATIONS ═══════════ */
   .section.active .card {
-    animation: cardReveal .45s cubic-bezier(.2,.8,.2,1) backwards;
+    animation: cardReveal 0.5s cubic-bezier(.2,.7,.3,1) backwards;
   }
-  .section.active .card:nth-child(1)  { animation-delay: .00s; }
+  .section.active .card:nth-child(1)  { animation-delay: 0s; }
   .section.active .card:nth-child(2)  { animation-delay: .04s; }
   .section.active .card:nth-child(3)  { animation-delay: .08s; }
   .section.active .card:nth-child(4)  { animation-delay: .12s; }
@@ -2011,109 +1476,74 @@
   .section.active .card:nth-child(17) { animation-delay: .64s; }
   .section.active .card:nth-child(18) { animation-delay: .68s; }
   @keyframes cardReveal {
-    from { opacity: 0; transform: translateY(20px) scale(.96); }
+    from { opacity: 0; transform: translateY(24px) scale(.96); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  /* Titre principal : pulsation lente du glow */
-  .header h1 {
-    animation: headerGlow 5s ease-in-out infinite;
-  }
+  .header h1 { animation: headerGlow 5s ease-in-out infinite; }
   @keyframes headerGlow {
-    0%, 100% { text-shadow: 0 0 20px #ff224488, 0 0 40px #ff224444; }
-    50%      { text-shadow: 0 0 32px #ff2244cc, 0 0 64px #ff224488; }
+    0%, 100% { filter: drop-shadow(0 0 18px rgba(255, 56, 96, 0.35)); }
+    50%      { filter: drop-shadow(0 0 28px rgba(255, 56, 96, 0.6)); }
   }
 
-  /* Numéros de mission : léger scale au survol de la carte */
   .mission-num { transition: transform .2s; }
-  .card:hover .mission-num { transform: scale(1.08); }
+  .card:hover .mission-num { transform: scale(1.1); }
 
-  /* Boutons d'onglets : scan-line discrète sur l'onglet actif */
-  .tab-btn.active::after {
-    content: '';
-    position: absolute; left: 0; right: 0; bottom: -1px;
-    height: 2px;
-    background: currentColor;
-    box-shadow: 0 0 8px currentColor;
-    animation: tabUnderline .6s cubic-bezier(.2,.8,.2,1);
-  }
-  .tab-btn { position: relative; overflow: hidden; }
-  @keyframes tabUnderline {
-    from { transform: scaleX(0); }
-    to   { transform: scaleX(1); }
-  }
-
-  /* Respect des préférences d'accessibilité */
   @media (prefers-reduced-motion: reduce) {
-    .stars, body::before, .card.impostor, .section.active,
-    .section.active .card, .header h1, .tab-btn.active::after {
-      animation: none !important;
-    }
+    .section.active, .section.active .card, .header h1 { animation: none !important; }
     .card:hover { transform: none !important; }
   }
-
-  /* Mode impression : aucune animation, pas de nébuleuse, pas de scanlines */
   @media print {
-    .stars, body::before, body::after, .card.impostor,
-    .section.active, .section.active .card, .header h1,
-    .tab-btn.active::after {
-      animation: none !important;
-    }
+    .section.active, .section.active .card, .header h1 { animation: none !important; }
     body::before, body::after { display: none !important; }
   }
 
-  /* ──────────────────────────────────────────────
-     ONGLET IMPRESSION RECTO/VERSO
-     ────────────────────────────────────────────── */
+  /* ═══════════ ONGLET IMPRESSION RECTO/VERSO ═══════════ */
   #tab-print .print-info {
-    max-width: 700px;
+    max-width: 740px;
     margin: 0 auto 28px;
-    padding: 18px 22px;
-    background: #0e1a2a;
-    border: 1px solid #00aabb55;
-    border-radius: 8px;
-    font-size: 13px;
+    padding: 20px 24px;
+    background: rgba(14, 26, 42, 0.7);
+    border: 1px solid rgba(41, 231, 255, .3);
+    border-radius: 12px;
+    font-size: 14px;
     line-height: 1.6;
-    color: #cce8ff;
+    color: #d6e8ff;
+    backdrop-filter: blur(10px);
   }
   #tab-print .print-info p { margin-bottom: 8px; }
   #tab-print .print-info ol { margin: 8px 0 12px 22px; }
   #tab-print .print-info li { margin-bottom: 4px; }
   #tab-print .print-info-tip {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px dashed #00aabb44;
-    color: #88ccff;
-    font-size: 12px;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px dashed rgba(41, 231, 255, .25);
+    color: #88ccff; font-size: 12.5px;
   }
 
   .print-pages-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 30px;
     padding: 10px 0 40px;
   }
   .print-page {
     background: #f4f6fa;
-    width: 210mm;
-    height: 297mm;
-    padding: 12mm;
-    box-sizing: border-box;
-    box-shadow: 0 8px 32px #00000099, 0 0 0 1px #00000044;
+    width: 210mm; height: 297mm;
+    padding: 12mm; box-sizing: border-box;
+    box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.3);
     color: #0a0e1a;
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     position: relative;
     max-width: 100%;
   }
   .print-page-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 3px;
     text-align: center;
     margin-bottom: 6mm;
     color: #556;
+    text-transform: uppercase;
   }
   .print-page.recto .print-page-label { color: #1a6b3a; }
   .print-page.verso .print-page-label { color: #b85500; }
@@ -2121,58 +1551,41 @@
     display: grid;
     grid-template-columns: repeat(3, 62mm);
     grid-template-rows: repeat(3, 87mm);
-    justify-content: center;
-    align-content: start;
-    gap: 0;
-    flex: 1;
+    justify-content: center; align-content: start;
+    gap: 0; flex: 1;
   }
-  /* Cartes redimensionnées dans le contexte d'impression */
   .print-page .card,
   .print-page .card-back {
-    width: 62mm !important;
-    height: 87mm !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
+    width: 62mm !important; height: 87mm !important;
+    border-radius: 0 !important; margin: 0 !important;
     animation: none !important;
   }
   .print-page .card { padding: 8px 6px 6px !important; }
   .print-page .card .char-area { width: 70px; height: 70px; }
-  .print-page .card-title { font-size: 9px !important; margin-bottom: 2px !important; }
+  .print-page .card-title { font-size: 9px !important; margin-bottom: 2px !important; padding: 3px 8px !important; }
   .print-page .missions { padding: 4px 6px !important; font-size: 6px !important; }
   .print-page .mission-num { min-width: 18px; height: 18px; font-size: 7px !important; }
   .print-page .missions-label { font-size: 5px !important; margin-bottom: 3px !important; }
-  /* Pas d'animation sur les cartes en mode print-page (override des animations globales) */
   .print-page .card:hover { transform: none !important; }
   .print-page .card { transition: none !important; }
 
-  /* Impression réelle : chaque .print-page = une page A4 */
   @media print {
     #tab-print.print-active { padding: 0 !important; }
     #tab-print.print-active > .section-title,
     #tab-print.print-active > .print-info,
-    #tab-print.print-active .print-page-label {
-      display: none !important;
-    }
+    #tab-print.print-active .print-page-label { display: none !important; }
     #tab-print.print-active .print-pages-container {
-      display: block !important;
-      gap: 0 !important;
-      padding: 0 !important;
+      display: block !important; gap: 0 !important; padding: 0 !important;
     }
     #tab-print.print-active .print-page {
-      background: white !important;
-      box-shadow: none !important;
-      width: 210mm !important;
-      height: 297mm !important;
-      padding: 8mm !important;
-      margin: 0 !important;
-      page-break-after: always !important;
-      break-after: page !important;
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
+      background: white !important; box-shadow: none !important;
+      width: 210mm !important; height: 297mm !important;
+      padding: 8mm !important; margin: 0 !important;
+      page-break-after: always !important; break-after: page !important;
+      page-break-inside: avoid !important; break-inside: avoid !important;
     }
     #tab-print.print-active .print-page:last-child {
-      page-break-after: auto !important;
-      break-after: auto !important;
+      page-break-after: auto !important; break-after: auto !important;
     }
     #tab-print.print-active .print-grid {
       grid-template-columns: repeat(3, 62mm) !important;
@@ -2180,36 +1593,33 @@
     }
     #tab-print.print-active .card,
     #tab-print.print-active .card-back {
-      width: 62mm !important;
-      height: 87mm !important;
-      margin: 0 !important;
-      border-radius: 0 !important;
+      width: 62mm !important; height: 87mm !important;
+      margin: 0 !important; border-radius: 0 !important;
     }
   }
 
-  /* ──────────────────────────────────────────────
-     ⏱ TIMER
-     ────────────────────────────────────────────── */
-  #tab-timer { text-align: center; padding: 40px 20px 80px; }
+  /* ═══════════ TIMER ═══════════ */
+  #tab-timer { text-align: center; padding: 50px 20px 80px; }
   .timer-display {
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(56px, 16vw, 150px);
-    letter-spacing: 6px;
-    margin: 30px auto;
-    color: #00ffcc;
-    text-shadow: 0 0 22px #00ffcc55;
-    transition: color .3s, text-shadow .3s, transform .2s;
+    font-family: 'Space Grotesk', 'JetBrains Mono', monospace;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
+    font-size: clamp(72px, 18vw, 180px);
+    letter-spacing: 8px;
+    margin: 36px auto;
+    color: #5cf2d6;
+    text-shadow: 0 0 28px rgba(92, 242, 214, .35);
+    transition: color .3s, text-shadow .3s, transform .2s;
   }
-  .timer-display.running  { color: #fff;     text-shadow: 0 0 30px #ffffff66; }
-  .timer-display.warning  { color: #ff8c00;  text-shadow: 0 0 30px #ff8c0088; }
+  .timer-display.running  { color: #fff;     text-shadow: 0 0 36px rgba(255,255,255,.4); }
+  .timer-display.warning  { color: var(--neon-orange);  text-shadow: 0 0 36px rgba(255,155,59,.55); }
   .timer-display.critical {
-    color: #ff2244;
-    text-shadow: 0 0 40px #ff2244aa;
+    color: var(--neon-red);
+    text-shadow: 0 0 48px rgba(255, 56, 96, .7);
     animation: timerCriticalPulse 1s ease-in-out infinite;
   }
   .timer-display.finished {
-    color: #ff2244;
+    color: var(--neon-red);
     animation: timerFinishedFlash .5s ease-in-out infinite;
   }
   @keyframes timerCriticalPulse {
@@ -2224,56 +1634,60 @@
   .timer-controls {
     display: flex; gap: 14px;
     justify-content: center;
-    margin: 28px 0;
+    margin: 32px 0;
     flex-wrap: wrap;
   }
   .timer-btn {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    padding: 16px 26px;
-    border: 1.5px solid currentColor;
-    border-radius: 4px;
-    cursor: pointer;
-    background: transparent;
-    letter-spacing: 1px;
-    transition: all .2s;
-  }
-  .timer-btn:hover { background: currentColor; color: var(--space-dark); }
-  .timer-btn.start { color: #39ff14; }
-  .timer-btn.pause { color: #ff8c00; }
-  .timer-btn.reset { color: #ff7788; }
-  .timer-info {
-    max-width: 540px;
-    margin: 40px auto 0;
-    color: #8899bb;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
     font-size: 13px;
+    padding: 14px 28px;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    cursor: pointer;
+    background: rgba(20, 24, 44, 0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all .25s;
+  }
+  .timer-btn:hover {
+    background: currentColor;
+    color: var(--bg-0);
+    box-shadow: 0 0 24px currentColor;
+  }
+  .timer-btn.start { color: var(--neon-green); }
+  .timer-btn.pause { color: var(--neon-orange); }
+  .timer-btn.reset { color: #ff8aa3; }
+  .timer-info {
+    max-width: 580px;
+    margin: 44px auto 0;
+    color: var(--text-dim);
+    font-size: 13.5px;
     line-height: 1.8;
     text-align: left;
-    padding: 18px 22px;
-    background: #0e1a2a;
-    border: 1px solid #00aabb55;
-    border-radius: 8px;
+    padding: 20px 24px;
+    background: rgba(14, 26, 42, 0.65);
+    border: 1px solid rgba(41, 231, 255, .28);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
   }
   .timer-info p { margin: 4px 0; }
 
-  /* ──────────────────────────────────────────────
-     🖥 OVERLAY PLEIN ÉCRAN (cartes)
-     ────────────────────────────────────────────── */
+  /* ═══════════ OVERLAY PLEIN ÉCRAN ═══════════ */
   .fullscreen-overlay {
     position: fixed; inset: 0;
-    background: rgba(5,8,15,0.94);
+    background: rgba(4, 6, 14, 0.92);
     z-index: 10000;
-    align-items: center;
-    justify-content: center;
+    align-items: center; justify-content: center;
     padding: 20px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
   .fullscreen-overlay[style*="flex"] { display: flex !important; }
   .fullscreen-close {
     position: absolute;
-    top: 14px; right: 14px;
-    width: 44px; height: 44px;
+    top: 18px; right: 18px;
+    width: 46px; height: 46px;
     border-radius: 50%;
     background: rgba(255,255,255,0.08);
     color: white;
@@ -2281,27 +1695,22 @@
     font-size: 20px;
     cursor: pointer;
     z-index: 10001;
-    transition: background .2s;
+    transition: background .2s, transform .2s;
   }
-  .fullscreen-close:hover { background: rgba(255,255,255,0.18); }
+  .fullscreen-close:hover { background: rgba(255,255,255,0.18); transform: rotate(90deg); }
   .fullscreen-content {
-    max-width: 100%;
-    max-height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    max-width: 100%; max-height: 100%;
+    display: flex; align-items: center; justify-content: center;
   }
   .fullscreen-card-wrap > .card {
-    width: min(85vw, 320px) !important;
-    height: min(80vh, 480px) !important;
+    width: min(85vw, 340px) !important;
+    height: min(80vh, 510px) !important;
     cursor: default !important;
     animation: none !important;
   }
   .fullscreen-card-wrap > .card:hover { transform: none !important; }
 
-  /* ──────────────────────────────────────────────
-     ☑ TRACKERS CLIQUABLES (Buzz, Sheriff balle)
-     ────────────────────────────────────────────── */
+  /* TRACKERS CLIQUABLES */
   .tracker-circle {
     cursor: pointer;
     transition: background .2s, transform .15s;
@@ -2316,12 +1725,10 @@
     content: '✕';
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    color: var(--space-dark);
-    font-weight: bold;
+    color: var(--bg-0);
+    font-weight: 700;
     font-size: 14px;
   }
-
-  /* Indicateur "carte cliquable = aperçu" — discret */
   .section.active .card { cursor: pointer; }
 
   @media print {
@@ -2338,45 +1745,45 @@
 
 <div class="tabs">
   <div class="sidebar-title">AMONG US</div>
-  <button class="tab-btn all active"     onclick="showTab('all')">TOUTES</button>
-  <button class="tab-btn crewmate"       onclick="showTab('crewmate')">CREWMATES</button>
-  <button class="tab-btn impostor"       onclick="showTab('impostor')">IMPOSTORS</button>
-  <button class="tab-btn sheriff"        onclick="showTab('sheriff')">SHERIFF</button>
-  <button class="tab-btn engineer"       onclick="showTab('engineer')">INGÉNIEUR</button>
-  <button class="tab-btn sabotage"       onclick="showTab('sabotage')">SABOTAGE</button>
-  <button class="tab-btn quests"         onclick="showTab('quests')">FICHE QUESTS</button>
-  <button class="tab-btn backs"          onclick="showTab('backs')">DOS DE CARTES</button>
-  <button class="tab-btn printtab"       onclick="showTab('print')">🖨 IMPRESSION</button>
-  <button class="tab-btn defis"          onclick="showTab('defis')">DÉFIS &amp; TÂCHES</button>
-  <button class="tab-btn rules"          onclick="showTab('rules')">RÈGLES</button>
-  <button class="tab-btn timer"          onclick="showTab('timer')">⏱ TIMER</button>
+  <button class="tab-btn crewmate active" onclick="showTab('crewmate')">Crewmates</button>
+  <button class="tab-btn impostor"       onclick="showTab('impostor')">Impostors</button>
+  <button class="tab-btn sheriff"        onclick="showTab('sheriff')">Sheriff</button>
+  <button class="tab-btn engineer"       onclick="showTab('engineer')">Ingenieur</button>
+  <button class="tab-btn rules"          onclick="showTab('rules')">Règles</button>
+  <button class="tab-btn sabotage"       onclick="showTab('sabotage')">Règles spéciales</button>
+  <button class="tab-btn quests"         onclick="showTab('quests')">Fiche Quests</button>
+  <button class="tab-btn defis"          onclick="showTab('defis')">Défis</button>
+  <button class="tab-btn backs"          onclick="showTab('backs')">Dos des cartes</button>
+  <button class="tab-btn timer"          onclick="showTab('timer')">Timer</button>
+  <button class="tab-btn livret"         onclick="showTab('livret')">Livret</button>
+  <button class="tab-btn all"            onclick="showTab('all')" style="display:none">Toutes</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
      ALL / CREWMATES
 ════════════════════════════════════════════════════ -->
-<div class="section active" id="tab-all">
-  <div class="section-title" style="color:#8899bb">TOUTES LES CARTES</div>
+<div class="section" id="tab-all">
+  <div class="section-title" style="color:#8899bb">Toutes</div>
   <div class="cards-grid" id="all-grid"></div>
 </div>
 
-<div class="section" id="tab-crewmate">
-  <div class="section-title" style="color:var(--neon-green)">CREWMATES (11)</div>
+<div class="section active" id="tab-crewmate">
+  <div class="section-title" style="color:var(--neon-green)">Crewmates</div>
   <div class="cards-grid" id="crew-grid"></div>
 </div>
 
 <div class="section" id="tab-impostor">
-  <div class="section-title" style="color:var(--neon-red)">IMPOSTORS (3)</div>
+  <div class="section-title" style="color:var(--neon-red)">Impostors</div>
   <div class="cards-grid" id="imp-grid"></div>
 </div>
 
 <div class="section" id="tab-sheriff">
-  <div class="section-title" style="color:var(--neon-yellow)">SHERIFF (1)</div>
+  <div class="section-title" style="color:var(--neon-yellow)">Sheriff</div>
   <div class="cards-grid" id="sheriff-grid"></div>
 </div>
 
 <div class="section" id="tab-engineer">
-  <div class="section-title" style="color:var(--neon-cyan)">INGÉNIEUR (1)</div>
+  <div class="section-title" style="color:var(--neon-cyan)">Ingenieur</div>
   <div class="cards-grid" id="eng-grid"></div>
 </div>
 
@@ -2384,12 +1791,12 @@
      SABOTAGE
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-sabotage">
-  <div class="section-title" style="color:var(--neon-purple)">RÈGLES — SABOTAGE & INGÉNIEUR</div>
+  <div class="section-title" style="color:var(--neon-purple)">Règles spéciales</div>
   <div class="sabotage-container">
 
     <div class="sabotage-card">
       <span class="tag purple">IMPOSTEUR FANTÔME</span>
-      <h3>⚡ SABOTER UNE PIÈCE</h3>
+      <h3>SABOTER UNE PIÈCE</h3>
       <p>Quand un Imposteur devient Fantôme, il peut saboter des pièces du bâtiment.</p>
       <br>
       <ul>
@@ -2418,7 +1825,7 @@
 
     <div class="sabotage-card">
       <span class="tag cyan">INGÉNIEUR</span>
-      <h3>🔧 RÉPARER UNE PIÈCE</h3>
+      <h3>RÉPARER UNE PIÈCE</h3>
       <p>L'Ingénieur est le seul joueur capable d'entrer dans une pièce sabotée.</p>
       <br>
       <ul>
@@ -2428,12 +1835,12 @@
         <li>La réparation prend <strong>10 secondes</strong> (rester dans la pièce)</li>
       </ul>
       <br>
-      <p style="color:#8899bb; font-size:11px">⚠️ L'Ingénieur peut être ciblé en priorité par les Imposteurs !</p>
+      <p style="color:#8899bb; font-size:11px">L'Ingénieur peut être ciblé en priorité par les Imposteurs !</p>
     </div>
 
     <div class="sabotage-card">
       <span class="tag cyan">INGÉNIEUR</span>
-      <h3>🤝 POUVOIR SPÉCIAL</h3>
+      <h3>POUVOIR SPÉCIAL</h3>
       <p>L'Ingénieur dispose d'un pouvoir unique :</p>
       <br>
       <ul>
@@ -2443,7 +1850,7 @@
 
     <div class="sabotage-card">
       <span class="tag purple">IMPOSTEUR FANTÔME</span>
-      <h3>🌑 AUTRES SABOTAGES</h3>
+      <h3>AUTRES SABOTAGES</h3>
       <p>En plus de saboter une pièce, le Fantôme Imposteur garde ses anciens pouvoirs :</p>
       <br>
       <ul>
@@ -2459,7 +1866,7 @@
 
   <!-- ── PANCARTES IMPRIMABLES ── -->
   <div class="pancartes-print-section">
-      <div class="pancartes-print-title">🖨️ PANCARTES À IMPRIMER &amp; PLASTIFIER</div>
+      <div class="pancartes-print-title">️ PANCARTES À IMPRIMER &amp; PLASTIFIER</div>
       <div class="pancartes-grid">
 
         <!-- PANCARTE VERTE : LIBRE -->
@@ -2515,9 +1922,6 @@
         </div>
 
       </div>
-      <p style="text-align:center; color:#445577; font-size:11px; margin-top:20px; font-family:'Press Start 2P',monospace; letter-spacing:1px">
-        IMPRIMER · DÉCOUPER · PLASTIFIER · AFFICHER SUR CHAQUE PORTE
-      </p>
     </div>
 
 </div>
@@ -2526,7 +1930,7 @@
      FICHE QUESTS (à imprimer et remplir à la main)
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-quests">
-  <div class="section-title" style="color:#a0e0cc">FICHE DE SUIVI DES QUÊTES</div>
+  <div class="section-title" style="color:#a0e0cc">Fiche Quests</div>
   <div class="quest-sheet" id="quest-sheet-content">
     <!-- rempli par JS -->
   </div>
@@ -2536,10 +1940,7 @@
      DOS DE CARTES (17 copies identiques)
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-backs">
-  <div class="section-title" style="color:#ff6b00">DOS DE CARTES — 16 COPIES</div>
-  <div style="text-align:center; color:#8899bb; font-size:12px; margin-bottom:20px; max-width:600px; margin-left:auto; margin-right:auto">
-    Aperçu seul des 16 dos identiques. Pour imprimer recto/verso aligné, utilise plutôt l'onglet <strong>🖨 IMPRESSION</strong>.
-  </div>
+  <div class="section-title" style="color:#ff6b00">Dos des cartes</div>
   <div class="cards-grid" id="backs-grid"></div>
 </div>
 
@@ -2547,16 +1948,16 @@
      IMPRESSION RECTO/VERSO (duplex)
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-print">
-  <div class="section-title" style="color:#00e5ff">🖨 IMPRESSION RECTO/VERSO</div>
+  <div class="section-title" style="color:#00e5ff">IMPRESSION RECTO/VERSO</div>
   <div class="print-info">
     <p><strong>Comment imprimer les cartes correctement :</strong></p>
     <ol>
-      <li>Clique sur <strong>🖨 IMPRIMER LA VUE ACTUELLE</strong> en bas de page.</li>
+      <li>Clique sur <strong>IMPRIMER LA VUE ACTUELLE</strong> en bas de page.</li>
       <li>Dans la fenêtre d'impression, active l'option <strong>« Recto-verso »</strong> (ou « Duplex », « Two-sided »).</li>
       <li>Choisis le retournement <strong>« sur le bord long »</strong> (long edge) — c'est le défaut sur la plupart des imprimantes.</li>
       <li>Imprime. Les pages sortent dans l'ordre : Recto 1 → Verso 1 → Recto 2 → Verso 2.</li>
     </ol>
-    <p class="print-info-tip">💡 Les <strong>16 cartes</strong> tiennent sur <strong>2 feuilles A4</strong> (9 cartes par page, 7 sur la dernière). Découpe ensuite chaque carte aux ciseaux.</p>
+    <p class="print-info-tip">Les <strong>16 cartes</strong> tiennent sur <strong>2 feuilles A4</strong> (9 cartes par page, 7 sur la dernière). Découpe ensuite chaque carte aux ciseaux.</p>
   </div>
   <div class="print-pages-container" id="print-pages-container"></div>
 </div>
@@ -2565,7 +1966,7 @@
      DÉFIS & TÂCHES
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-defis">
-  <div class="section-title" style="color:#ff9966">DÉFIS &amp; TÂCHES</div>
+  <div class="section-title" style="color:#ff9966">Défis</div>
   <div class="defis-container">
     <div class="defi-legend">
       <div class="defi-legend-item"><span class="defi-legend-dot red"></span>Défi rouge : mission à l'étage</div>
@@ -2573,13 +1974,13 @@
       <div class="defi-legend-item"><span class="defi-legend-dot green"></span>Tâche verte : localisation d'une mission</div>
     </div>
 
-    <div class="defis-section-title red">🔴 DÉFIS ROUGES — 9 DÉFIS</div>
+    <div class="defis-section-title red">Défis étage</div>
     <div class="defis-grid" id="defis-red"></div>
 
-    <div class="defis-section-title blue">🔵 DÉFIS BLEUS — 7 DÉFIS</div>
+    <div class="defis-section-title blue">Défis RDC</div>
     <div class="defis-grid" id="defis-blue"></div>
 
-    <div class="defis-section-title green">🗺️ TÂCHES — LOCALISATIONS</div>
+    <div class="defis-section-title green">Localisations</div>
     <div class="taches-grid" id="taches-zones"></div>
   </div>
 </div>
@@ -2588,18 +1989,18 @@
      RÈGLES DU JEU
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-rules">
-  <div class="section-title" style="color:#aabbff">RÈGLES DU JEU</div>
+  <div class="section-title" style="color:#aabbff">Règles</div>
   <div class="rules-container">
 
     <!-- TITRE -->
     <div class="rules-title-page">
       <h2>RULES</h2>
-      <p>AMONG US — GRANDEUR NATURE · 16 JOUEURS</p>
+      <p>AMONG US — GRANDEUR NATURE</p>
     </div>
 
     <!-- PRÉSENTATION : RÔLES -->
     <div class="rules-section">
-      <div class="rules-section-header blue">📋 PRÉSENTATION — RÔLES</div>
+      <div class="rules-section-header blue">PRÉSENTATION — RÔLES</div>
       <div class="rules-section-body">
         <div class="rules-roles-grid">
 
@@ -2649,22 +2050,22 @@
 
     <!-- MISE EN PLACE -->
     <div class="rules-section">
-      <div class="rules-section-header blue">⚙️ MISE EN PLACE — 16 JOUEURS</div>
+      <div class="rules-section-header blue">MISE EN PLACE</div>
       <div class="rules-section-body">
         <p style="margin-bottom:14px">16 cartes sont distribuées :</p>
         <div class="rules-config-grid">
           <div class="rules-config-card" style="grid-column: 1 / -1">
             <h4>COMPOSITION DU DECK</h4>
             <ul>
-              <li>3 <span class="kw-red">IMPOSTORS</span> — Bordeaux, Cramoisi, Écarlate</li>
               <li>11 <span class="kw-green">CREWMATES</span></li>
+              <li>3 <span class="kw-red">IMPOSTORS</span></li>
               <li>1 <span class="kw-yellow">SHERIFF</span></li>
               <li>1 <span class="kw-cyan">INGÉNIEUR</span></li>
             </ul>
           </div>
         </div>
         <p style="margin-top:16px; font-size:12px; color:#8899bb">
-          ⚖️ <strong>Équilibre parfait</strong> : chaque mission (1 à 16) apparaît exactement <strong>3 fois</strong> dans le deck.
+          <strong>Équilibre parfait</strong> : chaque mission (1 à 16) apparaît exactement <strong>3 fois</strong> dans le deck.
         </p>
         <p style="margin-top:10px; font-size:12px; color:#8899bb">
           Distribuer les cartes. Les <span class="kw-red">IMPOSTORS</span> doivent se reconnaître avant le début — faites fermer les yeux à tous pendant ce temps.
@@ -2674,7 +2075,7 @@
 
     <!-- DÉFIS -->
     <div class="rules-section">
-      <div class="rules-section-header orange">🎯 DÉFIS</div>
+      <div class="rules-section-header orange">DÉFIS</div>
       <div class="rules-section-body">
         <ul class="rules-list orange">
           <li>Installer les 16 défis (un par mission, missions 1 à 16).</li>
@@ -2688,7 +2089,7 @@
 
     <!-- DÉROULEMENT -->
     <div class="rules-section">
-      <div class="rules-section-header green">▶️ DÉROULEMENT D'UNE PARTIE</div>
+      <div class="rules-section-header green">DÉROULEMENT D'UNE PARTIE</div>
       <div class="rules-section-body">
         <p style="margin-bottom:14px">
           Quand un joueur découvre un mort, il crie <span class="kw-orange">REPORT</span> → on passe au <span class="kw-orange">MEETING</span>.
@@ -2717,7 +2118,7 @@
 
     <!-- SABOTAGE -->
     <div class="rules-section">
-      <div class="rules-section-header purple">⚡ SABOTAGE (Fantôme Impostor)</div>
+      <div class="rules-section-header purple">SABOTAGES</div>
       <div class="rules-section-body">
         <p style="margin-bottom:12px">
           Quand un <span class="kw-red">IMPOSTOR</span> est éliminé, il devient <span class="kw-pink">FANTÔME</span> et peut saboter :
@@ -2734,24 +2135,24 @@
 
     <!-- MORTS -->
     <div class="rules-section">
-      <div class="rules-section-header red">💀 MORTS &amp; FANTÔMES</div>
+      <div class="rules-section-header red">MORTS &amp; FANTÔMES</div>
       <div class="rules-section-body">
         <ul class="rules-list red">
           <li>Un joueur éliminé reste à l'endroit de sa mort, <strong>carte face visible</strong>.</li>
           <li>Il devient <span class="kw-pink">FANTÔME</span> quel que soit son rôle.</li>
           <li>Le Fantôme peut continuer ses défis mais a l'<strong>INTERDICTION de parler et de voter</strong>.</li>
-          <li>Un Fantôme <span class="kw-red">IMPOSTOR</span> peut toujours saboter (voir section Sabotage).</li>
+          <li>Un Fantôme <span class="kw-red">IMPOSTOR</span> peut toujours saboter.</li>
         </ul>
       </div>
     </div>
 
     <!-- FIN DE PARTIE -->
     <div class="rules-section">
-      <div class="rules-section-header green">🏆 FIN DE PARTIE — CONDITIONS DE VICTOIRE</div>
+      <div class="rules-section-header green">FIN DE PARTIE</div>
       <div class="rules-section-body">
         <div class="rules-win-grid">
           <div class="rules-win-card crew">
-            <h4>CREWMATES &amp; SHERIFF &amp; INGÉNIEUR</h4>
+            <h4>CREWMATES</h4>
             <ul class="rules-list green">
               <li>Toutes les missions sont terminées dans le temps imparti.</li>
               <li>OU tous les Impostors ont été éliminés.</li>
@@ -2772,30 +2173,432 @@
         </div>
       </div>
     </div>
-
-    <!-- BONNE CHANCE -->
-    <div class="rules-end-page">
-      <h2>BONNE<br>CHANCE</h2>
-    </div>
-
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
-     ⏱ TIMER (40 min) + Wake Lock
+     TIMER (40 min) + Wake Lock
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-timer">
-  <div class="section-title" style="color:#00e5ff">⏱ MINUTERIE — 40 MIN</div>
+  <div class="section-title" style="color:#00e5ff">Timer</div>
   <div id="timer-display" class="timer-display">40:00</div>
   <div class="timer-controls">
     <button class="timer-btn start" id="timer-start" onclick="startTimer()">▶ DÉMARRER</button>
-    <button class="timer-btn pause" id="timer-pause" onclick="pauseTimer()" style="display:none">⏸ PAUSE</button>
-    <button class="timer-btn reset" onclick="resetTimer()">⏹ RESET</button>
+    <button class="timer-btn pause" id="timer-pause" onclick="pauseTimer()" style="display:none">PAUSE</button>
+    <button class="timer-btn reset" onclick="resetTimer()">RESET</button>
   </div>
-  <div class="timer-info">
-    <p>📱 L'écran reste allumé tant que le timer tourne (Wake Lock).</p>
-    <p>💾 L'état est sauvegardé : tu peux fermer l'onglet ou recharger sans perdre le compte à rebours.</p>
-    <p>🔔 Alarme sonore + flash rouge quand le temps est écoulé.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     LIVRET (version papier, format A5 livret)
+════════════════════════════════════════════════════ -->
+<style>
+  /* ── LIVRET ──────────────────────────────────────── */
+  .livret-toolbar {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin: 0 auto 28px; max-width: 920px;
+  }
+  .livret-toolbar button {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: .5px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 90, 170, .18), rgba(184, 107, 255, .12));
+    color: var(--neon-pink);
+    border: 1px solid rgba(255, 90, 170, .45);
+    cursor: pointer;
+    transition: transform .15s, box-shadow .2s, background .2s;
+  }
+  .livret-toolbar button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(255, 90, 170, .25);
+    background: linear-gradient(135deg, rgba(255, 90, 170, .28), rgba(184, 107, 255, .18));
+  }
+  .livret-hint {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #8899bb;
+    max-width: 720px;
+    margin: 0 auto 28px;
+    line-height: 1.7;
+    opacity: .8;
+  }
+
+  .livret-book {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .livret-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: linear-gradient(160deg, rgba(14, 18, 38, .92), rgba(8, 10, 22, .98));
+    border: 1px solid rgba(255, 90, 170, .18);
+    border-radius: 6px;
+    padding: 18mm 18mm 20mm;
+    box-sizing: border-box;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+    position: relative;
+    overflow: hidden;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    margin: 0 auto;
+  }
+  .livret-page::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(107, 166, 255, .04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(107, 166, 255, .04) 1px, transparent 1px);
+    background-size: 18px 18px;
+    pointer-events: none;
+    opacity: .6;
+  }
+  .livret-page > * { position: relative; z-index: 1; }
+
+  .livret-page-num {
+    position: absolute;
+    bottom: 12mm; left: 0; right: 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    color: rgba(170, 187, 255, .55);
+    letter-spacing: 2px;
+    z-index: 2;
+  }
+
+  .livret-cover {
+    text-align: center;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 90, 170, .25), transparent 55%),
+      radial-gradient(ellipse at 70% 80%, rgba(107, 166, 255, .22), transparent 55%),
+      linear-gradient(160deg, rgba(14, 18, 38, .95), rgba(8, 10, 22, 1));
+    padding: 0 14mm;
+  }
+  .livret-cover .lc-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt; letter-spacing: 4px;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    margin-bottom: 18mm;
+    opacity: .9;
+  }
+  .livret-cover h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 56pt;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin: 0 0 8mm;
+    background: linear-gradient(135deg, #fff 0%, #ffaad2 50%, #b6a4ff 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 22px rgba(255, 90, 170, .35));
+  }
+  .livret-cover .lc-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14pt;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16mm;
+  }
+  .livret-cover .lc-rule {
+    width: 60mm; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 90, 170, .6), transparent);
+    margin: 0 0 14mm;
+  }
+  .livret-cover .lc-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12pt;
+    color: rgba(170, 187, 255, .65);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .livret-cover .lc-glyph {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 40pt;
+    color: var(--neon-pink);
+    margin-bottom: 12mm;
+    filter: drop-shadow(0 0 14px rgba(255, 90, 170, .6));
+    letter-spacing: 4px;
+  }
+
+  .livret-toc h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 32pt;
+    margin: 0 0 10mm;
+    color: var(--neon-pink);
+    letter-spacing: -.5px;
+  }
+  .livret-toc ol {
+    list-style: none; padding: 0; margin: 0;
+    counter-reset: toc;
+  }
+  .livret-toc ol li {
+    counter-increment: toc;
+    display: flex; align-items: baseline;
+    padding: 12px 0;
+    font-size: 16pt;
+    color: var(--text);
+    border-bottom: 1px dashed rgba(170, 187, 255, .2);
+  }
+  .livret-toc ol li::before {
+    content: counter(toc, decimal-leading-zero) ".";
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--neon-cyan);
+    margin-right: 14px;
+    font-weight: 600;
+    min-width: 32px;
+  }
+  .livret-toc ol li .toc-page {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13pt;
+    color: var(--text-dim);
+  }
+
+  .livret-section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--neon-pink);
+    margin-bottom: 6mm;
+    padding-bottom: 4mm;
+    border-bottom: 1px solid rgba(255, 90, 170, .25);
+  }
+  .livret-page h2.livret-h {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 28pt;
+    margin: 0 0 6mm;
+    line-height: 1.1;
+    letter-spacing: -.3px;
+  }
+
+  .livret-content { font-size: 13pt; text-align: left; }
+  .livret-content p { text-align: left; margin: 0 0 10px; line-height: 1.55; hyphens: auto; }
+  .livret-content p:last-child { margin-bottom: 0; }
+  .livret-content ul, .livret-content ol { padding-left: 18px; margin: 0 0 8px; }
+  .livret-content li { text-align: left; line-height: 1.5; }
+  .livret-content h3, .livret-content h4 { text-align: left; margin: 4mm 0 2mm; }
+  .livret-content .rules-section-header,
+  .livret-content .defis-section-title,
+  .livret-content .quest-floor-title,
+  .livret-content .taches-zone-title { text-align: left; }
+  .livret-content .pancarte-big { text-align: center; }
+  .livret-content .rules-list li { text-align: left; }
+  .livret-content strong { font-weight: 700; }
+  .livret-page h2.livret-h { text-align: left; }
+  .livret-section-tag { text-align: left; }
+  .livret-content .defi-text { text-align: left; }
+  .livret-content .tache-item { text-align: left; }
+  .livret-content .rules-section { margin-bottom: 4mm; }
+  .livret-content .rules-section:last-child { margin-bottom: 0; }
+  .livret-content .rules-section-header { font-size: 10.5pt !important; padding: 6px 11px !important; margin: 0 !important; }
+  .livret-content .rules-section-body { padding: 9px 12px !important; font-size: 10pt !important; line-height: 1.4 !important; }
+  .livret-content .rules-section-body p { font-size: 10pt !important; line-height: 1.4 !important; margin-bottom: 5px !important; }
+  .livret-content .rules-list li { font-size: 9.5pt !important; padding-left: 18px !important; margin-bottom: 3px !important; line-height: 1.35 !important; }
+  .livret-content .rules-roles-grid { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+  .livret-content .rules-role-card { padding: 7px 10px !important; }
+  .livret-content .rules-role-title { font-size: 10pt !important; margin-bottom: 2px !important; }
+  .livret-content .rules-role-text { font-size: 9pt !important; line-height: 1.3 !important; }
+  .livret-content .rules-config-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+  .livret-content .rules-config-card { padding: 7px 10px !important; }
+  .livret-content .rules-config-card h4 { font-size: 10pt !important; margin-bottom: 3px !important; }
+  .livret-content .rules-config-card ul li { font-size: 9pt !important; line-height: 1.3 !important; }
+  .livret-content .rules-win-grid { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+  .livret-content .rules-win-card { padding: 7px 10px !important; }
+  .livret-content .rules-win-card h4 { font-size: 10.5pt !important; margin-bottom: 3px !important; }
+  .livret-content .rules-win-card p { font-size: 9pt !important; line-height: 1.3 !important; }
+  .livret-content .rules-timers { gap: 5px !important; }
+  .livret-content .rules-timer-badge { font-size: 9pt !important; padding: 3px 7px !important; }
+
+  .livret-content .pancartes-grid { grid-template-columns: 1fr 1fr !important; gap: 6mm !important; }
+  .livret-content .pancarte-big { padding: 8mm 7mm !important; min-height: 0 !important; aspect-ratio: auto !important; }
+  .livret-content .pancarte-big-icon { font-size: 32pt !important; margin-bottom: 4mm !important; }
+  .livret-content .pancarte-big-title { font-size: 12pt !important; margin-bottom: 3mm !important; }
+  .livret-content .pancarte-big-text { font-size: 9.5pt !important; line-height: 1.35 !important; }
+
+  .livret-content .defi-card { padding: 7px 10px !important; margin-bottom: 5px !important; break-inside: avoid; }
+  .livret-content .defi-header { margin-bottom: 4px !important; }
+  .livret-content .defi-icon-wrap { display: none !important; }
+  .livret-content .defi-number { font-size: 9pt !important; }
+  .livret-content .defi-badge { font-size: 8pt !important; padding: 2px 6px !important; }
+  .livret-content .defi-text { font-size: 9.5pt !important; line-height: 1.35 !important; }
+  .livret-content .defis-grid { grid-template-columns: 1fr 1fr !important; grid-auto-rows: auto !important; gap: 6px !important; align-items: start !important; }
+  .livret-content .defi-legend { display: none !important; }
+  .livret-content .defis-section-title { font-size: 11pt !important; padding: 6px 12px !important; margin: 0 0 6px !important; }
+
+  .livret-content .taches-grid { grid-template-columns: 1fr 1fr !important; gap: 8mm !important; }
+  .livret-content .taches-zone-title { font-size: 13pt !important; }
+  .livret-content .tache-item { font-size: 12pt !important; padding: 6px 12px !important; }
+
+  .livret-content .quest-sheet-header { display: none !important; }
+  .livret-content .quest-page-header  { display: none !important; }
+  .livret-content .quest-floor-title { font-size: 13pt !important; padding: 8px 14px !important; margin: 0 0 5mm !important; }
+  .livret-content .quest-row { padding: 6px 12px !important; font-size: 12pt !important; }
+  .livret-content .quest-row-num { font-size: 11pt !important; }
+  .livret-content .quest-row-room { font-size: 11.5pt !important; }
+  .livret-content .quest-checkbox { width: 18px !important; height: 18px !important; }
+  .livret-content .quest-legend { font-size: 10pt !important; gap: 8px !important; flex-wrap: wrap; }
+  .livret-content .tracker-row { gap: 8px !important; margin-top: 5mm !important; }
+  .livret-content .tracker-card { padding: 12px 14px !important; }
+  .livret-content .tracker-title { font-size: 11pt !important; }
+
+  .livret-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* A4 297mm - padding 22+24 = 251mm. Header (~30mm) + page-num (~10mm) → ~210mm dispo */
+    grid-template-rows: repeat(2, 100mm);
+    gap: 8mm;
+  }
+  .livret-cards-grid .card {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    aspect-ratio: auto !important;
+    padding: 7mm 7mm !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    transform: none !important;
+    animation: none !important;
+    cursor: default !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .livret-cards-grid .card:hover { transform: none !important; }
+  .livret-cards-grid .card .card-title { font-size: 13pt !important; margin-bottom: 3mm !important; letter-spacing: 1.5px !important; }
+  .livret-cards-grid .card .char-area { flex: 1 1 0 !important; min-height: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; }
+  .livret-cards-grid .card .char-area svg { width: auto !important; height: 100% !important; max-height: 100% !important; max-width: 100% !important; }
+  .livret-cards-grid .card .missions { margin-top: 3mm !important; flex-shrink: 0 !important; }
+  .livret-cards-grid .card .missions-label { font-size: 9pt !important; margin-bottom: 2mm !important; letter-spacing: 1px !important; }
+  .livret-cards-grid .card .mission-num { font-size: 13pt !important; padding: 3px 7px !important; }
+  .livret-cards-grid .card .missions-nums { gap: 4px !important; flex-wrap: wrap !important; }
+  .livret-cards-grid .card .mission-extra { font-size: 10pt !important; line-height: 1.35 !important; margin-top: 3mm !important; }
+  .livret-cards-grid .card .color-dot { width: 11px !important; height: 11px !important; top: 8px !important; right: 8px !important; }
+  .livret-cards-grid .card .card-back-hint { display: none !important; }
+
+  .livret-page-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8mm;
+  }
+
+  /* ── PRINT : isole le livret ── */
+  body.printing-livret { background: #0a0e1a !important; margin: 0 !important; padding: 0 !important; }
+  body.printing-livret > *:not(#tab-livret) { display: none !important; }
+  body.printing-livret #tab-livret {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+  body.printing-livret #tab-livret > .section-title,
+  body.printing-livret .livret-toolbar,
+  body.printing-livret .livret-hint { display: none !important; }
+  body.printing-livret .livret-book {
+    gap: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+  body.printing-livret .livret-page {
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+  body.printing-livret .livret-page:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  /* ⚠ Quand on imprime le livret, on neutralise le @media print global de la feuille */
+  @media print {
+    body.printing-livret { background: #0a0e1a !important; }
+    body.printing-livret * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body.printing-livret .header,
+    body.printing-livret .tabs,
+    body.printing-livret .print-bar { display: none !important; }
+    body.printing-livret .section { display: none !important; }
+    body.printing-livret #tab-livret { display: block !important; }
+  }
+  /* @page A5 — défini en dehors de tout media block pour être plus robuste */
+  body.printing-livret { /* trigger to ensure @page below applies */ }
+
+  @media (max-width: 900px) {
+    .livret-page {
+      width: 100%;
+      min-height: 0;
+      padding: 24px 18px;
+    }
+  }
+</style>
+
+<div class="section" id="tab-livret">
+  <div class="section-title" style="color:var(--neon-pink)">Livret</div>
+
+  <div class="livret-toolbar">
+    <button onclick="printLivret()">Imprimer le livret</button>
+  </div>
+  <div class="livret-hint">
+    Format A4 portrait. Pour obtenir un livret A5 à plier, dans la boîte d'impression choisis « 2 pages par feuille ».<br>
+    Astuce : désactive « En-têtes et pieds de page » pour un rendu propre.
+  </div>
+
+  <div class="livret-book" id="livret-book">
+    <div class="livret-page livret-cover">
+      <div class="lc-glyph">▰▰▰</div>
+      <h1>AMONG US</h1>
+      <div class="lc-sub">Livret du Maître du Jeu</div>
+      <div class="lc-rule"></div>
+      <div class="lc-meta">8 joueurs · 12 joueurs · 16 joueurs</div>
+    </div>
+
+    <div class="livret-page livret-toc">
+      <div class="livret-section-tag">Index</div>
+      <h2 class="livret-h">Sommaire</h2>
+      <ol>
+        <li>Règles · Rôles &amp; Mise en place <span class="toc-page">p. 3</span></li>
+        <li>Règles · Défis &amp; Déroulement <span class="toc-page">p. 4</span></li>
+        <li>Règles · Sabotages, morts &amp; fin <span class="toc-page">p. 5</span></li>
+        <li>Règles spéciales <span class="toc-page">p. 6–7</span></li>
+        <li>Défis étage <span class="toc-page">p. 8–9</span></li>
+        <li>Défis RDC <span class="toc-page">p. 10–11</span></li>
+        <li>Localisations des tâches <span class="toc-page">p. 12–13</span></li>
+        <li>Fiche Quests <span class="toc-page">p. 14–15</span></li>
+        <li>Cartes de rôles <span class="toc-page">p. 16–19</span></li>
+      </ol>
+      <div class="livret-page-num">— 02 —</div>
+    </div>
+
+    <div id="livret-dynamic"></div>
   </div>
 </div>
 
@@ -2806,8 +2609,8 @@
 </div>
 
 <div class="print-bar">
-  <button class="print-btn" onclick="printCurrent()">🖨 IMPRIMER LA VUE ACTUELLE</button>
-  <button class="print-btn pdf-btn" onclick="exportRoleCardsPDF()">📄 EXPORTER CARTES EN PDF</button>
+  <button class="print-btn" onclick="printCurrent()">IMPRIMER LA VUE ACTUELLE</button>
+  <button class="print-btn pdf-btn" onclick="exportRoleCardsPDF()">EXPORTER CARTES EN PDF</button>
 </div>
 
 <script>
@@ -3234,7 +3037,7 @@ const BACK_CARD_HTML = `<div class="card-back">
       <rect x="-1.5" y="-20" width="3" height="12" rx="1.5" fill="#ff6b00"/>
     </g>
   </svg>
-  <div class="card-back-logo card-back-logo-bottom">SHHHH...</div>
+  <div class="card-back-logo card-back-logo-bottom">SHHHHHH</div>
   <div class="back-inner-corner back-bl"></div>
   <div class="back-inner-corner back-br"></div>
 </div>`;
@@ -3287,24 +3090,24 @@ function buildPrintPages() {
 // FICHE QUESTS — construction des lignes
 // ═══════════════════════════════════════════════════
 const MISSIONS_DATA = [
-  // PAGE 1 — 9 missions mélangées
-  { id:4,  room:"Salle Hublot",         floor:"etage" },
+  // Triées par N° croissant (emplacement conservé)
+  { id:1,  room:"Salle de danse",       floor:"etage" },
+  { id:2,  room:"Couloir Haut",         floor:"etage" },
   { id:3,  room:"Salle des 3 marches",  floor:"etage" },
+  { id:4,  room:"Salle Hublot",         floor:"etage" },
+  { id:5,  room:"Couloir Haut",         floor:"etage" },
+  { id:6,  room:"Salle de danse",       floor:"etage" },
+  { id:7,  room:"Salle Hublot",         floor:"etage" },
+  { id:8,  room:"Salle des 3 marches",  floor:"etage" },
+  { id:9,  room:"Couloir Haut",         floor:"etage" },
+  // PAGE 2
+  { id:10, room:"Salle de danse",       floor:"etage" },
+  { id:11, room:"Couloir Bas",          floor:"rdc"   },
+  { id:12, room:"Grande Salle",         floor:"rdc"   },
+  { id:13, room:"Cuisine",              floor:"rdc"   },
   { id:14, room:"Info Jeunes",          floor:"rdc"   },
   { id:15, room:"Salle d'attente",      floor:"rdc"   },
-  { id:8,  room:"Salle des 3 marches",  floor:"etage" },
-  { id:10, room:"Salle de danse",       floor:"etage" },
   { id:16, room:"Grande Salle",         floor:"rdc"   },
-  { id:13, room:"Cuisine",              floor:"rdc"   },
-  { id:6,  room:"Salle de danse",       floor:"etage" },
-  // PAGE 2 — 7 missions mélangées
-  { id:12, room:"Grande Salle",         floor:"rdc"   },
-  { id:9,  room:"Couloir Haut",         floor:"etage" },
-  { id:2,  room:"Couloir Haut",         floor:"etage" },
-  { id:1,  room:"Salle de danse",       floor:"etage" },
-  { id:7,  room:"Salle Hublot",         floor:"etage" },
-  { id:5,  room:"Couloir Haut",         floor:"etage" },
-  { id:11, room:"Couloir Bas",          floor:"rdc"   },
 ];
 
 function buildQuestSheet() {
@@ -3327,7 +3130,7 @@ function buildQuestSheet() {
   const html = `
     <!-- En-tête écran uniquement -->
     <div class="quest-sheet-header">
-      <h2>📋 QUESTS — 16 JOUEURS</h2>
+      <h2>QUESTS — 16 JOUEURS</h2>
       <div class="quest-sheet-meta">
         <strong>Durée max :</strong> 40 minutes<br>
         <strong>Total missions :</strong> 16
@@ -3337,10 +3140,9 @@ function buildQuestSheet() {
     <!-- ── PAGE 1 ── -->
     <div class="quest-floor-block">
       <div class="quest-page-header">
-        <div class="quest-page-header-title">📋 QUESTS — 16 JOUEURS</div>
+        <div class="quest-page-header-title">QUESTS — 16 JOUEURS</div>
         <div class="quest-page-header-meta">Durée max : 40 min &nbsp;|&nbsp; 16 missions</div>
       </div>
-      <div class="quest-floor-title etage">📋 PAGE 1 — 9 missions</div>
       <div class="quest-rows">${page1.map(rowHTML).join('')}</div>
       <div class="quest-legend">
         <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
@@ -3352,10 +3154,9 @@ function buildQuestSheet() {
     <!-- ── PAGE 2 ── -->
     <div class="quest-floor-block">
       <div class="quest-page-header">
-        <div class="quest-page-header-title">📋 QUESTS — 16 JOUEURS</div>
+        <div class="quest-page-header-title">QUESTS — 16 JOUEURS</div>
         <div class="quest-page-header-meta">Durée max : 40 min &nbsp;|&nbsp; 16 missions</div>
       </div>
-      <div class="quest-floor-title rdc">📋 PAGE 2 — 7 missions</div>
       <div class="quest-rows">${page2.map(rowHTML).join('')}</div>
       <div class="quest-legend">
         <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
@@ -3364,7 +3165,7 @@ function buildQuestSheet() {
       </div>
       <div class="tracker-row">
         <div class="tracker-card">
-          <div class="tracker-title">🔔 BUZZ RESTANTS (3 max)</div>
+          <div class="tracker-title">BUZZ RESTANTS (3 max)</div>
           <div class="tracker-circles">
             <div class="tracker-circle"></div>
             <div class="tracker-circle"></div>
@@ -3372,7 +3173,7 @@ function buildQuestSheet() {
           </div>
         </div>
         <div class="tracker-card">
-          <div class="tracker-title">🔫 SHERIFF — BALLE</div>
+          <div class="tracker-title">SHERIFF — BALLE</div>
           <div class="tracker-circles"><div class="tracker-circle red"></div></div>
           <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
         </div>
@@ -3475,7 +3276,7 @@ function buildDefis() {
       <div class="defi-header">
         <div class="defi-icon-wrap">${defiIconSVG(d.color)}</div>
         <div class="defi-number">DÉFI N°${String(d.num).padStart(2,'0')}</div>
-        <div class="defi-badge">${d.color === 'red' ? '🔴 ÉTAGE' : '🔵 RDC'}</div>
+        <div class="defi-badge">${d.color === 'red' ? 'ÉTAGE' : 'RDC'}</div>
       </div>
       <div class="defi-text">${d.text}</div>
     </div>
@@ -3499,12 +3300,12 @@ function buildDefis() {
   `;
 
   document.getElementById("taches-zones").innerHTML =
-    zoneHTML("TÂCHES ÉTAGE", "🔼", TACHES_ETAGE) +
-    zoneHTML("TÂCHES RDC",   "🔽", TACHES_RDC);
+    zoneHTML("TÂCHES ÉTAGE", "", TACHES_ETAGE) +
+    zoneHTML("TÂCHES RDC",   "", TACHES_RDC);
 }
 
 // ═══════════════════════════════════════════════════
-// ⏱ TIMER (40 min) — état persistant via localStorage
+// TIMER (40 min) — état persistant via localStorage
 // ═══════════════════════════════════════════════════
 const TIMER_KEY = 'among-us:timer:v1';
 const TIMER_DURATION_MS = 40 * 60 * 1000;
@@ -3619,7 +3420,7 @@ function playAlarm() {
 }
 
 // ═══════════════════════════════════════════════════
-// 🔋 WAKE LOCK — empêche l'écran de s'éteindre pendant la partie
+// WAKE LOCK — empêche l'écran de s'éteindre pendant la partie
 // ═══════════════════════════════════════════════════
 let wakeLock = null;
 async function requestWakeLock() {
@@ -3641,7 +3442,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ═══════════════════════════════════════════════════
-// 🖥 OVERLAY PLEIN ÉCRAN (cartes)
+// OVERLAY PLEIN ÉCRAN (cartes)
 // ═══════════════════════════════════════════════════
 function showFullscreen(content) {
   const overlay = document.getElementById('fullscreen-overlay');
@@ -3674,7 +3475,7 @@ function initCardClicks() {
 }
 
 // ═══════════════════════════════════════════════════
-// ☑ TRACKERS CLIQUABLES (Buzz, Sheriff balle, sabotages)
+// TRACKERS CLIQUABLES (Buzz, Sheriff balle, sabotages)
 // ═══════════════════════════════════════════════════
 const TRACKERS_KEY = 'among-us:trackers:v1';
 function loadTrackers() {
@@ -3696,9 +3497,264 @@ function initTrackers() {
   });
 }
 
+
+// ═══════════════════════════════════════════════════
+// LIVRET — version papier (A5)
+// ═══════════════════════════════════════════════════
+function buildLivret() {
+  const container = document.getElementById('livret-dynamic');
+  if (!container) return;
+
+  // Helper : crée une page livret
+  const page = (tag, title, contentHTML, pageNum, extraCls = '') => `
+    <div class="livret-page ${extraCls}">
+      <div class="livret-section-tag">${tag}</div>
+      <h2 class="livret-h">${title}</h2>
+      <div class="livret-content">${contentHTML}</div>
+      <div class="livret-page-num">— ${String(pageNum).padStart(2,'0')} —</div>
+    </div>
+  `;
+
+  // Helper : clone l'intérieur d'une section existante (sans le .section-title)
+  const cloneSection = (selector) => {
+    const src = document.querySelector(selector);
+    if (!src) return '';
+    const clone = src.cloneNode(true);
+    const title = clone.querySelector(':scope > .section-title');
+    if (title) title.remove();
+    return clone.innerHTML;
+  };
+
+  let html = '';
+
+  // ── Pages 3-5 : Règles du jeu (split en 3 pages) ──
+  // Sections dans l'ordre : 0=Présentation rôles, 1=Mise en place, 2=Défis,
+  //                         3=Déroulement, 4=Sabotages, 5=Morts, 6=Fin de partie
+  html += page('Chapitre 1', 'Rôles &amp; Mise en place', '<div class="rules-container" id="livret-rules-page-1"></div>', 3);
+  html += page('Chapitre 1 · suite', 'Défis &amp; Déroulement',  '<div class="rules-container" id="livret-rules-page-2"></div>', 4);
+  html += page('Chapitre 1 · fin',   'Sabotages, morts &amp; fin', '<div class="rules-container" id="livret-rules-page-3"></div>', 5);
+
+  // ── Pages 6-7 : Règles spéciales (sabotage) — 4 cartes split 2+2 ──
+  const sabotageSrc = document.querySelector('#tab-sabotage .sabotage-container');
+  html += page('Chapitre 2', 'Règles spéciales · 1/2', '<div class="sabotage-container" id="livret-sabotage-1"></div>', 6);
+  html += page('Chapitre 2 · suite', 'Règles spéciales · 2/2', '<div class="sabotage-container" id="livret-sabotage-2"></div>', 7);
+
+  // ── Pages 8-9 : Défis étage (9 cartes split 5+4) ──
+  html += page('Chapitre 3', 'Défis · Étage · 1/2', `
+    <div class="defis-grid" id="livret-defis-red-1"></div>
+  `, 8);
+  html += page('Chapitre 3 · suite', 'Défis · Étage · 2/2', `
+    <div class="defis-grid" id="livret-defis-red-2"></div>
+  `, 9);
+
+  // ── Pages 10-11 : Défis RDC (7 cartes split 4+3) ──
+  html += page('Chapitre 3 · suite', 'Défis · RDC · 1/2', `
+    <div class="defis-grid" id="livret-defis-blue-1"></div>
+  `, 10);
+  html += page('Chapitre 3 · fin', 'Défis · RDC · 2/2', `
+    <div class="defis-grid" id="livret-defis-blue-2"></div>
+  `, 11);
+
+  // ── Pages 12-13 : Localisations des tâches (split étage / RDC) ──
+  html += page('Chapitre 4', 'Localisations · Étage', `
+    <div class="taches-grid" id="livret-taches-1"></div>
+  `, 12);
+  html += page('Chapitre 4 · suite', 'Localisations · RDC', `
+    <div class="taches-grid" id="livret-taches-2"></div>
+  `, 13);
+
+  // ── Pages 14-15 : Fiche Quests (split étage / RDC) ──
+  html += page('Chapitre 5', 'Fiche Quests · Étage', '<div class="quest-sheet" id="livret-quests-1"></div>', 14);
+  html += page('Chapitre 5 · suite', 'Fiche Quests · RDC', '<div class="quest-sheet" id="livret-quests-2"></div>', 15);
+
+  // ── Pages 16-19 : Cartes de rôles (4 par page, 2×2) ──
+  const allCardsHTML = document.getElementById('all-grid')?.innerHTML || '';
+  html += page('Chapitre 6', 'Cartes de rôles · 1/4', `
+    <div class="livret-cards-grid livret-cards-grid-1"></div>
+  `, 16);
+  html += page('Chapitre 6 · suite', 'Cartes de rôles · 2/4', `
+    <div class="livret-cards-grid livret-cards-grid-2"></div>
+  `, 17);
+  html += page('Chapitre 6 · suite', 'Cartes de rôles · 3/4', `
+    <div class="livret-cards-grid livret-cards-grid-3"></div>
+  `, 18);
+  html += page('Chapitre 6 · fin', 'Cartes de rôles · 4/4', `
+    <div class="livret-cards-grid livret-cards-grid-4"></div>
+  `, 19);
+
+  container.innerHTML = html;
+
+  // ── Post-traitement : redistribution des contenus ──
+
+  // 1) RÈGLES : on récupère les 7 sections du #tab-rules et on les répartit
+  //    Page 1 : sections 0-1 (Présentation rôles + Mise en place)
+  //    Page 2 : sections 2-3 (Défis + Déroulement)
+  //    Page 3 : sections 4-5-6 (Sabotages + Morts + Fin)
+  const tabRules = document.querySelector('#tab-rules');
+  if (tabRules) {
+    const allSections = Array.from(tabRules.querySelectorAll('.rules-section'));
+    const distribute = (targetId, indices) => {
+      const target = container.querySelector('#' + targetId);
+      if (!target) return;
+      indices.forEach(i => {
+        if (allSections[i]) target.appendChild(allSections[i].cloneNode(true));
+      });
+    };
+    distribute('livret-rules-page-1', [0, 1]);
+    distribute('livret-rules-page-2', [2, 3]);
+    distribute('livret-rules-page-3', [4, 5, 6]);
+  }
+
+  // 2) QUESTS : on coupe par étage (le 1er .quest-floor-block sur p11, le reste sur p12)
+  const questsSrc = document.querySelector('#tab-quests .quest-sheet');
+  const quests1Target = container.querySelector('#livret-quests-1');
+  const quests2Target = container.querySelector('#livret-quests-2');
+  if (questsSrc && quests1Target && quests2Target) {
+    const blocks = Array.from(questsSrc.querySelectorAll(':scope > .quest-floor-block'));
+    if (blocks[0]) quests1Target.appendChild(blocks[0].cloneNode(true));
+    blocks.slice(1).forEach(b => quests2Target.appendChild(b.cloneNode(true)));
+  }
+
+  // 3) LOCALISATIONS : split par étage (chaque .zone-block contient un étage)
+  const tachesSrc = document.getElementById('taches-zones');
+  const taches1 = container.querySelector('#livret-taches-1');
+  const taches2 = container.querySelector('#livret-taches-2');
+  if (tachesSrc && taches1 && taches2) {
+    const zoneBlocks = Array.from(tachesSrc.children);
+    if (zoneBlocks.length >= 2) {
+      // On suppose 2 blocs (étage + RDC) — le 1er va sur taches1, le 2nd sur taches2
+      taches1.appendChild(zoneBlocks[0].cloneNode(true));
+      zoneBlocks.slice(1).forEach(b => taches2.appendChild(b.cloneNode(true)));
+    } else {
+      // fallback : tout sur la 1ère page
+      zoneBlocks.forEach(b => taches1.appendChild(b.cloneNode(true)));
+    }
+  }
+
+  // 3.5) SABOTAGE : 4 cartes split 2+2 sur 2 pages (sans les pancartes)
+  const sabSrc = document.querySelector('#tab-sabotage .sabotage-container');
+  const sab1 = container.querySelector('#livret-sabotage-1');
+  const sab2 = container.querySelector('#livret-sabotage-2');
+  if (sabSrc && sab1 && sab2) {
+    const cards = Array.from(sabSrc.querySelectorAll(':scope > .sabotage-card'));
+    cards.slice(0, 2).forEach(c => sab1.appendChild(c.cloneNode(true)));
+    cards.slice(2).forEach(c => sab2.appendChild(c.cloneNode(true)));
+  }
+
+  // 3.6) DÉFIS ÉTAGE : 9 cartes split 5+4 sur 2 pages
+  const defisRedSrc = document.getElementById('defis-red');
+  const defisRed1 = container.querySelector('#livret-defis-red-1');
+  const defisRed2 = container.querySelector('#livret-defis-red-2');
+  if (defisRedSrc && defisRed1 && defisRed2) {
+    const cards = Array.from(defisRedSrc.querySelectorAll(':scope > .defi-card'));
+    cards.slice(0, 5).forEach(c => defisRed1.appendChild(c.cloneNode(true)));
+    cards.slice(5).forEach(c => defisRed2.appendChild(c.cloneNode(true)));
+  }
+
+  // 3.7) DÉFIS RDC : 7 cartes split 4+3 sur 2 pages
+  const defisBlueSrc = document.getElementById('defis-blue');
+  const defisBlue1 = container.querySelector('#livret-defis-blue-1');
+  const defisBlue2 = container.querySelector('#livret-defis-blue-2');
+  if (defisBlueSrc && defisBlue1 && defisBlue2) {
+    const cards = Array.from(defisBlueSrc.querySelectorAll(':scope > .defi-card'));
+    cards.slice(0, 4).forEach(c => defisBlue1.appendChild(c.cloneNode(true)));
+    cards.slice(4).forEach(c => defisBlue2.appendChild(c.cloneNode(true)));
+  }
+
+  // 4) CARTES : on duplique le HTML des cartes (les originaux restent dans #all-grid)
+  // 4 cartes par page sur 4 pages (16 cartes au total)
+  const cardGrids = [
+    container.querySelector('.livret-cards-grid-1'),
+    container.querySelector('.livret-cards-grid-2'),
+    container.querySelector('.livret-cards-grid-3'),
+    container.querySelector('.livret-cards-grid-4'),
+  ];
+  if (cardGrids.every(g => g) && allCardsHTML) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = allCardsHTML;
+    const cards = Array.from(tmp.querySelectorAll('.card'));
+    for (let i = 0; i < cards.length; i++) {
+      const gridIdx = Math.floor(i / 4);
+      if (cardGrids[gridIdx]) cardGrids[gridIdx].appendChild(cards[i].cloneNode(true));
+    }
+  }
+}
+
+function printLivret() {
+  // 1) Injecter une feuille de style dédiée à l'impression A5 — supprime tous les @page concurrents
+  let styleEl = document.getElementById('__livret-print-style');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = '__livret-print-style';
+    styleEl.media = 'print';
+    styleEl.textContent = `
+      @page { size: 210mm 297mm; margin: 0 !important; }
+      html, body { width: 210mm !important; margin: 0 !important; padding: 0 !important; background: #0a0e1a !important; }
+      body * { visibility: hidden !important; }
+      body.printing-livret #tab-livret,
+      body.printing-livret #tab-livret * { visibility: visible !important; }
+      body.printing-livret #tab-livret {
+        position: absolute !important;
+        left: 0 !important; top: 0 !important;
+        width: 210mm !important;
+      }
+      body.printing-livret .livret-page {
+        width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+        max-height: 297mm !important;
+        margin: 0 !important;
+        padding: 22mm 20mm 24mm !important;
+        box-sizing: border-box !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        overflow: hidden !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        display: block !important;
+      }
+      body.printing-livret .livret-page.livret-cover {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+      }
+      body.printing-livret .livret-page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+      body.printing-livret .livret-toolbar,
+      body.printing-livret .livret-hint,
+      body.printing-livret #tab-livret > .section-title { display: none !important; }
+      body.printing-livret .livret-book { display: block !important; gap: 0 !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
+    `;
+    document.head.appendChild(styleEl);
+  }
+
+  document.body.classList.add('printing-livret');
+  // On force le tab livret à être visible (sans toucher aux autres états)
+  const livret = document.getElementById('tab-livret');
+  const wasActive = livret?.classList.contains('active');
+  if (livret && !wasActive) livret.classList.add('active', '__livret-temp-active');
+
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.body.classList.remove('printing-livret');
+      if (livret?.classList.contains('__livret-temp-active')) {
+        livret.classList.remove('active', '__livret-temp-active');
+      }
+    }, 300);
+  }, 200);
+}
+
 populateGrids();
 buildQuestSheet();
 buildDefis();
+buildLivret();
 buildPrintPages();
 initTrackers();
 loadTimerState();
