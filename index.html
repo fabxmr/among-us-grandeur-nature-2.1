@@ -2334,6 +2334,49 @@
     letter-spacing: 4px;
   }
 
+  /* 4e de couverture (back cover) */
+  .livret-back-cover {
+    text-align: center;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    background:
+      radial-gradient(ellipse at 70% 20%, rgba(255, 90, 170, .22), transparent 55%),
+      radial-gradient(ellipse at 30% 80%, rgba(107, 166, 255, .22), transparent 55%),
+      linear-gradient(160deg, rgba(14, 18, 38, .95), rgba(8, 10, 22, 1));
+    padding: 0 14mm;
+  }
+  .livret-back-cover .lbc-glyph {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28pt;
+    color: var(--neon-pink);
+    margin-bottom: 14mm;
+    filter: drop-shadow(0 0 12px rgba(255, 90, 170, .55));
+    letter-spacing: 4px;
+    opacity: .9;
+  }
+  .livret-back-cover .lbc-quote {
+    font-family: 'Space Grotesk', sans-serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22pt;
+    line-height: 1.3;
+    color: #f0f4ff;
+    max-width: 130mm;
+    margin: 0 0 12mm;
+    letter-spacing: .5px;
+    filter: drop-shadow(0 0 18px rgba(255, 90, 170, .25));
+  }
+  .livret-back-cover .lc-rule {
+    margin: 0 0 16mm;
+  }
+  .livret-back-cover .lbc-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: var(--neon-cyan);
+    letter-spacing: 1.5px;
+    opacity: .85;
+  }
+
   .livret-toc h2 {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
@@ -2559,17 +2602,22 @@
       padding: 24px 18px;
     }
   }
+
+  /* Container du livret pliable : invisible à l'écran, révélé en print uniquement */
+  #__booklet-container { display: none; }
 </style>
 
 <div class="section" id="tab-livret">
   <div class="section-title" style="color:var(--neon-pink)">Livret</div>
 
   <div class="livret-toolbar">
-    <button onclick="printLivret()">Imprimer le livret</button>
+    <button onclick="printLivret()">Imprimer le livret (A4)</button>
+    <button onclick="printLivretBooklet()">Imprimer en livret pliable (A5)</button>
   </div>
   <div class="livret-hint">
-    Format A4 portrait. Pour obtenir un livret A5 à plier, dans la boîte d'impression choisis « 2 pages par feuille ».<br>
-    Astuce : désactive « En-têtes et pieds de page » pour un rendu propre.
+    <strong>Livret A4</strong> : impression normale, 1 page par feuille.<br>
+    <strong>Livret pliable A5</strong> : feuilles A4 paysage avec pages réordonnées pour le pliage. Imprime en <strong>recto-verso</strong> (bord long), empile dans l'ordre, plie en deux par le centre, agrafe au pli — tu obtiens un vrai livret A5.<br>
+    Astuce : désactive « En-têtes et pieds de page » dans la boîte d'impression pour un rendu propre.
   </div>
 
   <div class="livret-book" id="livret-book">
@@ -2591,14 +2639,21 @@
         <li>Règles spéciales <span class="toc-page">p. 6–7</span></li>
         <li>Défis étage <span class="toc-page">p. 8–9</span></li>
         <li>Défis RDC <span class="toc-page">p. 10–11</span></li>
-        <li>Localisations des tâches <span class="toc-page">p. 12–13</span></li>
-        <li>Fiche Quests <span class="toc-page">p. 14–15</span></li>
-        <li>Cartes de rôles <span class="toc-page">p. 16–19</span></li>
+        <li>Localisations des tâches <span class="toc-page">p. 12</span></li>
+        <li>Fiche Quests <span class="toc-page">p. 13–14</span></li>
+        <li>Cartes de rôles <span class="toc-page">p. 15–18</span></li>
       </ol>
       <div class="livret-page-num">— 02 —</div>
     </div>
 
     <div id="livret-dynamic"></div>
+
+    <div class="livret-page livret-back-cover">
+      <div class="lbc-glyph">▰▰▰</div>
+      <div class="lbc-quote">Trust no one</div>
+      <div class="lc-rule"></div>
+      <div class="lbc-url">among-us-grandeur-nature-2.vercel.app</div>
+    </div>
   </div>
 </div>
 
@@ -3555,29 +3610,26 @@ function buildLivret() {
     <div class="defis-grid" id="livret-defis-blue-2"></div>
   `, 11);
 
-  // ── Pages 12-13 : Localisations des tâches (split étage / RDC) ──
-  html += page('Chapitre 4', 'Localisations · Étage', `
-    <div class="taches-grid" id="livret-taches-1"></div>
+  // ── Page 12 : Localisations des tâches (étage + RDC fusionnés) ──
+  html += page('Chapitre 4', 'Localisations des tâches', `
+    <div class="taches-grid" id="livret-taches-merged"></div>
   `, 12);
-  html += page('Chapitre 4 · suite', 'Localisations · RDC', `
-    <div class="taches-grid" id="livret-taches-2"></div>
-  `, 13);
 
-  // ── Pages 14-15 : Fiche Quests (split étage / RDC) ──
-  html += page('Chapitre 5', 'Fiche Quests · Étage', '<div class="quest-sheet" id="livret-quests-1"></div>', 14);
-  html += page('Chapitre 5 · suite', 'Fiche Quests · RDC', '<div class="quest-sheet" id="livret-quests-2"></div>', 15);
+  // ── Pages 13-14 : Fiche Quests (split étage / RDC) ──
+  html += page('Chapitre 5', 'Fiche Quests · Étage', '<div class="quest-sheet" id="livret-quests-1"></div>', 13);
+  html += page('Chapitre 5 · suite', 'Fiche Quests · RDC', '<div class="quest-sheet" id="livret-quests-2"></div>', 14);
 
-  // ── Pages 16-19 : Cartes de rôles (4 par page, 2×2) ──
+  // ── Pages 15-18 : Cartes de rôles (4 par page, 2×2) ──
   const allCardsHTML = document.getElementById('all-grid')?.innerHTML || '';
   html += page('Chapitre 6', 'Cartes de rôles · 1/4', `
     <div class="livret-cards-grid livret-cards-grid-1"></div>
-  `, 16);
+  `, 15);
   html += page('Chapitre 6 · suite', 'Cartes de rôles · 2/4', `
     <div class="livret-cards-grid livret-cards-grid-2"></div>
-  `, 17);
+  `, 16);
   html += page('Chapitre 6 · suite', 'Cartes de rôles · 3/4', `
     <div class="livret-cards-grid livret-cards-grid-3"></div>
-  `, 18);
+  `, 17);
   html += page('Chapitre 6 · fin', 'Cartes de rôles · 4/4', `
     <div class="livret-cards-grid livret-cards-grid-4"></div>
   `, 19);
@@ -3615,20 +3667,11 @@ function buildLivret() {
     blocks.slice(1).forEach(b => quests2Target.appendChild(b.cloneNode(true)));
   }
 
-  // 3) LOCALISATIONS : split par étage (chaque .zone-block contient un étage)
+  // 3) LOCALISATIONS : étage + RDC fusionnés sur une seule page (2 colonnes via .taches-grid)
   const tachesSrc = document.getElementById('taches-zones');
-  const taches1 = container.querySelector('#livret-taches-1');
-  const taches2 = container.querySelector('#livret-taches-2');
-  if (tachesSrc && taches1 && taches2) {
-    const zoneBlocks = Array.from(tachesSrc.children);
-    if (zoneBlocks.length >= 2) {
-      // On suppose 2 blocs (étage + RDC) — le 1er va sur taches1, le 2nd sur taches2
-      taches1.appendChild(zoneBlocks[0].cloneNode(true));
-      zoneBlocks.slice(1).forEach(b => taches2.appendChild(b.cloneNode(true)));
-    } else {
-      // fallback : tout sur la 1ère page
-      zoneBlocks.forEach(b => taches1.appendChild(b.cloneNode(true)));
-    }
+  const tachesMerged = container.querySelector('#livret-taches-merged');
+  if (tachesSrc && tachesMerged) {
+    Array.from(tachesSrc.children).forEach(b => tachesMerged.appendChild(b.cloneNode(true)));
   }
 
   // 3.5) SABOTAGE : 4 cartes split 2+2 sur 2 pages (sans les pancartes)
@@ -3749,6 +3792,148 @@ function printLivret() {
       }
     }, 300);
   }, 200);
+}
+
+// ═══════════════════════════════════════════════════
+// LIVRET PLIABLE A5 — imposition booklet (saddle stitch)
+// ═══════════════════════════════════════════════════
+function printLivretBooklet() {
+  const allSourcePages = Array.from(
+    document.querySelectorAll('#tab-livret .livret-book .livret-page')
+  );
+  if (allSourcePages.length === 0) {
+    alert('Aucune page de livret trouvée.');
+    return;
+  }
+
+  // Détecte la 4e de couverture (doit rester la dernière page après padding)
+  const lastIdx = allSourcePages.length - 1;
+  const hasBackCover = allSourcePages[lastIdx]?.classList.contains('livret-back-cover');
+  const contentPages = hasBackCover ? allSourcePages.slice(0, -1) : allSourcePages;
+  const backCover = hasBackCover ? allSourcePages[lastIdx] : null;
+
+  // Pad au multiple de 4 supérieur
+  const totalCount = contentPages.length + (hasBackCover ? 1 : 0);
+  const N = Math.ceil(totalCount / 4) * 4;
+
+  // Reconstruit la liste effective : contenu + (blancs avant la 4e de couv) + 4e de couv
+  const sourcePages = [...contentPages];
+  if (hasBackCover) {
+    while (sourcePages.length < N - 1) sourcePages.push(null); // blancs avant
+    sourcePages.push(backCover);
+  } else {
+    while (sourcePages.length < N) sourcePages.push(null); // blancs à la fin
+  }
+
+  // Imposition booklet : pour chaque cahier (4 pages), [outer-left, outer-right, inner-left, inner-right]
+  const order = [];
+  for (let k = 0; k < N / 4; k++) {
+    order.push(N - 2 * k);     // recto gauche
+    order.push(2 * k + 1);     // recto droite
+    order.push(2 * k + 2);     // verso gauche
+    order.push(N - 2 * k - 1); // verso droite
+  }
+
+  // Construit le container caché : N/2 feuilles A4 paysage, chacune = 2 demi-pages côte à côte
+  let container = document.getElementById('__booklet-container');
+  if (container) container.remove();
+  container = document.createElement('div');
+  container.id = '__booklet-container';
+
+  for (let i = 0; i < order.length; i += 2) {
+    const sheet = document.createElement('div');
+    sheet.className = '__booklet-sheet';
+
+    [order[i], order[i + 1]].forEach(pageNum => {
+      const half = document.createElement('div');
+      half.className = '__booklet-half';
+      const idx = pageNum - 1;
+      const src = sourcePages[idx];
+      if (src) {
+        const clone = src.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+        half.appendChild(clone);
+      } else {
+        const blank = document.createElement('div');
+        blank.className = 'livret-page __booklet-blank';
+        half.appendChild(blank);
+      }
+      sheet.appendChild(half);
+    });
+    container.appendChild(sheet);
+  }
+  document.body.appendChild(container);
+
+  // Feuille de style print dédiée (A4 paysage + scale 0.7071 sur chaque page)
+  let styleEl = document.getElementById('__booklet-print-style');
+  if (styleEl) styleEl.remove();
+  styleEl = document.createElement('style');
+  styleEl.id = '__booklet-print-style';
+  styleEl.media = 'print';
+  styleEl.textContent = `
+    @page { size: A4 landscape; margin: 0 !important; }
+    html, body { margin: 0 !important; padding: 0 !important; background: #0a0e1a !important; }
+    body.printing-booklet > * { display: none !important; }
+    body.printing-booklet > #__booklet-container { display: block !important; }
+    body.printing-booklet * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body.printing-booklet .__booklet-sheet {
+      width: 297mm !important;
+      height: 210mm !important;
+      display: flex !important;
+      flex-direction: row !important;
+      page-break-after: always !important;
+      break-after: page !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    body.printing-booklet .__booklet-sheet:last-child {
+      page-break-after: auto !important;
+      break-after: auto !important;
+    }
+    body.printing-booklet .__booklet-half {
+      width: 148.5mm !important;
+      height: 210mm !important;
+      overflow: hidden !important;
+      position: relative !important;
+      box-sizing: border-box !important;
+      flex-shrink: 0 !important;
+    }
+    body.printing-booklet .__booklet-half > .livret-page {
+      width: 210mm !important;
+      height: 297mm !important;
+      min-height: 297mm !important;
+      max-height: 297mm !important;
+      margin: 0 !important;
+      transform: scale(0.7071) !important;
+      transform-origin: top left !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      page-break-after: auto !important;
+      break-after: auto !important;
+    }
+    body.printing-booklet .__booklet-blank {
+      background: #0a0e1a !important;
+    }
+  `;
+  document.head.appendChild(styleEl);
+
+  document.body.classList.add('printing-booklet');
+
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.body.classList.remove('printing-booklet');
+      const c = document.getElementById('__booklet-container');
+      if (c) c.remove();
+      const s = document.getElementById('__booklet-print-style');
+      if (s) s.remove();
+    }, 400);
+  }, 250);
 }
 
 populateGrids();
