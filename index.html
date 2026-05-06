@@ -523,7 +523,18 @@
     color: var(--text);
     line-height: 1.7;
   }
-  .sabotage-card ul { padding-left: 18px; }
+  .sabotage-card h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+    margin: 14px 0 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(140, 160, 220, .15);
+  }
+  .sabotage-card ul { padding-left: 18px; margin-bottom: 10px; }
   .sabotage-card .tag {
     display: inline-block;
     font-family: 'JetBrains Mono', monospace;
@@ -1372,22 +1383,6 @@
   .rules-win-card.crew h4     { color: var(--neon-green); }
   .rules-win-card.impostor h4 { color: var(--neon-red); }
 
-  .rules-timers {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;
-    justify-content: flex-start;
-  }
-  .rules-timer-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 600;
-    font-size: 12px;
-    padding: 11px 16px;
-    border-radius: 999px;
-    background: rgba(107, 166, 255, .08);
-    border: 1px solid rgba(107, 166, 255, .35);
-    color: var(--neon-blue);
-    letter-spacing: 1.5px;
-  }
-
   .rules-end-page {
     text-align: center;
     padding: 38px 24px;
@@ -1796,14 +1791,14 @@
 
     <div class="sabotage-card">
       <span class="tag purple">IMPOSTEUR FANTÔME</span>
-      <h3>SABOTER UNE PIÈCE</h3>
-      <p>Quand un Imposteur devient Fantôme, il peut saboter des pièces du bâtiment.</p>
-      <br>
+      <h3>POUVOIRS DU FANTÔME</h3>
+      <p>Quand un Imposteur est éliminé, il devient Fantôme et peut continuer à nuire aux Crewmates.</p>
+
+      <h4>Saboter une pièce</h4>
       <ul>
-        <li>Retourne discrètement la <strong>pancarte</strong> d'une pièce côté <span style="color:var(--neon-red)">ROUGE</span></li>
+        <li>Retourner discrètement la <strong>pancarte</strong> d'une pièce côté <span style="color:var(--neon-red)">ROUGE</span></li>
         <li>Personne ne peut <strong>entrer</strong> dans une pièce rouge pendant <strong>3 minutes</strong></li>
-        <li>Un seul sabotage actif à la fois</li>
-        <li>La salle de réunion ne peut pas être sabotée</li>
+        <li>Un seul sabotage actif à la fois — la salle de réunion ne peut pas être sabotée</li>
       </ul>
       <div class="pancarte-demo">
         <div class="pancarte open">
@@ -1821,45 +1816,35 @@
           SABOTÉE
         </div>
       </div>
+
+      <h4>Autres sabotages</h4>
+      <ul>
+        <li>Fermer les <strong>portes</strong> d'une pièce</li>
+        <li>Éteindre les <strong>lumières</strong></li>
+        <li>Effacer jusqu'à <strong>3 défis</strong> sur la fiche Quests (hors Meeting)</li>
+      </ul>
     </div>
 
     <div class="sabotage-card">
       <span class="tag cyan">INGÉNIEUR</span>
-      <h3>RÉPARER UNE PIÈCE</h3>
-      <p>L'Ingénieur est le seul joueur capable d'entrer dans une pièce sabotée.</p>
-      <br>
+      <h3>POUVOIRS DE L'INGÉNIEUR</h3>
+      <p>Crewmate spécial avec deux pouvoirs techniques uniques.</p>
+
+      <h4>Réparer une pièce</h4>
       <ul>
-        <li>Se rend dans la pièce sabotée et retourne la pancarte côté <span style="color:var(--neon-green)">VERT</span></li>
-        <li>La pièce est de nouveau accessible à tous</li>
-        <li>L'Ingénieur peut réparer <strong>autant de fois</strong> que nécessaire</li>
+        <li>Seul joueur capable d'entrer dans une pièce sabotée</li>
+        <li>Retourner la pancarte côté <span style="color:var(--neon-green)">VERT</span></li>
         <li>La réparation prend <strong>10 secondes</strong> (rester dans la pièce)</li>
+        <li>Réparation possible <strong>autant de fois</strong> que nécessaire</li>
       </ul>
-      <br>
-      <p style="color:#8899bb; font-size:11px">L'Ingénieur peut être ciblé en priorité par les Imposteurs !</p>
-    </div>
 
-    <div class="sabotage-card">
-      <span class="tag cyan">INGÉNIEUR</span>
-      <h3>POUVOIR SPÉCIAL</h3>
-      <p>L'Ingénieur dispose d'un pouvoir unique :</p>
-      <br>
+      <h4>Mission posthume</h4>
       <ul>
-        <li><strong>Mission posthume :</strong> Peut valider <strong>une mission</strong> à la place d'un Crewmate mort — <em>une seule fois par partie</em></li>
+        <li>Peut valider <strong>une mission</strong> à la place d'un Crewmate mort</li>
+        <li><em>Une seule fois</em> par partie</li>
       </ul>
-    </div>
 
-    <div class="sabotage-card">
-      <span class="tag purple">IMPOSTEUR FANTÔME</span>
-      <h3>AUTRES SABOTAGES</h3>
-      <p>En plus de saboter une pièce, le Fantôme Imposteur garde ses anciens pouvoirs :</p>
-      <br>
-      <ul>
-        <li>Fermer les portes d'une pièce</li>
-        <li>Éteindre les lumières</li>
-        <li>Effacer jusqu'à <strong>3 défis</strong> (hors Meeting)</li>
-      </ul>
-      <br>
-      <p style="color:#8899bb; font-size:11px">Ces actions sont cumulables avec le sabotage de pièce, mais le sabotage de pièce ne peut être actif que sur <strong>une seule pièce</strong> à la fois.</p>
+      <p style="color:#8899bb; font-size:11px; margin-top:10px">L'Ingénieur peut être ciblé en priorité par les Imposteurs !</p>
     </div>
 
   </div><!-- fin sabotage-container -->
@@ -2036,12 +2021,8 @@
           <div class="rules-role-card engineer">
             <div class="rules-role-title">INGÉNIEUR</div>
             <div class="rules-role-text">
-              L'<span class="kw-cyan">INGÉNIEUR</span> est un Crewmate spécial aux pouvoirs techniques :
+              L'<span class="kw-cyan">INGÉNIEUR</span> est un Crewmate spécial aux pouvoirs techniques (réparation des pièces sabotées et mission posthume). Détails dans <strong>Règles spéciales</strong>.
             </div>
-            <ul class="rules-list cyan">
-              <li><strong>Réparer :</strong> seul capable d'entrer dans une pièce sabotée (pancarte rouge) et de la remettre en service en 10 secondes.</li>
-              <li><strong>Mission posthume :</strong> peut valider une mission à la place d'un Crewmate mort — une seule fois par partie.</li>
-            </ul>
           </div>
 
         </div>
@@ -2052,23 +2033,11 @@
     <div class="rules-section">
       <div class="rules-section-header blue">MISE EN PLACE</div>
       <div class="rules-section-body">
-        <p style="margin-bottom:14px">16 cartes sont distribuées :</p>
-        <div class="rules-config-grid">
-          <div class="rules-config-card" style="grid-column: 1 / -1">
-            <h4>COMPOSITION DU DECK</h4>
-            <ul>
-              <li>11 <span class="kw-green">CREWMATES</span></li>
-              <li>3 <span class="kw-red">IMPOSTORS</span></li>
-              <li>1 <span class="kw-yellow">SHERIFF</span></li>
-              <li>1 <span class="kw-cyan">INGÉNIEUR</span></li>
-            </ul>
-          </div>
-        </div>
-        <p style="margin-top:16px; font-size:12px; color:#8899bb">
-          <strong>Équilibre parfait</strong> : chaque mission (1 à 16) apparaît exactement <strong>3 fois</strong> dans le deck.
+        <p style="margin-bottom:10px">
+          Distribuer les cartes selon le mode choisi (cf. <strong>Modes de jeu</strong>). Adapter le nombre de défis et la durée en conséquence.
         </p>
         <p style="margin-top:10px; font-size:12px; color:#8899bb">
-          Distribuer les cartes. Les <span class="kw-red">IMPOSTORS</span> doivent se reconnaître avant le début — faites fermer les yeux à tous pendant ce temps.
+          Les <span class="kw-red">IMPOSTORS</span> doivent se reconnaître avant le début — faites fermer les yeux à tous pendant ce temps.
         </p>
       </div>
     </div>
@@ -2078,7 +2047,7 @@
       <div class="rules-section-header orange">DÉFIS</div>
       <div class="rules-section-body">
         <ul class="rules-list orange">
-          <li>Installer les 16 défis (un par mission, missions 1 à 16).</li>
+          <li>Installer les défis correspondant au mode choisi.</li>
           <li><span class="kw-red">Défis rouges</span> : missions situées à l'étage.</li>
           <li><span class="kw-blue">Défis bleus</span> : missions situées au RDC.</li>
           <li><span class="kw-green">Défis verts</span> : localisations des tâches, en soutien au maître du jeu.</li>
@@ -2141,7 +2110,7 @@
           <li>Un joueur éliminé reste à l'endroit de sa mort, <strong>carte face visible</strong>.</li>
           <li>Il devient <span class="kw-pink">FANTÔME</span> quel que soit son rôle.</li>
           <li>Le Fantôme peut continuer ses défis mais a l'<strong>INTERDICTION de parler et de voter</strong>.</li>
-          <li>Un Fantôme <span class="kw-red">IMPOSTOR</span> peut toujours saboter.</li>
+          <li>Un Fantôme <span class="kw-red">IMPOSTOR</span> peut toujours saboter (cf. <strong>Règles spéciales</strong>).</li>
         </ul>
       </div>
     </div>
@@ -2166,11 +2135,22 @@
             </ul>
           </div>
         </div>
-        <div class="rules-timers">
-          <span class="rules-timer-badge">8 joueurs → 20 min</span>
-          <span class="rules-timer-badge">12 joueurs → 30 min</span>
-          <span class="rules-timer-badge">16 joueurs → 40 min</span>
-        </div>
+      </div>
+    </div>
+
+    <!-- AIDE-MÉMOIRE MJ -->
+    <div class="rules-section">
+      <div class="rules-section-header cyan">AIDE-MÉMOIRE MJ</div>
+      <div class="rules-section-body">
+        <p style="margin-bottom:10px; font-size:12px; color:#8899bb">Réponses rapides aux questions des joueurs pendant la partie.</p>
+        <ul class="rules-list cyan">
+          <li><strong>Kill</strong> — toucher l'épaule. Le mort reste sur place, carte face visible.</li>
+          <li><strong>Sheriff</strong> — 1 balle. Tue Crewmate → meurt à sa place. Tue Impostor → désarmé pour le reste de la partie.</li>
+          <li><strong>Pièce sabotée</strong> — pancarte rouge, 3 min d'interdiction. Seul l'Ingénieur peut entrer (10 s pour réparer).</li>
+          <li><strong>Vote</strong> — majorité simple. Égalité = SKIP automatique.</li>
+          <li><strong>Buzz</strong> — 3 max par partie, 1 par joueur. Déclenche un Meeting sans mort.</li>
+          <li><strong>Fantôme</strong> — interdit de parler/voter. Continue ses défis. Un Impostor fantôme peut saboter.</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -2381,6 +2361,126 @@
     margin: 0;
   }
 
+  /* Modes de jeu (page 3 du livret) */
+  .modes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5mm;
+    margin: 4mm 0;
+  }
+  .mode-card {
+    border: 1px solid rgba(140, 160, 220, .18);
+    border-radius: 5px;
+    padding: 4mm 4mm 5mm;
+    background: rgba(18, 22, 42, .42);
+    display: flex;
+    flex-direction: column;
+  }
+  /* Variantes par mode (couleur du cadre + accents) */
+  .mode-card.blue {
+    border-color: rgba(107, 166, 255, .42);
+    background: rgba(16, 22, 36, .55);
+    box-shadow: 0 0 14px rgba(107, 166, 255, .12);
+  }
+  .mode-card.orange {
+    border-color: rgba(255, 155, 59, .42);
+    background: rgba(28, 22, 14, .55);
+    box-shadow: 0 0 14px rgba(255, 155, 59, .12);
+  }
+  .mode-card.highlighted {
+    border-color: rgba(255, 90, 170, .42);
+    background: rgba(28, 18, 32, .55);
+    box-shadow: 0 0 14px rgba(255, 90, 170, .12);
+  }
+  .mode-header {
+    display: flex;
+    align-items: baseline;
+    gap: 2.5mm;
+    margin-bottom: 2mm;
+  }
+  .mode-count {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 28pt;
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: -1.5px;
+  }
+  .mode-card.blue .mode-count {
+    background: linear-gradient(135deg, #fff 0%, #a5cdff 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .mode-card.orange .mode-count {
+    background: linear-gradient(135deg, #fff 0%, #ffd29a 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .mode-card.highlighted .mode-count {
+    background: linear-gradient(135deg, #fff 0%, #ffaad2 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .mode-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  /* Durée — élément phare de chaque mode */
+  .mode-meta {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 18pt;
+    line-height: 1;
+    letter-spacing: -.5px;
+    margin: 1mm 0 4mm;
+    color: var(--text);
+  }
+  .mode-card.blue        .mode-meta { color: var(--neon-blue); }
+  .mode-card.orange      .mode-meta { color: var(--neon-orange); }
+  .mode-card.highlighted .mode-meta { color: var(--neon-pink); }
+  .mode-configs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+  }
+  .mode-configs li {
+    font-size: 9pt;
+    line-height: 1.4;
+    padding: 1.8mm 0;
+    border-top: 1px solid rgba(140, 160, 220, .08);
+    color: var(--text);
+  }
+  .mode-configs li:first-child { border-top: none; padding-top: 0; }
+  .mode-configs li strong {
+    color: var(--neon-cyan);
+    font-weight: 600;
+    letter-spacing: .3px;
+    display: block;
+    font-size: 8.5pt;
+    margin-bottom: 0.5mm;
+    text-transform: uppercase;
+  }
+  .mode-card.blue        .mode-configs li strong { color: var(--neon-blue); }
+  .mode-card.orange      .mode-configs li strong { color: var(--neon-orange); }
+  .mode-card.highlighted .mode-configs li strong { color: var(--neon-pink); }
+  .mode-note {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5mm;
+    font-size: 9pt;
+    color: var(--text-dim);
+    font-style: italic;
+    text-align: center;
+    margin-top: 4mm;
+    padding-top: 4mm;
+    border-top: 1px solid rgba(140, 160, 220, .12);
+    line-height: 1.45;
+  }
+
   .livret-toc h2 {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
@@ -2470,8 +2570,18 @@
   .livret-content .rules-win-card { padding: 7px 10px !important; }
   .livret-content .rules-win-card h4 { font-size: 10.5pt !important; margin-bottom: 3px !important; }
   .livret-content .rules-win-card p { font-size: 9pt !important; line-height: 1.3 !important; }
-  .livret-content .rules-timers { gap: 5px !important; }
-  .livret-content .rules-timer-badge { font-size: 9pt !important; padding: 3px 7px !important; }
+
+  /* Sabotage cards en livret : 2 colonnes côte à côte, fonts compactes */
+  .livret-content .sabotage-container { grid-template-columns: 1fr 1fr !important; gap: 5mm !important; max-width: 100% !important; }
+  .livret-content .sabotage-card { padding: 5mm 5mm !important; backdrop-filter: none !important; box-shadow: none !important; }
+  .livret-content .sabotage-card h3 { font-size: 11pt !important; margin-bottom: 2mm !important; letter-spacing: 1px !important; }
+  .livret-content .sabotage-card h4 { font-size: 9.5pt !important; margin: 3mm 0 1.5mm !important; padding-bottom: 1mm !important; }
+  .livret-content .sabotage-card p, .livret-content .sabotage-card li { font-size: 9pt !important; line-height: 1.4 !important; }
+  .livret-content .sabotage-card ul { padding-left: 4mm !important; margin-bottom: 2mm !important; }
+  .livret-content .sabotage-card .tag { font-size: 7.5pt !important; padding: 2px 8px !important; margin-bottom: 2mm !important; }
+  .livret-content .sabotage-card .pancarte-demo { gap: 3mm !important; margin: 2mm 0 !important; }
+  .livret-content .sabotage-card .pancarte { padding: 2mm 3mm !important; font-size: 8pt !important; }
+  .livret-content .sabotage-card .pancarte svg { width: 14px !important; height: 14px !important; }
 
   .livret-content .pancartes-grid { grid-template-columns: 1fr 1fr !important; gap: 6mm !important; }
   .livret-content .pancarte-big { padding: 8mm 7mm !important; min-height: 0 !important; aspect-ratio: auto !important; }
@@ -2637,10 +2747,11 @@
       <div class="livret-section-tag">Index</div>
       <h2 class="livret-h">Sommaire</h2>
       <ol>
-        <li>Règles · Rôles &amp; Mise en place <span class="toc-page">p. 3</span></li>
-        <li>Règles · Défis &amp; Déroulement <span class="toc-page">p. 4</span></li>
-        <li>Règles · Sabotages, morts &amp; fin <span class="toc-page">p. 5</span></li>
-        <li>Règles spéciales <span class="toc-page">p. 6–7</span></li>
+        <li>Modes de jeu <span class="toc-page">p. 3</span></li>
+        <li>Règles · Rôles &amp; Mise en place <span class="toc-page">p. 4</span></li>
+        <li>Règles · Défis &amp; Déroulement <span class="toc-page">p. 5</span></li>
+        <li>Règles · Morts &amp; Fin de partie <span class="toc-page">p. 6</span></li>
+        <li>Règles spéciales <span class="toc-page">p. 7</span></li>
         <li>Défis étage <span class="toc-page">p. 8–9</span></li>
         <li>Défis RDC <span class="toc-page">p. 10–11</span></li>
         <li>Localisations des tâches <span class="toc-page">p. 12</span></li>
@@ -3189,18 +3300,17 @@ function buildQuestSheet() {
   const html = `
     <!-- En-tête écran uniquement -->
     <div class="quest-sheet-header">
-      <h2>QUESTS — 16 JOUEURS</h2>
+      <h2>QUESTS</h2>
       <div class="quest-sheet-meta">
-        <strong>Durée max :</strong> 40 minutes<br>
-        <strong>Total missions :</strong> 16
+        Cocher au fur et à mesure les missions terminées par les joueurs.
       </div>
     </div>
 
     <!-- ── PAGE 1 ── -->
     <div class="quest-floor-block">
       <div class="quest-page-header">
-        <div class="quest-page-header-title">QUESTS — 16 JOUEURS</div>
-        <div class="quest-page-header-meta">Durée max : 40 min &nbsp;|&nbsp; 16 missions</div>
+        <div class="quest-page-header-title">QUESTS</div>
+        <div class="quest-page-header-meta">Cocher les missions au fur et à mesure</div>
       </div>
       <div class="quest-rows">${page1.map(rowHTML).join('')}</div>
       <div class="quest-legend">
@@ -3213,8 +3323,8 @@ function buildQuestSheet() {
     <!-- ── PAGE 2 ── -->
     <div class="quest-floor-block">
       <div class="quest-page-header">
-        <div class="quest-page-header-title">QUESTS — 16 JOUEURS</div>
-        <div class="quest-page-header-meta">Durée max : 40 min &nbsp;|&nbsp; 16 missions</div>
+        <div class="quest-page-header-title">QUESTS</div>
+        <div class="quest-page-header-meta">Cocher les missions au fur et à mesure</div>
       </div>
       <div class="quest-rows">${page2.map(rowHTML).join('')}</div>
       <div class="quest-legend">
@@ -3586,17 +3696,65 @@ function buildLivret() {
 
   let html = '';
 
-  // ── Pages 3-5 : Règles du jeu (split en 3 pages) ──
+  // ── Page 3 : Modes de jeu (8 / 12 / 16 joueurs) ──
+  html += page('Configuration', 'Modes de jeu', `
+    <p style="text-align:left; margin-bottom:4mm">
+      Choisir entre <strong>8</strong>, <strong>12</strong> ou <strong>16</strong> joueurs. Adapter le nombre de défis au nombre de joueurs.
+    </p>
+    <div class="modes-grid">
+      <div class="mode-card blue">
+        <div class="mode-header">
+          <span class="mode-count">8</span>
+          <span class="mode-label">joueurs</span>
+        </div>
+        <div class="mode-meta">20 min</div>
+        <ul class="mode-configs">
+          <li><strong>Config A</strong>1 Impostor + 7 Crewmates</li>
+          <li><strong>Config B</strong>2 Impostors + 6 Crewmates</li>
+        </ul>
+      </div>
+      <div class="mode-card orange">
+        <div class="mode-header">
+          <span class="mode-count">12</span>
+          <span class="mode-label">joueurs</span>
+        </div>
+        <div class="mode-meta">30 min</div>
+        <ul class="mode-configs">
+          <li><strong>Config A</strong>2 Impostors + 10 Crewmates</li>
+          <li><strong>Config B</strong>3 Impostors + 9 Crewmates</li>
+          <li><strong>Config C</strong>2 Imp + 9 Crew + 1 Sheriff</li>
+        </ul>
+      </div>
+      <div class="mode-card highlighted">
+        <div class="mode-header">
+          <span class="mode-count">16</span>
+          <span class="mode-label">joueurs</span>
+        </div>
+        <div class="mode-meta">40 min</div>
+        <ul class="mode-configs">
+          <li><strong>Config A</strong>3 Imp + 12 Crew + 1 Sheriff</li>
+          <li><strong>Config B</strong>4 Imp + 11 Crew + 1 Sheriff</li>
+          <li><strong>Config C</strong>3 Imp + 11 Crew + 1 Sheriff + 1 Ingénieur</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mode-note">
+      <span>À 8 joueurs : pas de Sheriff ni d'Ingénieur</span>
+      <span>À 12 joueurs : Sheriff optionnel</span>
+      <span>L'Ingénieur n'existe que dans la version 16 joueurs</span>
+    </div>
+  `, 3);
+
+  // ── Pages 4-6 : Règles du jeu (split en 3 pages) ──
   // Sections dans l'ordre : 0=Présentation rôles, 1=Mise en place, 2=Défis,
   //                         3=Déroulement, 4=Sabotages, 5=Morts, 6=Fin de partie
-  html += page('Chapitre 1', 'Rôles &amp; Mise en place', '<div class="rules-container" id="livret-rules-page-1"></div>', 3);
-  html += page('Chapitre 1 · suite', 'Défis &amp; Déroulement',  '<div class="rules-container" id="livret-rules-page-2"></div>', 4);
-  html += page('Chapitre 1 · fin',   'Sabotages, morts &amp; fin', '<div class="rules-container" id="livret-rules-page-3"></div>', 5);
+  html += page('Chapitre 1', 'Rôles &amp; Mise en place', '<div class="rules-container" id="livret-rules-page-1"></div>', 4);
+  html += page('Chapitre 1 · suite', 'Défis &amp; Déroulement',  '<div class="rules-container" id="livret-rules-page-2"></div>', 5);
+  html += page('Chapitre 1 · fin',   'Morts &amp; Fin de partie', '<div class="rules-container" id="livret-rules-page-3"></div>', 6);
 
-  // ── Pages 6-7 : Règles spéciales (sabotage) — 4 cartes split 2+2 ──
+  // ── Page 7 : Règles spéciales (Fantôme + Ingénieur sur la même page) ──
   const sabotageSrc = document.querySelector('#tab-sabotage .sabotage-container');
-  html += page('Chapitre 2', 'Règles spéciales · 1/2', '<div class="sabotage-container" id="livret-sabotage-1"></div>', 6);
-  html += page('Chapitre 2 · suite', 'Règles spéciales · 2/2', '<div class="sabotage-container" id="livret-sabotage-2"></div>', 7);
+  html += page('Chapitre 2', 'Règles spéciales', '<div class="sabotage-container" id="livret-sabotage-merged"></div>', 7);
 
   // ── Pages 8-9 : Défis étage (9 cartes split 5+4) ──
   html += page('Chapitre 3', 'Défis · Étage · 1/2', `
@@ -3642,10 +3800,11 @@ function buildLivret() {
 
   // ── Post-traitement : redistribution des contenus ──
 
-  // 1) RÈGLES : on récupère les 7 sections du #tab-rules et on les répartit
+  // 1) RÈGLES : on récupère les 8 sections du #tab-rules et on les répartit
   //    Page 1 : sections 0-1 (Présentation rôles + Mise en place)
   //    Page 2 : sections 2-3 (Défis + Déroulement)
-  //    Page 3 : sections 4-5-6 (Sabotages + Morts + Fin)
+  //    Page 3 : sections 5-6-7 (Morts + Fin + Aide-mémoire MJ)
+  //              La section 4 (Sabotages) est exclue : déjà détaillée dans Règles spéciales.
   const tabRules = document.querySelector('#tab-rules');
   if (tabRules) {
     const allSections = Array.from(tabRules.querySelectorAll('.rules-section'));
@@ -3658,7 +3817,7 @@ function buildLivret() {
     };
     distribute('livret-rules-page-1', [0, 1]);
     distribute('livret-rules-page-2', [2, 3]);
-    distribute('livret-rules-page-3', [4, 5, 6]);
+    distribute('livret-rules-page-3', [5, 6, 7]);
   }
 
   // 2) QUESTS : on coupe par étage (le 1er .quest-floor-block sur p11, le reste sur p12)
@@ -3678,14 +3837,12 @@ function buildLivret() {
     Array.from(tachesSrc.children).forEach(b => tachesMerged.appendChild(b.cloneNode(true)));
   }
 
-  // 3.5) SABOTAGE : 4 cartes split 2+2 sur 2 pages (sans les pancartes)
+  // 3.5) SABOTAGE : 2 cartes consolidées (Fantôme + Ingénieur) sur une seule page
   const sabSrc = document.querySelector('#tab-sabotage .sabotage-container');
-  const sab1 = container.querySelector('#livret-sabotage-1');
-  const sab2 = container.querySelector('#livret-sabotage-2');
-  if (sabSrc && sab1 && sab2) {
+  const sabMerged = container.querySelector('#livret-sabotage-merged');
+  if (sabSrc && sabMerged) {
     const cards = Array.from(sabSrc.querySelectorAll(':scope > .sabotage-card'));
-    cards.slice(0, 2).forEach(c => sab1.appendChild(c.cloneNode(true)));
-    cards.slice(2).forEach(c => sab2.appendChild(c.cloneNode(true)));
+    cards.forEach(c => sabMerged.appendChild(c.cloneNode(true)));
   }
 
   // 3.6) DÉFIS ÉTAGE : 9 cartes split 5+4 sur 2 pages
