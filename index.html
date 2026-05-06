@@ -2339,6 +2339,7 @@
     text-align: center;
     display: flex; flex-direction: column;
     justify-content: center; align-items: center;
+    gap: 14mm;
     background:
       radial-gradient(ellipse at 70% 20%, rgba(255, 90, 170, .22), transparent 55%),
       radial-gradient(ellipse at 30% 80%, rgba(107, 166, 255, .22), transparent 55%),
@@ -2349,10 +2350,10 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 28pt;
     color: var(--neon-pink);
-    margin-bottom: 14mm;
     filter: drop-shadow(0 0 12px rgba(255, 90, 170, .55));
     letter-spacing: 4px;
     opacity: .9;
+    margin: 0;
   }
   .livret-back-cover .lbc-quote {
     font-family: 'Space Grotesk', sans-serif;
@@ -2362,12 +2363,14 @@
     line-height: 1.3;
     color: #f0f4ff;
     max-width: 130mm;
-    margin: 0 0 12mm;
     letter-spacing: .5px;
     filter: drop-shadow(0 0 18px rgba(255, 90, 170, .25));
+    margin: 0;
   }
   .livret-back-cover .lc-rule {
-    margin: 0 0 16mm;
+    width: 60mm; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 90, 170, .6), transparent);
+    margin: 0;
   }
   .livret-back-cover .lbc-url {
     font-family: 'JetBrains Mono', monospace;
@@ -2375,6 +2378,7 @@
     color: var(--neon-cyan);
     letter-spacing: 1.5px;
     opacity: .85;
+    margin: 0;
   }
 
   .livret-toc h2 {
