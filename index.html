@@ -1538,6 +1538,58 @@
   }
   .print-page.verso .card-back::before { display: none !important; }
 
+  /* ═══════════ ONGLET DÉFIS À IMPRIMER ═══════════ */
+  /* Grille 2x2 pour les défis (4 par page A4) */
+  .defi-print-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 96mm);
+    grid-template-rows: repeat(2, 138mm);
+    justify-content: center;
+    align-content: start;
+    gap: 2mm;
+    flex: 1;
+  }
+  .print-page.defi-recto .defi-card {
+    width: 96mm !important;
+    height: 138mm !important;
+    margin: 0 !important;
+    border-width: 3px !important;
+  }
+  /* Verso : pages au fond colore (rouge ou bleu) selon le type de defi */
+  .print-page.defi-verso-red {
+    background: linear-gradient(160deg, #240810, #100408) !important;
+  }
+  .print-page.defi-verso-blue {
+    background: linear-gradient(160deg, #081224, #040810) !important;
+  }
+  /* Card-back du verso defis : transparent + bleed (comme cards verso) */
+  .print-page.defi-verso .card-back {
+    width: 100mm !important;
+    height: 142mm !important;
+    transform: translate(-2mm, -2mm) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    margin: 0 !important;
+  }
+  .print-page.defi-verso .card-back::before { display: none !important; }
+  /* Adapte le logo "AMONG US" + "SHHHHHH" + filtre du SVG selon couleur du verso */
+  .print-page.defi-verso-red .card-back-logo {
+    color: var(--neon-red) !important;
+    text-shadow: 0 0 16px rgba(255, 56, 96, .6), 0 0 32px rgba(255, 56, 96, .35) !important;
+  }
+  .print-page.defi-verso-red .card-back-icon {
+    filter: drop-shadow(0 0 16px rgba(255, 56, 96, .6)) !important;
+  }
+  .print-page.defi-verso-blue .card-back-logo {
+    color: var(--neon-blue) !important;
+    text-shadow: 0 0 16px rgba(107, 166, 255, .6), 0 0 32px rgba(107, 166, 255, .35) !important;
+  }
+  .print-page.defi-verso-blue .card-back-icon {
+    filter: drop-shadow(0 0 16px rgba(107, 166, 255, .6)) !important;
+  }
+
   /* Toolbar print */
   .cards-print-toolbar {
     display: flex; justify-content: center;
@@ -1604,6 +1656,50 @@
     #tab-print.print-active .print-page.verso {
       background: linear-gradient(160deg, #1a0d05, #0a0400) !important;
     }
+
+    /* Defis à imprimer : meme logique que cartes mais grille 2x2 + verso colore */
+    #tab-defis-print.print-active { padding: 0 !important; }
+    #tab-defis-print.print-active > .section-title,
+    #tab-defis-print.print-active .cards-print-toolbar,
+    #tab-defis-print.print-active .print-page-label { display: none !important; }
+    #tab-defis-print.print-active .print-pages-container {
+      display: block !important; gap: 0 !important; padding: 0 !important;
+    }
+    #tab-defis-print.print-active .print-page {
+      background: white !important; box-shadow: none !important;
+      width: 210mm !important; height: 297mm !important;
+      padding: 8mm !important; margin: 0 !important;
+      page-break-after: always !important; break-after: page !important;
+      page-break-inside: avoid !important; break-inside: avoid !important;
+    }
+    #tab-defis-print.print-active .print-page:last-child {
+      page-break-after: auto !important; break-after: auto !important;
+    }
+    #tab-defis-print.print-active .defi-print-grid {
+      grid-template-columns: repeat(2, 96mm) !important;
+      grid-template-rows: repeat(2, 138mm) !important;
+      gap: 2mm !important;
+    }
+    #tab-defis-print.print-active .defi-card {
+      width: 96mm !important; height: 138mm !important;
+      margin: 0 !important; border-width: 3px !important;
+    }
+    /* Verso pages : fond colore qui override le fond blanc */
+    #tab-defis-print.print-active .print-page.defi-verso-red {
+      background: linear-gradient(160deg, #240810, #100408) !important;
+    }
+    #tab-defis-print.print-active .print-page.defi-verso-blue {
+      background: linear-gradient(160deg, #081224, #040810) !important;
+    }
+    /* Verso card-backs : transparent avec bleed */
+    #tab-defis-print.print-active .print-page.defi-verso .card-back {
+      width: 100mm !important; height: 142mm !important;
+      margin: 0 !important;
+      border: none !important; border-radius: 0 !important; box-shadow: none !important;
+      background: transparent !important;
+      transform: translate(-2mm, -2mm) !important;
+    }
+    #tab-defis-print.print-active .print-page.defi-verso .card-back::before { display: none !important; }
     #tab-print.print-active .print-page.verso .card-back {
       width: 67mm !important; height: 94mm !important;
       margin: 0 !important;
@@ -1774,6 +1870,7 @@
   <button class="tab-btn backs"          onclick="showTab('backs')">Dos des cartes</button>
   <button class="tab-btn timer"          onclick="showTab('timer')">Timer</button>
   <button class="tab-btn printtab"       onclick="showTab('print')">Cartes à imprimer</button>
+  <button class="tab-btn defis"          onclick="showTab('defis-print')">Défis à imprimer</button>
   <button class="tab-btn livret"         onclick="showTab('livret')">Livret</button>
   <button class="tab-btn all"            onclick="showTab('all')" style="display:none">Toutes</button>
 </div>
@@ -1964,6 +2061,17 @@
   </div>
 
   <div class="print-pages-container" id="print-pages-container"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DÉFIS À IMPRIMER (4 par page, recto/verso colore)
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-defis-print">
+  <div class="section-title" style="color:#ff9966">Défis à imprimer</div>
+  <div class="cards-print-toolbar">
+    <button onclick="printDefisTab()">Imprimer les défis</button>
+  </div>
+  <div class="print-pages-container" id="defis-print-container"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -3387,6 +3495,80 @@ function printCardsTab() {
   }, 100);
 }
 
+// Imprime l'onglet "Défis à imprimer"
+function printDefisTab() {
+  const tab = document.getElementById('tab-defis-print');
+  if (!tab) return;
+  tab.classList.add('print-active');
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => tab.classList.remove('print-active'), 400);
+  }, 100);
+}
+
+// Construit le HTML d'un dos de carte en remplaçant l'orange par une autre couleur
+function backCardHTMLColored(color) {
+  return BACK_CARD_HTML.replaceAll('#ff6b00', color);
+}
+
+// Génère les pages d'impression des défis (recto/verso, 4 par page)
+function buildDefisPrintPages() {
+  const container = document.getElementById('defis-print-container');
+  if (!container) return;
+
+  const reds  = DEFIS.filter(d => d.color === 'red');
+  const blues = DEFIS.filter(d => d.color === 'blue');
+  const PER_PAGE = 4;
+  const RED_HEX  = '#ff3860'; // var(--neon-red)
+  const BLUE_HEX = '#6ba6ff'; // var(--neon-blue)
+
+  const defiCardHTML = (d) => `
+    <div class="defi-card ${d.color}">
+      <div class="defi-header">
+        <div class="defi-icon-wrap">${defiIconSVG(d.color)}</div>
+        <div class="defi-number">DÉFI N°${String(d.num).padStart(2,'0')}</div>
+        <div class="defi-badge">${d.color === 'red' ? 'ÉTAGE' : 'RDC'}</div>
+      </div>
+      <div class="defi-text">${d.text}</div>
+    </div>
+  `;
+
+  let html = '';
+  let pageNum = 1;
+
+  function buildSet(defis, colorClass, hexColor) {
+    let setHtml = '';
+    for (let i = 0; i < defis.length; i += PER_PAGE) {
+      const chunk = defis.slice(i, i + PER_PAGE);
+      const cards = chunk.map(defiCardHTML).join('');
+      // Toujours 4 dos par page (uniforme), peu importe le nb de cartes recto
+      const backsHTML = Array(PER_PAGE).fill(backCardHTMLColored(hexColor)).join('');
+
+      setHtml += `
+        <div class="print-page defi-recto">
+          <div class="print-page-label">RECTO ${colorClass.toUpperCase()} — PAGE ${pageNum} (${chunk.length} défi${chunk.length > 1 ? 's' : ''})</div>
+          <div class="defi-print-grid">${cards}</div>
+        </div>
+      `;
+      pageNum++;
+
+      setHtml += `
+        <div class="print-page defi-verso defi-verso-${colorClass}">
+          <div class="print-page-label">VERSO ${colorClass.toUpperCase()} — PAGE ${pageNum}</div>
+          <div class="defi-print-grid">${backsHTML}</div>
+        </div>
+      `;
+      pageNum++;
+    }
+    return setHtml;
+  }
+
+  html += buildSet(reds,  'red',  RED_HEX);
+  html += buildSet(blues, 'blue', BLUE_HEX);
+
+  container.innerHTML = html;
+}
+
 
 // ═══════════════════════════════════════════════════
 // DÉFIS & TÂCHES
@@ -3974,6 +4156,7 @@ buildQuestSheet();
 buildDefis();
 buildLivret();
 buildPrintPages();
+buildDefisPrintPages();
 initTrackers();
 loadTimerState();
 initCardClicks();
