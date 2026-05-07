@@ -200,6 +200,7 @@
   .tab-btn.rules    { color: var(--neon-blue);   border-color: rgba(107, 166, 255, .35); }
   .tab-btn.livret   { color: var(--neon-pink);   border-color: rgba(255, 90, 170, .35); }
   .tab-btn.all      { color: #fff;               border-color: rgba(255, 255, 255, .25); }
+  .tab-btn.home     { color: #fff;               border-color: rgba(255, 255, 255, .35); }
 
   .tab-btn:hover {
     transform: translateY(-1px);
@@ -1885,6 +1886,159 @@
   }
 
   /* ═══════════ TIMER ═══════════ */
+  /* ═══════════ PAGE D'ACCUEIL ═══════════ */
+  #tab-accueil {
+    text-align: center;
+    padding: 40px 20px 80px;
+  }
+  .accueil-hero {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 70vh;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .accueil-glyph {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28pt;
+    color: var(--neon-pink);
+    letter-spacing: 6px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 14px rgba(255, 90, 170, .55));
+    opacity: .85;
+  }
+  .accueil-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: clamp(48px, 9vw, 92px);
+    line-height: 1;
+    letter-spacing: -2px;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, #ffaad2 50%, #b6a4ff 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 28px rgba(255, 90, 170, .35));
+  }
+  .accueil-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14pt;
+    color: var(--text-dim);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-top: 14px;
+  }
+  .accueil-rule {
+    width: 80mm; max-width: 70%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 90, 170, .55), transparent);
+    margin: 32px 0;
+  }
+  .accueil-prompt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    color: var(--text-dim);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: .85;
+  }
+
+  .accueil-modes {
+    display: flex; gap: 22px;
+    flex-wrap: wrap; justify-content: center;
+    margin-bottom: 50px;
+  }
+  .accueil-mode {
+    font-family: 'Space Grotesk', sans-serif;
+    background: rgba(20, 24, 44, 0.6);
+    border: 2px solid var(--line-2);
+    border-radius: 18px;
+    padding: 30px 38px;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(.2,.7,.3,1);
+    display: flex; flex-direction: column;
+    align-items: center;
+    min-width: 150px;
+  }
+  .accueil-mode:hover { transform: translateY(-4px); }
+  .accueil-mode .amode-num {
+    font-weight: 800;
+    font-size: 56pt;
+    line-height: 1;
+    letter-spacing: -3px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .accueil-mode .amode-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5pt;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .accueil-mode .amode-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+  }
+  /* Variantes par couleur, assorties a la page Modes de jeu */
+  .accueil-mode.blue { border-color: rgba(107, 166, 255, .42); }
+  .accueil-mode.blue:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 16px 40px rgba(107, 166, 255, .25);
+    background: linear-gradient(160deg, rgba(8, 18, 36, .9), rgba(20, 24, 44, .95));
+  }
+  .accueil-mode.blue .amode-num {
+    background: linear-gradient(135deg, #fff 0%, #a5cdff 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .accueil-mode.blue .amode-meta { color: var(--neon-blue); }
+
+  .accueil-mode.orange { border-color: rgba(255, 155, 59, .42); }
+  .accueil-mode.orange:hover {
+    border-color: var(--neon-orange);
+    box-shadow: 0 16px 40px rgba(255, 155, 59, .25);
+    background: linear-gradient(160deg, rgba(28, 22, 14, .9), rgba(20, 24, 44, .95));
+  }
+  .accueil-mode.orange .amode-num {
+    background: linear-gradient(135deg, #fff 0%, #ffd29a 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .accueil-mode.orange .amode-meta { color: var(--neon-orange); }
+
+  .accueil-mode.pink { border-color: rgba(255, 90, 170, .42); }
+  .accueil-mode.pink:hover {
+    border-color: var(--neon-pink);
+    box-shadow: 0 16px 40px rgba(255, 90, 170, .25);
+    background: linear-gradient(160deg, rgba(28, 18, 32, .9), rgba(20, 24, 44, .95));
+  }
+  .accueil-mode.pink .amode-num {
+    background: linear-gradient(135deg, #fff 0%, #ffaad2 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .accueil-mode.pink .amode-meta { color: var(--neon-pink); }
+
+  .accueil-rules-link {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 1.5px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: 1px solid var(--line-2);
+    transition: all .2s;
+  }
+  .accueil-rules-link:hover {
+    color: var(--neon-cyan);
+    border-color: rgba(41, 231, 255, .55);
+    background: rgba(41, 231, 255, .08);
+    transform: translateY(-1px);
+  }
+
   #tab-timer { text-align: center; padding: 50px 20px 80px; }
 
   /* Selecteur de mode (8 / 12 / 16 joueurs) au dessus du timer */
@@ -2072,7 +2226,8 @@
 
 <div class="tabs">
   <div class="sidebar-title">AMONG US</div>
-  <button class="tab-btn crewmate active" onclick="showTab('crewmate')">Crewmates</button>
+  <button class="tab-btn home active"    onclick="showTab('accueil')">Accueil</button>
+  <button class="tab-btn crewmate"       onclick="showTab('crewmate')">Crewmates</button>
   <button class="tab-btn impostor"       onclick="showTab('impostor')">Impostors</button>
   <button class="tab-btn sheriff"        onclick="showTab('sheriff')">Sheriff</button>
   <button class="tab-btn engineer"       onclick="showTab('engineer')">Ingenieur</button>
@@ -2087,6 +2242,41 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════
+     ACCUEIL — page d'entree avec selection du mode
+════════════════════════════════════════════════════ -->
+<div class="section active" id="tab-accueil">
+  <div class="accueil-hero">
+    <div class="accueil-glyph">▰▰▰</div>
+    <h1 class="accueil-title">AMONG US</h1>
+    <div class="accueil-subtitle">Grandeur Nature</div>
+    <div class="accueil-rule"></div>
+    <div class="accueil-prompt">Sélectionne le nombre de joueurs</div>
+
+    <div class="accueil-modes">
+      <button class="accueil-mode blue" onclick="setGameMode(8)">
+        <span class="amode-num">8</span>
+        <span class="amode-label">joueurs</span>
+        <span class="amode-meta">20 min</span>
+      </button>
+      <button class="accueil-mode orange" onclick="setGameMode(12)">
+        <span class="amode-num">12</span>
+        <span class="amode-label">joueurs</span>
+        <span class="amode-meta">30 min</span>
+      </button>
+      <button class="accueil-mode pink" onclick="setGameMode(16)">
+        <span class="amode-num">16</span>
+        <span class="amode-label">joueurs</span>
+        <span class="amode-meta">40 min</span>
+      </button>
+    </div>
+
+    <a class="accueil-rules-link" href="#" onclick="showTab('rules'); return false;">
+      Règles &amp; Règles spéciales →
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
      ALL / CREWMATES
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-all">
@@ -2094,7 +2284,7 @@
   <div class="cards-grid" id="all-grid"></div>
 </div>
 
-<div class="section active" id="tab-crewmate">
+<div class="section" id="tab-crewmate">
   <div class="section-title" style="color:var(--neon-green)">Crewmates</div>
   <div class="cards-grid" id="crew-grid"></div>
 </div>
@@ -3697,6 +3887,29 @@ function showTab(name) {
   const btn = (typeof event !== 'undefined' && event && event.currentTarget) ||
               document.querySelector(`.tab-btn[onclick*="'${name}'"]`);
   if (btn && btn.classList) btn.classList.add('active');
+}
+
+// Sélection du mode de jeu depuis la page d'accueil (étape 1 : stocke + sync timer + navigue)
+const GAME_MODE_KEY = 'among-us:game-mode:v1';
+
+function setGameMode(mode) {
+  if (![8, 12, 16].includes(mode)) return;
+  localStorage.setItem(GAME_MODE_KEY, String(mode));
+
+  // Sync avec le timer (8j → 20min, 12j → 30min, 16j → 40min)
+  const minutes = { 8: 20, 12: 30, 16: 40 }[mode];
+  if (minutes && typeof setTimerMode === 'function') {
+    const btn = document.querySelector(`.timer-mode-btn[data-duration="${minutes}"]`);
+    if (btn) setTimerMode(minutes, btn);
+  }
+
+  // Navigue vers Crewmates (point d'entrée naturel après sélection du mode)
+  showTab('crewmate');
+}
+
+function loadGameMode() {
+  const stored = parseInt(localStorage.getItem(GAME_MODE_KEY) || '0', 10);
+  return [8, 12, 16].includes(stored) ? stored : null;
 }
 
 // Affiche un sous-onglet dans l'onglet Impressions (cards / defis / pancartes)
