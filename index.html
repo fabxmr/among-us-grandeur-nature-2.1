@@ -1523,6 +1523,8 @@
   }
   /* Espacement entre cartes uniquement sur le recto (guide de decoupe) */
   .print-page.recto .print-grid { gap: 2mm; }
+  /* Bordures recto un peu plus marquees pour mieux delimiter chaque carte */
+  .print-page.recto .card { border-width: 2px !important; }
   .print-page .card,
   .print-page .card-back {
     width: 63mm !important; height: 88mm !important;
@@ -1601,10 +1603,11 @@
     #tab-print.print-active .print-page.recto .print-grid {
       gap: 2mm !important;
     }
-    /* Recto : herite des coins arrondis de la carte de base */
+    /* Recto : herite des coins arrondis de la carte de base + bordures plus marquees */
     #tab-print.print-active .card {
       width: 63mm !important; height: 88mm !important;
       margin: 0 !important;
+      border-width: 2px !important;
     }
     /* Recto card-back (cas inutilise mais garde par precaution) : coins droits */
     #tab-print.print-active .print-page.recto .card-back {
