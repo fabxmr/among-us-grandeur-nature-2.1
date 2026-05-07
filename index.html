@@ -1516,14 +1516,14 @@
   .print-page.verso .print-page-label { color: #b85500; }
   .print-grid {
     display: grid;
-    grid-template-columns: repeat(3, 62mm);
-    grid-template-rows: repeat(3, 87mm);
+    grid-template-columns: repeat(3, 63mm);
+    grid-template-rows: repeat(3, 88mm);
     justify-content: center; align-content: start;
     gap: 0; flex: 1;
   }
   .print-page .card,
   .print-page .card-back {
-    width: 62mm !important; height: 87mm !important;
+    width: 63mm !important; height: 88mm !important;
     border-radius: 0 !important; margin: 0 !important;
     animation: none !important;
   }
@@ -1536,11 +1536,11 @@
   .print-page .card:hover { transform: none !important; }
   .print-page .card { transition: none !important; }
 
-  /* VERSO : 1mm de bleed dans chaque direction (carte 64×89 vs recto 62×87) */
-  /* La grille reste à 62×87, la carte déborde via translate pour rester centrée */
+  /* VERSO : 1mm de bleed dans chaque direction (carte 65×90 vs recto 63×88) */
+  /* La grille reste à 63×88, la carte déborde via translate pour rester centrée */
   .print-page.verso .card-back {
-    width: 64mm !important;
-    height: 89mm !important;
+    width: 65mm !important;
+    height: 90mm !important;
     transform: translate(-1mm, -1mm) !important;
   }
 
@@ -1587,17 +1587,17 @@
       page-break-after: auto !important; break-after: auto !important;
     }
     #tab-print.print-active .print-grid {
-      grid-template-columns: repeat(3, 62mm) !important;
-      grid-template-rows: repeat(3, 87mm) !important;
+      grid-template-columns: repeat(3, 63mm) !important;
+      grid-template-rows: repeat(3, 88mm) !important;
     }
     #tab-print.print-active .card,
     #tab-print.print-active .print-page.recto .card-back {
-      width: 62mm !important; height: 87mm !important;
+      width: 63mm !important; height: 88mm !important;
       margin: 0 !important; border-radius: 0 !important;
     }
     /* Verso : 1mm de bleed pour eviter la bande blanche au decoupage */
     #tab-print.print-active .print-page.verso .card-back {
-      width: 64mm !important; height: 89mm !important;
+      width: 65mm !important; height: 90mm !important;
       margin: 0 !important; border-radius: 0 !important;
       transform: translate(-1mm, -1mm) !important;
     }
