@@ -1886,6 +1886,12 @@
   }
 
   /* ═══════════ TIMER ═══════════ */
+  /* ═══════════ MODE ACCUEIL : nav cachee, page pleine largeur ═══════════ */
+  body.on-accueil .tabs { display: none !important; }
+  @media (min-width: 1024px) {
+    body.on-accueil { padding-left: 0 !important; }
+  }
+
   /* ═══════════ INDICATEUR DE MODE ACTIF ═══════════ */
   .mode-indicator {
     position: fixed;
@@ -3948,6 +3954,9 @@ function showTab(name) {
   const btn = (typeof event !== 'undefined' && event && event.currentTarget) ||
               document.querySelector(`.tab-btn[onclick*="'${name}'"]`);
   if (btn && btn.classList) btn.classList.add('active');
+
+  // Cache la nav quand on est sur l'accueil (apparait au clic sur un mode)
+  document.body.classList.toggle('on-accueil', name === 'accueil');
 }
 
 // Sélection du mode de jeu depuis la page d'accueil
@@ -4867,6 +4876,11 @@ initTrackers();
 loadTimerMode();
 loadTimerState();
 initCardClicks();
+
+// Au chargement initial : applique la classe on-accueil si l'accueil est l'onglet actif
+if (document.querySelector('#tab-accueil.active')) {
+  document.body.classList.add('on-accueil');
+}
 </script>
 <script>
   if ('serviceWorker' in navigator) {
