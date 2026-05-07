@@ -1539,19 +1539,18 @@
   .print-page.verso .card-back::before { display: none !important; }
 
   /* ═══════════ ONGLET DÉFIS À IMPRIMER ═══════════ */
-  /* Grille 2x2 pour les défis (4 par page A4) */
+  /* Grille 1 colonne x 4 lignes : 4 defis horizontaux empiles */
   .defi-print-grid {
     display: grid;
-    grid-template-columns: repeat(2, 96mm);
-    grid-template-rows: repeat(2, 138mm);
-    justify-content: center;
-    align-content: start;
-    gap: 2mm;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(4, 67mm);
+    gap: 3mm;
     flex: 1;
+    width: 100%;
   }
   .print-page.defi-recto .defi-card {
-    width: 96mm !important;
-    height: 138mm !important;
+    width: 100% !important;
+    height: 67mm !important;
     margin: 0 !important;
     border-width: 3px !important;
   }
@@ -1562,10 +1561,10 @@
   .print-page.defi-verso-blue {
     background: linear-gradient(160deg, #081224, #040810) !important;
   }
-  /* Card-back du verso defis : transparent + bleed (comme cards verso) */
+  /* Card-back du verso defis : transparent + bleed 2mm chaque cote */
   .print-page.defi-verso .card-back {
-    width: 100mm !important;
-    height: 142mm !important;
+    width: 198mm !important;
+    height: 71mm !important;
     transform: translate(-2mm, -2mm) !important;
     border: none !important;
     border-radius: 0 !important;
@@ -1676,12 +1675,12 @@
       page-break-after: auto !important; break-after: auto !important;
     }
     #tab-defis-print.print-active .defi-print-grid {
-      grid-template-columns: repeat(2, 96mm) !important;
-      grid-template-rows: repeat(2, 138mm) !important;
-      gap: 2mm !important;
+      grid-template-columns: 100% !important;
+      grid-template-rows: repeat(4, 67mm) !important;
+      gap: 3mm !important;
     }
     #tab-defis-print.print-active .defi-card {
-      width: 96mm !important; height: 138mm !important;
+      width: 100% !important; height: 67mm !important;
       margin: 0 !important; border-width: 3px !important;
     }
     /* Verso pages : fond colore qui override le fond blanc */
@@ -1691,9 +1690,9 @@
     #tab-defis-print.print-active .print-page.defi-verso-blue {
       background: linear-gradient(160deg, #081224, #040810) !important;
     }
-    /* Verso card-backs : transparent avec bleed */
+    /* Verso card-backs : transparent avec bleed 2mm */
     #tab-defis-print.print-active .print-page.defi-verso .card-back {
-      width: 100mm !important; height: 142mm !important;
+      width: 198mm !important; height: 71mm !important;
       margin: 0 !important;
       border: none !important; border-radius: 0 !important; box-shadow: none !important;
       background: transparent !important;
