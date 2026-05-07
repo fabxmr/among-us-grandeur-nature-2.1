@@ -1542,7 +1542,12 @@
 
   /* VERSO : on garde les cartes (logos AMONG US + impostor SVG + SHHHHHH)
      mais on enleve tout ce qui cree des lignes visibles entre les cartes :
-     bordures, box-shadow, coins arrondis, pattern de points decoratifs */
+     bordures, box-shadow, coins arrondis, pattern de points decoratifs.
+     Les fonds des cartes sont rendus transparents, et la page entiere
+     porte un degrade uniforme — plus de quadrillage visible. */
+  .print-page.verso {
+    background: linear-gradient(160deg, #1a0d05, #0a0400) !important;
+  }
   .print-page.verso .card-back {
     width: 67mm !important;
     height: 94mm !important;
@@ -1550,6 +1555,7 @@
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+    background: transparent !important;
   }
   .print-page.verso .card-back::before { display: none !important; }
 
@@ -1614,14 +1620,18 @@
       width: 63mm !important; height: 88mm !important;
       margin: 0 !important; border-radius: 0 !important;
     }
-    /* Verso : cartes visibles (logos + SVG) mais sans bordures/shadow/radius
-       qui creaient des lignes entre les cartes. Bleed 67×94 pour couvrir le recto. */
+    /* Verso : cartes visibles (logos + SVG) avec fond uniforme (pas de quadrillage).
+       Le degrade unique est sur la page entiere, les cartes sont transparentes. */
+    #tab-print.print-active .print-page.verso {
+      background: linear-gradient(160deg, #1a0d05, #0a0400) !important;
+    }
     #tab-print.print-active .print-page.verso .card-back {
       width: 67mm !important; height: 94mm !important;
       margin: 0 !important;
       border: none !important;
       border-radius: 0 !important;
       box-shadow: none !important;
+      background: transparent !important;
       transform: translate(-2mm, -2mm) !important;
     }
     #tab-print.print-active .print-page.verso .card-back::before { display: none !important; }
