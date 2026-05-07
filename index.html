@@ -1886,6 +1886,47 @@
 
   /* ═══════════ TIMER ═══════════ */
   #tab-timer { text-align: center; padding: 50px 20px 80px; }
+
+  /* Selecteur de mode (8 / 12 / 16 joueurs) au dessus du timer */
+  .timer-modes {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin: 0 auto 36px; max-width: 720px;
+  }
+  .timer-mode-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: .5px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: rgba(20, 24, 44, 0.55);
+    color: var(--text-dim);
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .timer-mode-btn:hover {
+    transform: translateY(-1px);
+    background: rgba(20, 24, 44, 0.8);
+  }
+  .timer-mode-btn.blue.active {
+    color: var(--neon-blue);
+    border-color: rgba(107, 166, 255, .55);
+    background: linear-gradient(135deg, rgba(107, 166, 255, .22), rgba(107, 166, 255, .08));
+    box-shadow: 0 4px 16px rgba(107, 166, 255, .18);
+  }
+  .timer-mode-btn.orange.active {
+    color: var(--neon-orange);
+    border-color: rgba(255, 155, 59, .55);
+    background: linear-gradient(135deg, rgba(255, 155, 59, .22), rgba(255, 155, 59, .08));
+    box-shadow: 0 4px 16px rgba(255, 155, 59, .18);
+  }
+  .timer-mode-btn.pink.active {
+    color: var(--neon-pink);
+    border-color: rgba(255, 90, 170, .55);
+    background: linear-gradient(135deg, rgba(255, 90, 170, .22), rgba(255, 90, 170, .08));
+    box-shadow: 0 4px 16px rgba(255, 90, 170, .18);
+  }
   .timer-display {
     font-family: 'Space Grotesk', 'JetBrains Mono', monospace;
     font-weight: 700;
@@ -2460,6 +2501,11 @@
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-timer">
   <div class="section-title" style="color:#00e5ff">Timer</div>
+  <div class="timer-modes">
+    <button class="timer-mode-btn blue"   data-duration="20" onclick="setTimerMode(20, this)">8 joueurs · 20 min</button>
+    <button class="timer-mode-btn orange" data-duration="30" onclick="setTimerMode(30, this)">12 joueurs · 30 min</button>
+    <button class="timer-mode-btn pink active" data-duration="40" onclick="setTimerMode(40, this)">16 joueurs · 40 min</button>
+  </div>
   <div id="timer-display" class="timer-display">40:00</div>
   <div class="timer-controls">
     <button class="timer-btn start" id="timer-start" onclick="startTimer()">▶ DÉMARRER</button>
@@ -3939,10 +3985,37 @@ function buildDefis() {
 // TIMER (40 min) — état persistant via localStorage
 // ═══════════════════════════════════════════════════
 const TIMER_KEY = 'among-us:timer:v1';
-const TIMER_DURATION_MS = 40 * 60 * 1000;
+const TIMER_MODE_KEY = 'among-us:timer-mode:v1';
+let TIMER_DURATION_MS = 40 * 60 * 1000;  // mis a jour par setTimerMode
 let timerInterval = null;
 let timerEndAt = null;          // timestamp où le timer atteindra zéro
 let timerPausedRemaining = null; // ms restantes quand mis en pause
+
+// Selecteur de mode (8 / 12 / 16 joueurs)
+function setTimerMode(minutes, btnEl) {
+  // Pas de changement de mode pendant qu'un timer est en cours
+  if (timerEndAt) return;
+
+  TIMER_DURATION_MS = minutes * 60 * 1000;
+  localStorage.setItem(TIMER_MODE_KEY, String(minutes));
+
+  document.querySelectorAll('.timer-mode-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  // Reset le compte a rebours et l'affichage
+  timerPausedRemaining = null;
+  saveTimerState();
+  renderTimer(TIMER_DURATION_MS);
+}
+
+function loadTimerMode() {
+  const stored = parseInt(localStorage.getItem(TIMER_MODE_KEY) || '40', 10);
+  const minutes = [20, 30, 40].includes(stored) ? stored : 40;
+  TIMER_DURATION_MS = minutes * 60 * 1000;
+  document.querySelectorAll('.timer-mode-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.timer-mode-btn[data-duration="${minutes}"]`);
+  if (btn) btn.classList.add('active');
+}
 
 function loadTimerState() {
   try {
@@ -4431,6 +4504,7 @@ buildPrintPages();
 buildDefisPrintPages();
 buildPancartesPrintPages();
 initTrackers();
+loadTimerMode();
 loadTimerState();
 initCardClicks();
 </script>
