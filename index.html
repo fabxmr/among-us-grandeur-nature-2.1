@@ -1526,9 +1526,12 @@
   .print-page .card,
   .print-page .card-back {
     width: 63mm !important; height: 88mm !important;
-    border-radius: 0 !important; margin: 0 !important;
+    margin: 0 !important;
     animation: none !important;
   }
+  /* Verso : coins droits pour faciliter l'alignement et la decoupe rectangulaire.
+     Recto : herite des coins arrondis de la carte de base (var(--radius-lg) = 22px). */
+  .print-page .card-back { border-radius: 0 !important; }
   /* Le contenu interne herite des tailles de base (.card, .char-area, .card-title, .missions, .mission-num)
      car la carte print 63x88mm = ~238x333px est tres proche de la carte ecran 230x340px.
      On ne neutralise que les interactions (hover/transition). */
@@ -1595,7 +1598,12 @@
     #tab-print.print-active .print-page.recto .print-grid {
       gap: 2mm !important;
     }
-    #tab-print.print-active .card,
+    /* Recto : herite des coins arrondis de la carte de base */
+    #tab-print.print-active .card {
+      width: 63mm !important; height: 88mm !important;
+      margin: 0 !important;
+    }
+    /* Recto card-back (cas inutilise mais garde par precaution) : coins droits */
     #tab-print.print-active .print-page.recto .card-back {
       width: 63mm !important; height: 88mm !important;
       margin: 0 !important; border-radius: 0 !important;
