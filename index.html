@@ -1886,6 +1886,57 @@
   }
 
   /* ═══════════ TIMER ═══════════ */
+  /* ═══════════ INDICATEUR DE MODE ACTIF ═══════════ */
+  .mode-indicator {
+    position: fixed;
+    top: 18px; right: 20px;
+    z-index: 90;
+    display: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(20, 24, 44, 0.65);
+    color: var(--text-dim);
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform .15s, box-shadow .2s, border-color .2s, color .2s;
+    user-select: none;
+  }
+  .mode-indicator.visible { display: block; }
+  .mode-indicator:hover {
+    transform: translateY(-1px);
+  }
+  .mode-indicator span { font-weight: 800; font-size: 11pt; margin-right: 2px; }
+  .mode-indicator.mode-blue {
+    color: var(--neon-blue);
+    border-color: rgba(107, 166, 255, .55);
+    box-shadow: 0 4px 16px rgba(107, 166, 255, .15);
+  }
+  .mode-indicator.mode-orange {
+    color: var(--neon-orange);
+    border-color: rgba(255, 155, 59, .55);
+    box-shadow: 0 4px 16px rgba(255, 155, 59, .15);
+  }
+  .mode-indicator.mode-pink {
+    color: var(--neon-pink);
+    border-color: rgba(255, 90, 170, .55);
+    box-shadow: 0 4px 16px rgba(255, 90, 170, .15);
+  }
+  .mode-indicator.mode-blue:hover   { background: rgba(107, 166, 255, .12); }
+  .mode-indicator.mode-orange:hover { background: rgba(255, 155, 59, .12); }
+  .mode-indicator.mode-pink:hover   { background: rgba(255, 90, 170, .12); }
+
+  /* En print : on cache le badge */
+  @media print {
+    .mode-indicator { display: none !important; }
+  }
+
   /* ═══════════ PAGE D'ACCUEIL ═══════════ */
   #tab-accueil {
     text-align: center;
@@ -2222,6 +2273,10 @@
 <div class="header">
   <div class="stars"></div>
   <h1>AMONG US</h1>
+</div>
+
+<div class="mode-indicator" id="mode-indicator" onclick="showTab('accueil')" title="Retourner à l'accueil">
+  Mode <span id="mode-num">16</span> joueurs
 </div>
 
 <div class="tabs">
@@ -3961,7 +4016,8 @@ function setGameMode(mode) {
 
 // Re-render le contenu mode-dependant + ajuste la nav (Sheriff/Ingenieur visibles ?)
 function applyGameMode() {
-  const cfg = getModeConfig(getCurrentMode());
+  const mode = getCurrentMode();
+  const cfg = getModeConfig(mode);
 
   // Re-render des contenus dynamiques
   if (typeof populateGrids === 'function')        populateGrids();
@@ -3983,6 +4039,21 @@ function applyGameMode() {
     if ((cls.contains('sheriff') && !cfg.sheriff) || (cls.contains('engineer') && !cfg.engineer)) {
       showTab('crewmate');
     }
+  }
+
+  // Met a jour l'indicateur de mode (badge flottant top-right)
+  const indicator = document.getElementById('mode-indicator');
+  if (indicator) {
+    const numEl = document.getElementById('mode-num');
+    if (numEl) numEl.textContent = String(mode);
+
+    indicator.classList.remove('mode-blue', 'mode-orange', 'mode-pink');
+    const colorClass = { 8: 'mode-blue', 12: 'mode-orange', 16: 'mode-pink' }[mode];
+    if (colorClass) indicator.classList.add(colorClass);
+
+    // Visible seulement si l'utilisateur a explicitement choisi un mode (storage rempli)
+    const stored = localStorage.getItem(GAME_MODE_KEY);
+    indicator.classList.toggle('visible', !!stored);
   }
 }
 
