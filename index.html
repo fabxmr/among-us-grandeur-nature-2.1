@@ -1521,6 +1521,8 @@
     justify-content: center; align-content: start;
     gap: 0; flex: 1;
   }
+  /* Espacement entre cartes uniquement sur le recto (guide de decoupe) */
+  .print-page.recto .print-grid { gap: 2mm; }
   .print-page .card,
   .print-page .card-back {
     width: 63mm !important; height: 88mm !important;
@@ -1533,12 +1535,14 @@
   .print-page .card:hover { transform: none !important; }
   .print-page .card { transition: none !important; }
 
-  /* VERSO : 1mm de bleed dans chaque direction (carte 65×90 vs recto 63×88) */
-  /* La grille reste à 63×88, la carte déborde via translate pour rester centrée */
+  /* VERSO : bleed pour compenser le decalage horizontal/vertical du gap recto */
+  /* Largeur 67mm (4mm > recto) avec translate -2mm = symetrique (la flip horizontal
+     du duplex equilibre les bords). Hauteur 94mm car le decalage vertical
+     cumule (4mm sur la 3e ligne) ne se compense pas (pas de flip vertical en bord long). */
   .print-page.verso .card-back {
-    width: 65mm !important;
-    height: 90mm !important;
-    transform: translate(-1mm, -1mm) !important;
+    width: 67mm !important;
+    height: 94mm !important;
+    transform: translate(-2mm, -2mm) !important;
   }
 
   /* Toolbar print */
@@ -1587,16 +1591,20 @@
       grid-template-columns: repeat(3, 63mm) !important;
       grid-template-rows: repeat(3, 88mm) !important;
     }
+    /* Espacement entre cartes recto pour le decoupage */
+    #tab-print.print-active .print-page.recto .print-grid {
+      gap: 2mm !important;
+    }
     #tab-print.print-active .card,
     #tab-print.print-active .print-page.recto .card-back {
       width: 63mm !important; height: 88mm !important;
       margin: 0 !important; border-radius: 0 !important;
     }
-    /* Verso : 1mm de bleed pour eviter la bande blanche au decoupage */
+    /* Verso : bleed asymetrique (67×94) pour couvrir le recto avec gap 2mm */
     #tab-print.print-active .print-page.verso .card-back {
-      width: 65mm !important; height: 90mm !important;
+      width: 67mm !important; height: 94mm !important;
       margin: 0 !important; border-radius: 0 !important;
-      transform: translate(-1mm, -1mm) !important;
+      transform: translate(-2mm, -2mm) !important;
     }
   }
 
