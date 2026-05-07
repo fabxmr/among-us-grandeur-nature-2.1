@@ -2515,6 +2515,20 @@
     font-size: 13pt;
     color: var(--text-dim);
   }
+  /* Liens cliquables du sommaire — mêmes proportions, hover néon rose */
+  .livret-toc ol li a {
+    display: flex;
+    align-items: baseline;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+    transition: color .15s ease, transform .15s ease;
+  }
+  .livret-toc ol li a:hover {
+    color: var(--neon-pink);
+    transform: translateX(3px);
+  }
+  .livret-toc ol li a:hover .toc-page { color: var(--neon-pink); }
 
   .livret-section-tag {
     font-family: 'JetBrains Mono', monospace;
@@ -2747,16 +2761,16 @@
       <div class="livret-section-tag">Index</div>
       <h2 class="livret-h">Sommaire</h2>
       <ol>
-        <li>Modes de jeu <span class="toc-page">p. 3</span></li>
-        <li>Règles · Rôles &amp; Mise en place <span class="toc-page">p. 4</span></li>
-        <li>Règles · Défis &amp; Déroulement <span class="toc-page">p. 5</span></li>
-        <li>Règles · Morts &amp; Fin de partie <span class="toc-page">p. 6</span></li>
-        <li>Règles spéciales <span class="toc-page">p. 7</span></li>
-        <li>Défis étage <span class="toc-page">p. 8–9</span></li>
-        <li>Défis RDC <span class="toc-page">p. 10–11</span></li>
-        <li>Localisations des tâches <span class="toc-page">p. 12</span></li>
-        <li>Fiche Quests <span class="toc-page">p. 13–14</span></li>
-        <li>Cartes de rôles <span class="toc-page">p. 15–18</span></li>
+        <li><a href="#livret-p3"><span class="toc-title">Modes de jeu</span><span class="toc-page">p. 3</span></a></li>
+        <li><a href="#livret-p4"><span class="toc-title">Règles · Rôles &amp; Mise en place</span><span class="toc-page">p. 4</span></a></li>
+        <li><a href="#livret-p5"><span class="toc-title">Règles · Défis &amp; Déroulement</span><span class="toc-page">p. 5</span></a></li>
+        <li><a href="#livret-p6"><span class="toc-title">Règles · Morts &amp; Fin de partie</span><span class="toc-page">p. 6</span></a></li>
+        <li><a href="#livret-p7"><span class="toc-title">Règles spéciales</span><span class="toc-page">p. 7</span></a></li>
+        <li><a href="#livret-p8"><span class="toc-title">Défis étage</span><span class="toc-page">p. 8–9</span></a></li>
+        <li><a href="#livret-p10"><span class="toc-title">Défis RDC</span><span class="toc-page">p. 10–11</span></a></li>
+        <li><a href="#livret-p12"><span class="toc-title">Localisations des tâches</span><span class="toc-page">p. 12</span></a></li>
+        <li><a href="#livret-p13"><span class="toc-title">Fiche Quests</span><span class="toc-page">p. 13–14</span></a></li>
+        <li><a href="#livret-p15"><span class="toc-title">Cartes de rôles</span><span class="toc-page">p. 15–18</span></a></li>
       </ol>
       <div class="livret-page-num">— 02 —</div>
     </div>
@@ -3676,7 +3690,7 @@ function buildLivret() {
 
   // Helper : crée une page livret
   const page = (tag, title, contentHTML, pageNum, extraCls = '') => `
-    <div class="livret-page ${extraCls}">
+    <div class="livret-page ${extraCls}" id="livret-p${pageNum}">
       <div class="livret-section-tag">${tag}</div>
       <h2 class="livret-h">${title}</h2>
       <div class="livret-content">${contentHTML}</div>
