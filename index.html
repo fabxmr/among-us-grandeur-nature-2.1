@@ -1666,6 +1666,46 @@
     filter: drop-shadow(0 0 16px rgba(255, 56, 96, .6)) !important;
   }
 
+  /* ═══════════ ONGLET IMPRESSIONS — SOUS-TABS ═══════════ */
+  .subtab-nav {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin: 0 auto 28px; max-width: 920px;
+  }
+  .subtab-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: .5px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: rgba(20, 24, 44, 0.55);
+    color: var(--text-dim);
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .subtab-btn:hover {
+    color: var(--neon-cyan);
+    border-color: rgba(41, 231, 255, .45);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(41, 231, 255, .15);
+  }
+  .subtab-btn.active {
+    background: linear-gradient(135deg, rgba(41, 231, 255, .22), rgba(107, 166, 255, .14));
+    color: var(--neon-cyan);
+    border-color: rgba(41, 231, 255, .55);
+    box-shadow: 0 4px 16px rgba(41, 231, 255, .15);
+  }
+  .subtab { display: none; }
+  .subtab.active { display: block; }
+
+  /* En print : masquer la barre de sous-tabs, le titre Impressions et le padding du wrapper */
+  @media print {
+    #tab-impressions { padding: 0 !important; max-width: none !important; margin: 0 !important; }
+    #tab-impressions > .section-title { display: none !important; }
+    #tab-impressions .subtab-nav { display: none !important; }
+  }
+
   /* Toolbar print */
   .cards-print-toolbar {
     display: flex; justify-content: center;
@@ -2002,9 +2042,7 @@
   <button class="tab-btn defis"          onclick="showTab('defis')">Défis</button>
   <button class="tab-btn backs"          onclick="showTab('backs')">Dos des cartes</button>
   <button class="tab-btn timer"          onclick="showTab('timer')">Timer</button>
-  <button class="tab-btn printtab"       onclick="showTab('print')">Cartes à imprimer</button>
-  <button class="tab-btn defis"          onclick="showTab('defis-print')">Défis à imprimer</button>
-  <button class="tab-btn sabotage"       onclick="showTab('pancartes-print')">Pancartes à imprimer</button>
+  <button class="tab-btn printtab"       onclick="showTab('impressions')">Impressions</button>
   <button class="tab-btn livret"         onclick="showTab('livret')">Livret</button>
   <button class="tab-btn all"            onclick="showTab('all')" style="display:none">Toutes</button>
 </div>
@@ -2185,38 +2223,37 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════
-     IMPRESSION RECTO/VERSO (duplex)
+     IMPRESSIONS — onglet unifie avec sous-tabs
 ════════════════════════════════════════════════════ -->
-<div class="section" id="tab-print">
-  <div class="section-title" style="color:var(--neon-cyan)">Cartes à imprimer</div>
+<div class="section" id="tab-impressions">
+  <div class="section-title" style="color:var(--neon-cyan)">Impressions</div>
 
-  <div class="cards-print-toolbar">
-    <button onclick="printCardsTab()">Imprimer les cartes</button>
+  <div class="subtab-nav">
+    <button class="subtab-btn active" data-target="tab-print"           onclick="showSubTab('tab-print')">Cartes à imprimer</button>
+    <button class="subtab-btn"        data-target="tab-defis-print"     onclick="showSubTab('tab-defis-print')">Défis à imprimer</button>
+    <button class="subtab-btn"        data-target="tab-pancartes-print" onclick="showSubTab('tab-pancartes-print')">Pancartes à imprimer</button>
   </div>
 
-  <div class="print-pages-container" id="print-pages-container"></div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════
-     DÉFIS À IMPRIMER (4 par page, recto/verso colore)
-════════════════════════════════════════════════════ -->
-<div class="section" id="tab-defis-print">
-  <div class="section-title" style="color:#ff9966">Défis à imprimer</div>
-  <div class="cards-print-toolbar">
-    <button onclick="printDefisTab()">Imprimer les défis</button>
+  <div class="subtab active" id="tab-print">
+    <div class="cards-print-toolbar">
+      <button onclick="printCardsTab()">Imprimer les cartes</button>
+    </div>
+    <div class="print-pages-container" id="print-pages-container"></div>
   </div>
-  <div class="print-pages-container" id="defis-print-container"></div>
-</div>
 
-<!-- ═══════════════════════════════════════════════════
-     PANCARTES À IMPRIMER (LIBRE + SABOTÉE recto/verso)
-════════════════════════════════════════════════════ -->
-<div class="section" id="tab-pancartes-print">
-  <div class="section-title" style="color:var(--neon-purple)">Pancartes à imprimer</div>
-  <div class="cards-print-toolbar">
-    <button onclick="printPancartesTab()">Imprimer les pancartes</button>
+  <div class="subtab" id="tab-defis-print">
+    <div class="cards-print-toolbar">
+      <button onclick="printDefisTab()">Imprimer les défis</button>
+    </div>
+    <div class="print-pages-container" id="defis-print-container"></div>
   </div>
-  <div class="print-pages-container" id="pancartes-print-container"></div>
+
+  <div class="subtab" id="tab-pancartes-print">
+    <div class="cards-print-toolbar">
+      <button onclick="printPancartesTab()">Imprimer les pancartes</button>
+    </div>
+    <div class="print-pages-container" id="pancartes-print-container"></div>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -3627,6 +3664,18 @@ function showTab(name) {
   const btn = (typeof event !== 'undefined' && event && event.currentTarget) ||
               document.querySelector(`.tab-btn[onclick*="'${name}'"]`);
   if (btn && btn.classList) btn.classList.add('active');
+}
+
+// Affiche un sous-onglet dans l'onglet Impressions (cards / defis / pancartes)
+function showSubTab(id) {
+  const wrapper = document.getElementById('tab-impressions');
+  if (!wrapper) return;
+  wrapper.querySelectorAll('.subtab').forEach(s => s.classList.remove('active'));
+  wrapper.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  const btn = wrapper.querySelector(`.subtab-btn[data-target="${id}"]`);
+  if (btn) btn.classList.add('active');
 }
 
 // Imprime l'onglet "Cartes à imprimer" (ajoute .print-active pour activer le layout print)
