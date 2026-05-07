@@ -1850,8 +1850,8 @@
     </div>
 
     <div class="sabotage-card">
-      <span class="tag cyan">INGÉNIEUR</span>
-      <h3>POUVOIRS DE L'INGÉNIEUR</h3>
+      <span class="tag cyan">INGENIEUR</span>
+      <h3>POUVOIRS DE L'INGENIEUR</h3>
       <p>Crewmate spécial avec deux pouvoirs techniques uniques.</p>
 
       <h4>Réparer une pièce</h4>
@@ -1868,7 +1868,7 @@
         <li><em>Une seule fois</em> par partie</li>
       </ul>
 
-      <p style="color:#8899bb; font-size:11px; margin-top:10px">L'Ingénieur peut être ciblé en priorité par les Imposteurs !</p>
+      <p style="color:#8899bb; font-size:11px; margin-top:10px">L'Ingenieur peut être ciblé en priorité par les Imposteurs !</p>
     </div>
 
   </div><!-- fin sabotage-container -->
@@ -1927,7 +1927,7 @@
             </g>
           </svg>
           <div class="pancarte-big-label">SABOTÉE</div>
-          <div class="pancarte-big-sub">ACCÈS INTERDIT<br>INGÉNIEUR SEULEMENT</div>
+          <div class="pancarte-big-sub">ACCÈS INTERDIT<br>INGENIEUR SEULEMENT</div>
         </div>
 
       </div>
@@ -2038,9 +2038,9 @@
           </div>
 
           <div class="rules-role-card engineer">
-            <div class="rules-role-title">INGÉNIEUR</div>
+            <div class="rules-role-title">INGENIEUR</div>
             <div class="rules-role-text">
-              L'<span class="kw-cyan">INGÉNIEUR</span> est un Crewmate spécial aux pouvoirs techniques (réparation des pièces sabotées et mission posthume). Détails dans <strong>Règles spéciales</strong>.
+              L'<span class="kw-cyan">INGENIEUR</span> est un Crewmate spécial aux pouvoirs techniques (réparation des pièces sabotées et mission posthume). Détails dans <strong>Règles spéciales</strong>.
             </div>
           </div>
 
@@ -2115,7 +2115,7 @@
           <li>Fermer les portes d'une pièce.</li>
           <li>Éteindre les lumières.</li>
           <li>Effacer jusqu'à <strong>3 défis</strong> sur la fiche Quests (hors Meeting).</li>
-          <li><strong>Saboter une pièce :</strong> retourner la pancarte côté <span class="kw-red">ROUGE</span> — personne ne peut y entrer pendant 3 minutes, sauf l'<span class="kw-cyan">INGÉNIEUR</span>.</li>
+          <li><strong>Saboter une pièce :</strong> retourner la pancarte côté <span class="kw-red">ROUGE</span> — personne ne peut y entrer pendant 3 minutes, sauf l'<span class="kw-cyan">INGENIEUR</span>.</li>
         </ul>
         <p style="margin-top:12px;font-size:12px;color:#8899bb">Un seul sabotage de pièce actif à la fois. La salle de Meeting ne peut pas être sabotée.</p>
       </div>
@@ -2149,7 +2149,7 @@
           <div class="rules-win-card impostor">
             <h4>IMPOSTORS</h4>
             <ul class="rules-list red">
-              <li>Tous les Crewmates, Sheriff et Ingénieur ont été éliminés.</li>
+              <li>Tous les Crewmates, Sheriff et Ingenieur ont été éliminés.</li>
               <li>OU la limite de temps est dépassée.</li>
             </ul>
           </div>
@@ -2165,7 +2165,7 @@
         <ul class="rules-list cyan">
           <li><strong>Kill</strong> — toucher l'épaule. Le mort reste sur place, carte face visible.</li>
           <li><strong>Sheriff</strong> — 1 balle. Tue Crewmate → meurt à sa place. Tue Impostor → désarmé pour le reste de la partie.</li>
-          <li><strong>Pièce sabotée</strong> — pancarte rouge, 3 min d'interdiction. Seul l'Ingénieur peut entrer (10 s pour réparer).</li>
+          <li><strong>Pièce sabotée</strong> — pancarte rouge, 3 min d'interdiction. Seul l'Ingenieur peut entrer (10 s pour réparer).</li>
           <li><strong>Vote</strong> — majorité simple. Égalité = SKIP automatique.</li>
           <li><strong>Buzz</strong> — 3 max par partie, 1 par joueur. Déclenche un Meeting sans mort.</li>
           <li><strong>Fantôme</strong> — interdit de parler/voter. Continue ses défis. Un Impostor fantôme peut saboter.</li>
@@ -3126,7 +3126,7 @@ function rgbToHex(r, g, b) {
 // BUILD CARDS
 // ═══════════════════════════════════════════════════
 function buildCard(type, colorObj, missions, extra = '') {
-  const typeLabel = { crewmate: 'CREWMATE', impostor: 'IMPOSTOR', sheriff: 'SHERIFF', engineer: 'INGÉNIEUR' }[type];
+  const typeLabel = { crewmate: 'CREWMATE', impostor: 'IMPOSTOR', sheriff: 'SHERIFF', engineer: 'INGENIEUR' }[type];
   const isImp  = type === 'impostor';
   const isSher = type === 'sheriff';
   const isEng  = type === 'engineer';
@@ -3227,7 +3227,7 @@ function buildPrintPages() {
   const container = document.getElementById('print-pages-container');
   if (!container) return;
 
-  // Collecte des 16 cartes (recto) dans l'ordre Crewmates → Imposteurs → Sheriff → Ingénieur
+  // Collecte des 16 cartes (recto) dans l'ordre Crewmates → Imposteurs → Sheriff → Ingenieur
   const allCards = [];
   crewmatesData.forEach(c => allCards.push(buildCard('crewmate', c.color, c.missions)));
   impostorsData.forEach(c => allCards.push(buildCard('impostor', c.color, c.missions)));
@@ -3742,14 +3742,14 @@ function buildLivret() {
         <ul class="mode-configs">
           <li><strong>Config A</strong>3 Imp + 12 Crew + 1 Sheriff</li>
           <li><strong>Config B</strong>4 Imp + 11 Crew + 1 Sheriff</li>
-          <li><strong>Config C</strong>3 Imp + 11 Crew + 1 Sheriff + 1 Ingénieur</li>
+          <li><strong>Config C</strong>3 Imp + 11 Crew + 1 Sheriff + 1 Ingenieur</li>
         </ul>
       </div>
     </div>
     <div class="mode-note">
-      <span>À 8 joueurs : pas de Sheriff ni d'Ingénieur</span>
+      <span>À 8 joueurs : pas de Sheriff ni d'Ingenieur</span>
       <span>À 12 joueurs : Sheriff optionnel</span>
-      <span>L'Ingénieur n'existe que dans la version 16 joueurs</span>
+      <span>L'Ingenieur n'existe que dans la version 16 joueurs</span>
     </div>
   `, 3);
 
@@ -3760,7 +3760,7 @@ function buildLivret() {
   html += page('Chapitre 1 · suite', 'Défis &amp; Déroulement',  '<div class="rules-container" id="livret-rules-page-2"></div>', 5);
   html += page('Chapitre 1 · fin',   'Morts &amp; Fin de partie', '<div class="rules-container" id="livret-rules-page-3"></div>', 6);
 
-  // ── Page 7 : Règles spéciales (Fantôme + Ingénieur sur la même page) ──
+  // ── Page 7 : Règles spéciales (Fantôme + Ingenieur sur la même page) ──
   const sabotageSrc = document.querySelector('#tab-sabotage .sabotage-container');
   html += page('Chapitre 2', 'Règles spéciales', '<div class="sabotage-container" id="livret-sabotage-merged"></div>', 7);
 
@@ -3845,7 +3845,7 @@ function buildLivret() {
     Array.from(tachesSrc.children).forEach(b => tachesMerged.appendChild(b.cloneNode(true)));
   }
 
-  // 3.5) SABOTAGE : 2 cartes consolidées (Fantôme + Ingénieur) sur une seule page
+  // 3.5) SABOTAGE : 2 cartes consolidées (Fantôme + Ingenieur) sur une seule page
   const sabSrc = document.querySelector('#tab-sabotage .sabotage-container');
   const sabMerged = container.querySelector('#livret-sabotage-merged');
   if (sabSrc && sabMerged) {
