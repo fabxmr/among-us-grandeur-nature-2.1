@@ -2196,17 +2196,6 @@
     box-shadow: 0 8px 24px rgba(255, 90, 170, .25);
     background: linear-gradient(135deg, rgba(255, 90, 170, .28), rgba(184, 107, 255, .18));
   }
-  .livret-hint {
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: #8899bb;
-    max-width: 720px;
-    margin: 0 auto 28px;
-    line-height: 1.7;
-    opacity: .8;
-  }
-
   .livret-book {
     max-width: 900px;
     margin: 0 auto;
@@ -2680,8 +2669,7 @@
     background: transparent !important;
   }
   body.printing-livret #tab-livret > .section-title,
-  body.printing-livret .livret-toolbar,
-  body.printing-livret .livret-hint { display: none !important; }
+  body.printing-livret .livret-toolbar { display: none !important; }
   body.printing-livret .livret-book {
     gap: 0 !important;
     max-width: none !important;
@@ -2731,21 +2719,13 @@
     }
   }
 
-  /* Container du livret pliable : invisible à l'écran, révélé en print uniquement */
-  #__booklet-container { display: none; }
 </style>
 
 <div class="section" id="tab-livret">
   <div class="section-title" style="color:var(--neon-pink)">Livret</div>
 
   <div class="livret-toolbar">
-    <button onclick="printLivret()">Imprimer le livret (A4)</button>
-    <button onclick="printLivretBooklet()">Imprimer en livret pliable (A5)</button>
-  </div>
-  <div class="livret-hint">
-    <strong>Livret A4</strong> : impression normale, 1 page par feuille.<br>
-    <strong>Livret pliable A5</strong> : feuilles A4 paysage avec pages réordonnées pour le pliage. Imprime en <strong>recto-verso</strong> (bord long), empile dans l'ordre, plie en deux par le centre, agrafe au pli — tu obtiens un vrai livret A5.<br>
-    Astuce : désactive « En-têtes et pieds de page » dans la boîte d'impression pour un rendu propre.
+    <button onclick="printLivret()">Imprimer le livret</button>
   </div>
 
   <div class="livret-book" id="livret-book">
@@ -3952,7 +3932,6 @@ function printLivret() {
         break-after: auto !important;
       }
       body.printing-livret .livret-toolbar,
-      body.printing-livret .livret-hint,
       body.printing-livret #tab-livret > .section-title { display: none !important; }
       body.printing-livret .livret-book { display: block !important; gap: 0 !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
     `;
@@ -3974,148 +3953,6 @@ function printLivret() {
       }
     }, 300);
   }, 200);
-}
-
-// ═══════════════════════════════════════════════════
-// LIVRET PLIABLE A5 — imposition booklet (saddle stitch)
-// ═══════════════════════════════════════════════════
-function printLivretBooklet() {
-  const allSourcePages = Array.from(
-    document.querySelectorAll('#tab-livret .livret-book .livret-page')
-  );
-  if (allSourcePages.length === 0) {
-    alert('Aucune page de livret trouvée.');
-    return;
-  }
-
-  // Détecte la 4e de couverture (doit rester la dernière page après padding)
-  const lastIdx = allSourcePages.length - 1;
-  const hasBackCover = allSourcePages[lastIdx]?.classList.contains('livret-back-cover');
-  const contentPages = hasBackCover ? allSourcePages.slice(0, -1) : allSourcePages;
-  const backCover = hasBackCover ? allSourcePages[lastIdx] : null;
-
-  // Pad au multiple de 4 supérieur
-  const totalCount = contentPages.length + (hasBackCover ? 1 : 0);
-  const N = Math.ceil(totalCount / 4) * 4;
-
-  // Reconstruit la liste effective : contenu + (blancs avant la 4e de couv) + 4e de couv
-  const sourcePages = [...contentPages];
-  if (hasBackCover) {
-    while (sourcePages.length < N - 1) sourcePages.push(null); // blancs avant
-    sourcePages.push(backCover);
-  } else {
-    while (sourcePages.length < N) sourcePages.push(null); // blancs à la fin
-  }
-
-  // Imposition booklet : pour chaque cahier (4 pages), [outer-left, outer-right, inner-left, inner-right]
-  const order = [];
-  for (let k = 0; k < N / 4; k++) {
-    order.push(N - 2 * k);     // recto gauche
-    order.push(2 * k + 1);     // recto droite
-    order.push(2 * k + 2);     // verso gauche
-    order.push(N - 2 * k - 1); // verso droite
-  }
-
-  // Construit le container caché : N/2 feuilles A4 paysage, chacune = 2 demi-pages côte à côte
-  let container = document.getElementById('__booklet-container');
-  if (container) container.remove();
-  container = document.createElement('div');
-  container.id = '__booklet-container';
-
-  for (let i = 0; i < order.length; i += 2) {
-    const sheet = document.createElement('div');
-    sheet.className = '__booklet-sheet';
-
-    [order[i], order[i + 1]].forEach(pageNum => {
-      const half = document.createElement('div');
-      half.className = '__booklet-half';
-      const idx = pageNum - 1;
-      const src = sourcePages[idx];
-      if (src) {
-        const clone = src.cloneNode(true);
-        clone.removeAttribute('id');
-        clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
-        half.appendChild(clone);
-      } else {
-        const blank = document.createElement('div');
-        blank.className = 'livret-page __booklet-blank';
-        half.appendChild(blank);
-      }
-      sheet.appendChild(half);
-    });
-    container.appendChild(sheet);
-  }
-  document.body.appendChild(container);
-
-  // Feuille de style print dédiée (A4 paysage + scale 0.7071 sur chaque page)
-  let styleEl = document.getElementById('__booklet-print-style');
-  if (styleEl) styleEl.remove();
-  styleEl = document.createElement('style');
-  styleEl.id = '__booklet-print-style';
-  styleEl.media = 'print';
-  styleEl.textContent = `
-    @page { size: A4 landscape; margin: 0 !important; }
-    html, body { margin: 0 !important; padding: 0 !important; background: #0a0e1a !important; }
-    body.printing-booklet > * { display: none !important; }
-    body.printing-booklet > #__booklet-container { display: block !important; }
-    body.printing-booklet * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    body.printing-booklet .__booklet-sheet {
-      width: 297mm !important;
-      height: 210mm !important;
-      display: flex !important;
-      flex-direction: row !important;
-      page-break-after: always !important;
-      break-after: page !important;
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
-      overflow: hidden !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    body.printing-booklet .__booklet-sheet:last-child {
-      page-break-after: auto !important;
-      break-after: auto !important;
-    }
-    body.printing-booklet .__booklet-half {
-      width: 148.5mm !important;
-      height: 210mm !important;
-      overflow: hidden !important;
-      position: relative !important;
-      box-sizing: border-box !important;
-      flex-shrink: 0 !important;
-    }
-    body.printing-booklet .__booklet-half > .livret-page {
-      width: 210mm !important;
-      height: 297mm !important;
-      min-height: 297mm !important;
-      max-height: 297mm !important;
-      margin: 0 !important;
-      transform: scale(0.7071) !important;
-      transform-origin: top left !important;
-      border: none !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
-      page-break-after: auto !important;
-      break-after: auto !important;
-    }
-    body.printing-booklet .__booklet-blank {
-      background: #0a0e1a !important;
-    }
-  `;
-  document.head.appendChild(styleEl);
-
-  document.body.classList.add('printing-booklet');
-
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => {
-      document.body.classList.remove('printing-booklet');
-      const c = document.getElementById('__booklet-container');
-      if (c) c.remove();
-      const s = document.getElementById('__booklet-print-style');
-      if (s) s.remove();
-    }, 400);
-  }, 250);
 }
 
 populateGrids();
