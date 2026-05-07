@@ -194,7 +194,6 @@
   .tab-btn.engineer { color: var(--neon-cyan);   border-color: rgba(41, 231, 255, .35); }
   .tab-btn.sabotage { color: var(--neon-purple); border-color: rgba(184, 107, 255, .35); }
   .tab-btn.quests   { color: #6ee7c7;            border-color: rgba(110, 231, 199, .3); }
-  .tab-btn.backs    { color: #ffb37a;            border-color: rgba(255, 179, 122, .3); }
   .tab-btn.printtab { color: var(--neon-cyan);   border-color: rgba(41, 231, 255, .35); }
   .tab-btn.timer    { color: #5cf2d6;            border-color: rgba(92, 242, 214, .35); }
   .tab-btn.defis    { color: var(--neon-orange); border-color: rgba(255, 155, 59, .35); }
@@ -2040,7 +2039,6 @@
   <button class="tab-btn sabotage"       onclick="showTab('sabotage')">Règles spéciales</button>
   <button class="tab-btn quests"         onclick="showTab('quests')">Fiche Quests</button>
   <button class="tab-btn defis"          onclick="showTab('defis')">Défis</button>
-  <button class="tab-btn backs"          onclick="showTab('backs')">Dos des cartes</button>
   <button class="tab-btn timer"          onclick="showTab('timer')">Timer</button>
   <button class="tab-btn printtab"       onclick="showTab('impressions')">Impressions</button>
   <button class="tab-btn livret"         onclick="showTab('livret')">Livret</button>
@@ -2212,14 +2210,6 @@
   <div class="quest-sheet" id="quest-sheet-content">
     <!-- rempli par JS -->
   </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════
-     DOS DE CARTES (17 copies identiques)
-════════════════════════════════════════════════════ -->
-<div class="section" id="tab-backs">
-  <div class="section-title" style="color:#ff6b00">Dos des cartes</div>
-  <div class="cards-grid" id="backs-grid"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -3473,9 +3463,6 @@ function populateGrids() {
   document.getElementById('sheriff-grid').innerHTML= sherCards.join('');
   document.getElementById('eng-grid').innerHTML    = engCards.join('');
 
-  // Dos de cartes : 17 copies identiques (utilise BACK_CARD_HTML défini plus bas)
-  const backsHTML = Array(16).fill(BACK_CARD_HTML).join('');
-  document.getElementById('backs-grid').innerHTML = backsHTML;
 }
 
 const BACK_CARD_HTML = `<div class="card-back">
