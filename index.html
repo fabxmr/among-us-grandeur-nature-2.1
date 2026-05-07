@@ -1599,6 +1599,73 @@
     filter: drop-shadow(0 0 16px rgba(107, 166, 255, .6)) !important;
   }
 
+  /* ═══════════ ONGLET PANCARTES À IMPRIMER ═══════════ */
+  .pancartes-print-grid {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(2, 130mm);
+    gap: 10mm;
+    flex: 1;
+    width: 100%;
+    align-content: center;
+  }
+  .print-page.pancartes-recto .pancarte-big {
+    width: 100% !important;
+    height: 130mm !important;
+    min-height: 130mm !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+  }
+
+  /* Verso pancartes : zones colorees (vert top / rouge bottom) avec card-back transparent dessus */
+  .print-page.pancartes-verso .pancarte-back-zone {
+    width: 100%;
+    height: 130mm;
+    position: relative;
+    overflow: hidden;
+  }
+  .print-page.pancartes-verso .pancarte-back-zone.libre {
+    background: linear-gradient(160deg, #082212, #041a08);
+  }
+  .print-page.pancartes-verso .pancarte-back-zone.sabotee {
+    background: linear-gradient(160deg, #240810, #100408);
+  }
+  .print-page.pancartes-verso .pancarte-back-zone .card-back {
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+  .print-page.pancartes-verso .pancarte-back-zone .card-back::before { display: none !important; }
+  .print-page.pancartes-verso .card-back-icon {
+    width: 180px !important;
+    height: 180px !important;
+  }
+  .print-page.pancartes-verso .card-back-logo-top {
+    font-size: 32px !important;
+    letter-spacing: 10px !important;
+  }
+  .print-page.pancartes-verso .card-back-logo-bottom {
+    font-size: 18px !important;
+  }
+  .print-page.pancartes-verso .pancarte-back-zone.libre .card-back-logo {
+    color: var(--neon-green) !important;
+    text-shadow: 0 0 16px rgba(76, 255, 157, .6), 0 0 32px rgba(76, 255, 157, .35) !important;
+  }
+  .print-page.pancartes-verso .pancarte-back-zone.libre .card-back-icon {
+    filter: drop-shadow(0 0 16px rgba(76, 255, 157, .6)) !important;
+  }
+  .print-page.pancartes-verso .pancarte-back-zone.sabotee .card-back-logo {
+    color: var(--neon-red) !important;
+    text-shadow: 0 0 16px rgba(255, 56, 96, .6), 0 0 32px rgba(255, 56, 96, .35) !important;
+  }
+  .print-page.pancartes-verso .pancarte-back-zone.sabotee .card-back-icon {
+    filter: drop-shadow(0 0 16px rgba(255, 56, 96, .6)) !important;
+  }
+
   /* Toolbar print */
   .cards-print-toolbar {
     display: flex; justify-content: center;
@@ -1720,6 +1787,52 @@
       transform: translate(-2mm, -2mm) !important;
     }
     #tab-defis-print.print-active .print-page.defi-verso .card-back::before { display: none !important; }
+
+    /* Pancartes a imprimer : 2 par page recto/verso colore */
+    #tab-pancartes-print.print-active { padding: 0 !important; }
+    #tab-pancartes-print.print-active > .section-title,
+    #tab-pancartes-print.print-active .cards-print-toolbar,
+    #tab-pancartes-print.print-active .print-page-label { display: none !important; }
+    #tab-pancartes-print.print-active .print-pages-container {
+      display: block !important; gap: 0 !important; padding: 0 !important;
+    }
+    #tab-pancartes-print.print-active .print-page {
+      background: white !important; box-shadow: none !important;
+      width: 210mm !important; height: 297mm !important;
+      padding: 12mm !important; margin: 0 !important;
+      page-break-after: always !important; break-after: page !important;
+      page-break-inside: avoid !important; break-inside: avoid !important;
+    }
+    #tab-pancartes-print.print-active .print-page:last-child {
+      page-break-after: auto !important; break-after: auto !important;
+    }
+    #tab-pancartes-print.print-active .pancartes-print-grid {
+      grid-template-columns: 100% !important;
+      grid-template-rows: repeat(2, 130mm) !important;
+      gap: 10mm !important;
+      align-content: center !important;
+    }
+    #tab-pancartes-print.print-active .pancarte-big {
+      width: 100% !important; height: 130mm !important;
+      min-height: 130mm !important;
+      margin: 0 !important;
+    }
+    #tab-pancartes-print.print-active .pancarte-back-zone {
+      width: 100% !important; height: 130mm !important;
+    }
+    #tab-pancartes-print.print-active .pancarte-back-zone.libre {
+      background: linear-gradient(160deg, #082212, #041a08) !important;
+    }
+    #tab-pancartes-print.print-active .pancarte-back-zone.sabotee {
+      background: linear-gradient(160deg, #240810, #100408) !important;
+    }
+    #tab-pancartes-print.print-active .pancarte-back-zone .card-back {
+      width: 100% !important; height: 100% !important;
+      background: transparent !important;
+      border: none !important; border-radius: 0 !important; box-shadow: none !important;
+      margin: 0 !important;
+    }
+    #tab-pancartes-print.print-active .pancarte-back-zone .card-back::before { display: none !important; }
     #tab-print.print-active .print-page.verso .card-back {
       width: 67mm !important; height: 94mm !important;
       margin: 0 !important;
@@ -1891,6 +2004,7 @@
   <button class="tab-btn timer"          onclick="showTab('timer')">Timer</button>
   <button class="tab-btn printtab"       onclick="showTab('print')">Cartes à imprimer</button>
   <button class="tab-btn defis"          onclick="showTab('defis-print')">Défis à imprimer</button>
+  <button class="tab-btn sabotage"       onclick="showTab('pancartes-print')">Pancartes à imprimer</button>
   <button class="tab-btn livret"         onclick="showTab('livret')">Livret</button>
   <button class="tab-btn all"            onclick="showTab('all')" style="display:none">Toutes</button>
 </div>
@@ -2092,6 +2206,17 @@
     <button onclick="printDefisTab()">Imprimer les défis</button>
   </div>
   <div class="print-pages-container" id="defis-print-container"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANCARTES À IMPRIMER (LIBRE + SABOTÉE recto/verso)
+════════════════════════════════════════════════════ -->
+<div class="section" id="tab-pancartes-print">
+  <div class="section-title" style="color:var(--neon-purple)">Pancartes à imprimer</div>
+  <div class="cards-print-toolbar">
+    <button onclick="printPancartesTab()">Imprimer les pancartes</button>
+  </div>
+  <div class="print-pages-container" id="pancartes-print-container"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -3554,6 +3679,57 @@ function backCardHTMLColored(color) {
   return BACK_CARD_HTML.replaceAll('#ff6b00', color);
 }
 
+// Imprime l'onglet "Pancartes à imprimer"
+function printPancartesTab() {
+  const tab = document.getElementById('tab-pancartes-print');
+  if (!tab) return;
+  let styleEl = document.getElementById('__pancartes-print-style');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = '__pancartes-print-style';
+    styleEl.media = 'print';
+    styleEl.textContent = `@page { size: A4 portrait; margin: 0 !important; }`;
+    document.head.appendChild(styleEl);
+  }
+  tab.classList.add('print-active');
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => tab.classList.remove('print-active'), 400);
+  }, 100);
+}
+
+// Génère les 2 pages d'impression des pancartes (recto + verso colore)
+function buildPancartesPrintPages() {
+  const container = document.getElementById('pancartes-print-container');
+  if (!container) return;
+
+  const sourceLibre   = document.querySelector('#tab-sabotage .pancarte-big.libre');
+  const sourceSabotee = document.querySelector('#tab-sabotage .pancarte-big.sabotee');
+  if (!sourceLibre || !sourceSabotee) return;
+
+  const libreHTML   = sourceLibre.outerHTML;
+  const saboteeHTML = sourceSabotee.outerHTML;
+  const greenBack = backCardHTMLColored('#4cff9d'); // var(--neon-green)
+  const redBack   = backCardHTMLColored('#ff3860'); // var(--neon-red)
+
+  container.innerHTML = `
+    <div class="print-page pancartes-recto">
+      <div class="print-page-label">RECTO PANCARTES</div>
+      <div class="pancartes-print-grid">
+        ${libreHTML}
+        ${saboteeHTML}
+      </div>
+    </div>
+    <div class="print-page pancartes-verso">
+      <div class="print-page-label">VERSO PANCARTES</div>
+      <div class="pancartes-print-grid">
+        <div class="pancarte-back-zone libre">${greenBack}</div>
+        <div class="pancarte-back-zone sabotee">${redBack}</div>
+      </div>
+    </div>
+  `;
+}
+
 // Génère les pages d'impression des défis (recto/verso, 4 par page)
 function buildDefisPrintPages() {
   const container = document.getElementById('defis-print-container');
@@ -4200,6 +4376,7 @@ buildDefis();
 buildLivret();
 buildPrintPages();
 buildDefisPrintPages();
+buildPancartesPrintPages();
 initTrackers();
 loadTimerState();
 initCardClicks();
