@@ -1527,12 +1527,9 @@
     border-radius: 0 !important; margin: 0 !important;
     animation: none !important;
   }
-  .print-page .card { padding: 8px 6px 6px !important; }
-  .print-page .card .char-area { width: 70px; height: 70px; }
-  .print-page .card-title { font-size: 9px !important; margin-bottom: 2px !important; padding: 3px 8px !important; }
-  .print-page .missions { padding: 4px 6px !important; font-size: 6px !important; }
-  .print-page .mission-num { min-width: 18px; height: 18px; font-size: 7px !important; }
-  .print-page .missions-label { font-size: 5px !important; margin-bottom: 3px !important; }
+  /* Le contenu interne herite des tailles de base (.card, .char-area, .card-title, .missions, .mission-num)
+     car la carte print 63x88mm = ~238x333px est tres proche de la carte ecran 230x340px.
+     On ne neutralise que les interactions (hover/transition). */
   .print-page .card:hover { transform: none !important; }
   .print-page .card { transition: none !important; }
 
