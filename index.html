@@ -1538,12 +1538,18 @@
   .print-page .card:hover { transform: none !important; }
   .print-page .card { transition: none !important; }
 
-  /* VERSO : fond uniforme sur toute la page, plus de cartes individuelles */
-  /* (chaque carte avait un cadre + ses decorations qui creaient des lignes visibles) */
-  .print-page.verso {
-    background: linear-gradient(160deg, #1a0d05, #0a0400) !important;
+  /* VERSO : on garde les cartes (logos AMONG US + impostor SVG + SHHHHHH)
+     mais on enleve tout ce qui cree des lignes visibles entre les cartes :
+     bordures, box-shadow, coins arrondis, pattern de points decoratifs */
+  .print-page.verso .card-back {
+    width: 67mm !important;
+    height: 94mm !important;
+    transform: translate(-2mm, -2mm) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
-  .print-page.verso .print-grid { display: none !important; }
+  .print-page.verso .card-back::before { display: none !important; }
 
   /* Toolbar print */
   .cards-print-toolbar {
@@ -1605,10 +1611,17 @@
       width: 63mm !important; height: 88mm !important;
       margin: 0 !important; border-radius: 0 !important;
     }
-    /* Verso : fond uniforme sur toute la page, override du fond blanc */
-    #tab-print.print-active .print-page.verso {
-      background: linear-gradient(160deg, #1a0d05, #0a0400) !important;
+    /* Verso : cartes visibles (logos + SVG) mais sans bordures/shadow/radius
+       qui creaient des lignes entre les cartes. Bleed 67×94 pour couvrir le recto. */
+    #tab-print.print-active .print-page.verso .card-back {
+      width: 67mm !important; height: 94mm !important;
+      margin: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      transform: translate(-2mm, -2mm) !important;
     }
+    #tab-print.print-active .print-page.verso .card-back::before { display: none !important; }
   }
 
   /* ═══════════ TIMER ═══════════ */
