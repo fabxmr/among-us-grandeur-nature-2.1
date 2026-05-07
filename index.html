@@ -1539,7 +1539,7 @@
   .print-page.verso .card-back::before { display: none !important; }
 
   /* ═══════════ ONGLET DÉFIS À IMPRIMER ═══════════ */
-  /* Grille 1 colonne x 4 lignes : 4 defis horizontaux empiles */
+  /* Grille 1 colonne x 4 lignes : 4 defis horizontaux empiles, centres verticalement */
   .defi-print-grid {
     display: grid;
     grid-template-columns: 100%;
@@ -1547,6 +1547,7 @@
     gap: 3mm;
     flex: 1;
     width: 100%;
+    align-content: center;
   }
   .print-page.defi-recto .defi-card {
     width: 100% !important;
@@ -1687,6 +1688,7 @@
       grid-template-columns: 100% !important;
       grid-template-rows: repeat(4, 60mm) !important;
       gap: 3mm !important;
+      align-content: center !important;
     }
     #tab-defis-print.print-active .defi-card {
       width: 100% !important; height: 60mm !important;
