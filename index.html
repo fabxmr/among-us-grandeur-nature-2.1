@@ -1466,27 +1466,6 @@
   }
 
   /* ═══════════ ONGLET IMPRESSION RECTO/VERSO ═══════════ */
-  #tab-print .print-info {
-    max-width: 740px;
-    margin: 0 auto 28px;
-    padding: 20px 24px;
-    background: rgba(14, 26, 42, 0.7);
-    border: 1px solid rgba(41, 231, 255, .3);
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.6;
-    color: #d6e8ff;
-    backdrop-filter: blur(10px);
-  }
-  #tab-print .print-info p { margin-bottom: 8px; }
-  #tab-print .print-info ol { margin: 8px 0 12px 22px; }
-  #tab-print .print-info li { margin-bottom: 4px; }
-  #tab-print .print-info-tip {
-    margin-top: 14px; padding-top: 14px;
-    border-top: 1px dashed rgba(41, 231, 255, .25);
-    color: #88ccff; font-size: 12.5px;
-  }
-
   .print-pages-container {
     display: flex; flex-direction: column;
     align-items: center; gap: 30px;
@@ -1586,7 +1565,7 @@
   @media print {
     #tab-print.print-active { padding: 0 !important; }
     #tab-print.print-active > .section-title,
-    #tab-print.print-active > .print-info,
+    #tab-print.print-active .cards-print-toolbar,
     #tab-print.print-active .print-page-label { display: none !important; }
     #tab-print.print-active .print-pages-container {
       display: block !important; gap: 0 !important; padding: 0 !important;
@@ -1982,18 +1961,6 @@
 
   <div class="cards-print-toolbar">
     <button onclick="printCardsTab()">Imprimer les cartes</button>
-  </div>
-
-  <div class="print-info">
-    <p><strong>Comment imprimer correctement :</strong></p>
-    <ol>
-      <li>Clique sur <strong>« Imprimer les cartes »</strong> ci-dessus.</li>
-      <li>Active <strong>« Recto-verso »</strong> (ou « Duplex », « Two-sided »).</li>
-      <li>Choisis le retournement <strong>« sur le bord long »</strong> (long edge) — défaut sur la plupart des imprimantes.</li>
-      <li>Imprime. Pages dans l'ordre : Recto 1 → Verso 1 → Recto 2 → Verso 2.</li>
-      <li>Découpe chaque carte aux ciseaux en suivant le contour du recto.</li>
-    </ol>
-    <p class="print-info-tip">Les <strong>16 cartes</strong> tiennent sur <strong>2 feuilles A4</strong> (9 cartes par page, 7 sur la dernière). Le verso est <strong>légèrement plus grand</strong> que le recto (1mm de bleed) — pas de bande blanche au verso après découpe.</p>
   </div>
 
   <div class="print-pages-container" id="print-pages-container"></div>
