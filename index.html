@@ -3668,19 +3668,19 @@ function buildCard(type, colorObj, missions, extra = '') {
 // ═══════════════════════════════════════════════════
 function populateGrids() {
   const cfg = getModeConfig(getCurrentMode());
-  const filterMissions = (missions) => missions.filter(m => m <= cfg.missions);
 
-  const crewCards = crewmatesData.slice(0, cfg.crew).map(c =>
-    buildCard('crewmate', c.color, filterMissions(c.missions))
+  let g = 0; // index global du joueur (utilise pour la distribution cyclique en 8j/12j)
+  const crewCards = crewmatesData.slice(0, cfg.crew).map((c, i) =>
+    buildCard('crewmate', c.color, getCardMissions('crewmate', i, cfg, g++))
   );
-  const impCards  = impostorsData.slice(0, cfg.imp).map(c =>
-    buildCard('impostor', c.color, filterMissions(c.missions))
+  const impCards  = impostorsData.slice(0, cfg.imp).map((c, i) =>
+    buildCard('impostor', c.color, getCardMissions('impostor', i, cfg, g++))
   );
   const sherCards = cfg.sheriff
-    ? [buildCard('sheriff', sheriffData.color, filterMissions(sheriffData.missions))]
+    ? [buildCard('sheriff', sheriffData.color, getCardMissions('sheriff', 0, cfg, g++))]
     : [];
   const engCards  = cfg.engineer
-    ? [buildCard('engineer', engineerData.color, filterMissions(engineerData.missions))]
+    ? [buildCard('engineer', engineerData.color, getCardMissions('engineer', 0, cfg, g++))]
     : [];
 
   const allCards = [...crewCards, ...impCards, ...sherCards, ...engCards];
@@ -3732,21 +3732,21 @@ function buildPrintPages() {
   if (!container) return;
 
   const cfg = getModeConfig(getCurrentMode());
-  const filterMissions = (missions) => missions.filter(m => m <= cfg.missions);
 
   // Collecte des cartes (recto) selon le mode courant
+  let g = 0;
   const allCards = [];
-  crewmatesData.slice(0, cfg.crew).forEach(c =>
-    allCards.push(buildCard('crewmate', c.color, filterMissions(c.missions)))
+  crewmatesData.slice(0, cfg.crew).forEach((c, i) =>
+    allCards.push(buildCard('crewmate', c.color, getCardMissions('crewmate', i, cfg, g++)))
   );
-  impostorsData.slice(0, cfg.imp).forEach(c =>
-    allCards.push(buildCard('impostor', c.color, filterMissions(c.missions)))
+  impostorsData.slice(0, cfg.imp).forEach((c, i) =>
+    allCards.push(buildCard('impostor', c.color, getCardMissions('impostor', i, cfg, g++)))
   );
   if (cfg.sheriff) {
-    allCards.push(buildCard('sheriff', sheriffData.color, filterMissions(sheriffData.missions)));
+    allCards.push(buildCard('sheriff', sheriffData.color, getCardMissions('sheriff', 0, cfg, g++)));
   }
   if (cfg.engineer) {
-    allCards.push(buildCard('engineer', engineerData.color, filterMissions(engineerData.missions)));
+    allCards.push(buildCard('engineer', engineerData.color, getCardMissions('engineer', 0, cfg, g++)));
   }
 
   const PER_PAGE = 9;
@@ -3903,14 +3903,42 @@ function getCurrentMode() {
   return [8, 12, 16].includes(stored) ? stored : 16; // defaut 16
 }
 
-// Configuration par mode (sub-config par defaut, ajustable plus tard via etape 3)
+// Configuration par mode (sub-config imposee : memes regles pour tous)
+//   8j  : 7 crewmates + 1 impostor                                 = 8 joueurs
+//   12j : 9 crewmates + 2 impostors + 1 sheriff                    = 12 joueurs
+//   16j : 11 crewmates + 3 impostors + 1 sheriff + 1 ingenieur     = 16 joueurs
 function getModeConfig(mode) {
   const configs = {
     8:  { crew: 7,  imp: 1, sheriff: false, engineer: false, missions: 8  },
-    12: { crew: 10, imp: 2, sheriff: false, engineer: false, missions: 12 },
+    12: { crew: 9,  imp: 2, sheriff: true,  engineer: false, missions: 12 },
     16: { crew: 11, imp: 3, sheriff: true,  engineer: true,  missions: 16 },
   };
   return configs[mode] || configs[16];
+}
+
+// Genere 3 missions equitables pour un joueur (decalage N/3 pour eviter les missions consecutives)
+// Chaque mission apparait exactement 3 fois sur l'ensemble des N joueurs.
+function generateMissionsForPlayer(playerIdx, total) {
+  const a = Math.round(total / 3);       // ~ N/3
+  const b = Math.round((2 * total) / 3); // ~ 2N/3
+  return [
+    (playerIdx % total) + 1,
+    ((playerIdx + a) % total) + 1,
+    ((playerIdx + b) % total) + 1,
+  ];
+}
+
+// Retourne les missions pour une carte donnee.
+//   Mode 16j : utilise les donnees hardcodees (deja parfaitement equilibrees).
+//   Modes 8j/12j : distribution cyclique automatique (chaque joueur 3 missions, chaque mission 3x).
+function getCardMissions(role, indexInRole, cfg, globalIdx) {
+  if (cfg.missions === 16) {
+    if (role === 'crewmate') return crewmatesData[indexInRole].missions;
+    if (role === 'impostor') return impostorsData[indexInRole].missions;
+    if (role === 'sheriff')  return sheriffData.missions;
+    if (role === 'engineer') return engineerData.missions;
+  }
+  return generateMissionsForPlayer(globalIdx, cfg.missions);
 }
 
 function setGameMode(mode) {
