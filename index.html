@@ -3507,6 +3507,17 @@ function showTab(name) {
 function printCardsTab() {
   const tabPrint = document.getElementById('tab-print');
   if (!tabPrint) return;
+
+  // Neutralise les marges par defaut du browser (sinon elles s'ajoutent au padding CSS)
+  let styleEl = document.getElementById('__cards-print-style');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = '__cards-print-style';
+    styleEl.media = 'print';
+    styleEl.textContent = `@page { size: A4 portrait; margin: 0 !important; }`;
+    document.head.appendChild(styleEl);
+  }
+
   tabPrint.classList.add('print-active');
   setTimeout(() => {
     window.print();
