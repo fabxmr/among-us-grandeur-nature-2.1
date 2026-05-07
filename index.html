@@ -1497,7 +1497,7 @@
     display: grid;
     grid-template-columns: repeat(3, 63mm);
     grid-template-rows: repeat(3, 88mm);
-    justify-content: center; align-content: start;
+    justify-content: center; align-content: center;
     gap: 0; flex: 1;
   }
   /* Espacement entre cartes uniquement sur le recto (guide de decoupe) */
@@ -1644,6 +1644,7 @@
     #tab-print.print-active .print-grid {
       grid-template-columns: repeat(3, 63mm) !important;
       grid-template-rows: repeat(3, 88mm) !important;
+      align-content: center !important;
     }
     /* Espacement entre cartes recto pour le decoupage */
     #tab-print.print-active .print-page.recto .print-grid {
