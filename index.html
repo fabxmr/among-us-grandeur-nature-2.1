@@ -3240,7 +3240,9 @@ function buildPrintPages() {
 
   for (let i = 0; i < allCards.length; i += PER_PAGE) {
     const chunk = allCards.slice(i, i + PER_PAGE);
-    const backsForChunk = Array(chunk.length).fill(BACK_CARD_HTML).join('');
+    // Le verso est toujours rempli (9 dos par page) meme si la derniere page recto
+    // n'a que 7 cartes — pour que les bonhommes + SHHHHHH soient presents partout
+    const backsForChunk = Array(PER_PAGE).fill(BACK_CARD_HTML).join('');
 
     // Recto
     html += `
@@ -3251,10 +3253,10 @@ function buildPrintPages() {
     `;
     pageNum++;
 
-    // Verso (même nombre de dos identiques, alignés sur les rectos)
+    // Verso (toujours 9 dos pour un fond uniforme et des bonhommes partout)
     html += `
       <div class="print-page verso">
-        <div class="print-page-label">VERSO — PAGE ${pageNum} (${chunk.length} dos)</div>
+        <div class="print-page-label">VERSO — PAGE ${pageNum} (${PER_PAGE} dos)</div>
         <div class="print-grid">${backsForChunk}</div>
       </div>
     `;
