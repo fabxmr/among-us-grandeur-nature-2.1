@@ -1677,7 +1677,7 @@
     #tab-defis-print.print-active .print-page {
       background: white !important; box-shadow: none !important;
       width: 210mm !important; height: 297mm !important;
-      padding: 8mm !important; margin: 0 !important;
+      padding: 12mm !important; margin: 0 !important;
       page-break-after: always !important; break-after: page !important;
       page-break-inside: avoid !important; break-inside: avoid !important;
     }
@@ -3518,6 +3518,18 @@ function printCardsTab() {
 function printDefisTab() {
   const tab = document.getElementById('tab-defis-print');
   if (!tab) return;
+
+  // Injecte une regle @page pour neutraliser les marges par defaut du browser
+  // (sinon le browser ajoute ses propres marges en plus du padding CSS)
+  let styleEl = document.getElementById('__defis-print-style');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = '__defis-print-style';
+    styleEl.media = 'print';
+    styleEl.textContent = `@page { size: A4 portrait; margin: 0 !important; }`;
+    document.head.appendChild(styleEl);
+  }
+
   tab.classList.add('print-active');
   setTimeout(() => {
     window.print();
