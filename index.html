@@ -3325,18 +3325,7 @@
     <div class="livret-page livret-toc">
       <div class="livret-section-tag">Index</div>
       <h2 class="livret-h">Sommaire</h2>
-      <ol>
-        <li><a href="#livret-p3"><span class="toc-title">Modes de jeu</span><span class="toc-page">p. 3</span></a></li>
-        <li><a href="#livret-p4"><span class="toc-title">Règles · Rôles &amp; Mise en place</span><span class="toc-page">p. 4</span></a></li>
-        <li><a href="#livret-p5"><span class="toc-title">Règles · Défis &amp; Déroulement</span><span class="toc-page">p. 5</span></a></li>
-        <li><a href="#livret-p6"><span class="toc-title">Règles · Morts &amp; Fin de partie</span><span class="toc-page">p. 6</span></a></li>
-        <li><a href="#livret-p7"><span class="toc-title">Règles spéciales</span><span class="toc-page">p. 7</span></a></li>
-        <li><a href="#livret-p8"><span class="toc-title">Défis étage</span><span class="toc-page">p. 8–9</span></a></li>
-        <li><a href="#livret-p10"><span class="toc-title">Défis RDC</span><span class="toc-page">p. 10–11</span></a></li>
-        <li><a href="#livret-p12"><span class="toc-title">Localisations des tâches</span><span class="toc-page">p. 12</span></a></li>
-        <li><a href="#livret-p13"><span class="toc-title">Fiche Quests</span><span class="toc-page">p. 13–14</span></a></li>
-        <li><a href="#livret-p15"><span class="toc-title">Cartes de rôles</span><span class="toc-page">p. 15–18</span></a></li>
-      </ol>
+      <ol id="livret-toc-list"><!-- rempli dynamiquement par buildLivret() --></ol>
       <div class="livret-page-num">— 02 —</div>
     </div>
 
@@ -4019,9 +4008,12 @@ function applyGameMode() {
   const cfg = getModeConfig(mode);
 
   // Re-render des contenus dynamiques
+  // Ordre important : populateGrids/buildQuestSheet/buildDefis avant buildLivret
+  // (buildLivret clone depuis #all-grid, #tab-defis, #tab-quests qui doivent etre a jour)
   if (typeof populateGrids === 'function')        populateGrids();
   if (typeof buildQuestSheet === 'function')      buildQuestSheet();
   if (typeof buildDefis === 'function')           buildDefis();
+  if (typeof buildLivret === 'function')          buildLivret();
   if (typeof buildPrintPages === 'function')      buildPrintPages();
   if (typeof buildDefisPrintPages === 'function') buildDefisPrintPages();
 
@@ -4570,6 +4562,8 @@ function buildLivret() {
   const container = document.getElementById('livret-dynamic');
   if (!container) return;
 
+  const cfg = getModeConfig(getCurrentMode());
+
   // Helper : crée une page livret
   const page = (tag, title, contentHTML, pageNum, extraCls = '') => `
     <div class="livret-page ${extraCls}" id="livret-p${pageNum}">
@@ -4580,19 +4574,16 @@ function buildLivret() {
     </div>
   `;
 
-  // Helper : clone l'intérieur d'une section existante (sans le .section-title)
-  const cloneSection = (selector) => {
-    const src = document.querySelector(selector);
-    if (!src) return '';
-    const clone = src.cloneNode(true);
-    const title = clone.querySelector(':scope > .section-title');
-    if (title) title.remove();
-    return clone.innerHTML;
+  // Pagination dynamique : tracker pageNum + collecter les entrées du sommaire
+  let html = '';
+  let pageNum = 3; // 1=cover, 2=TOC, donc on commence à 3
+  const tocEntries = [];
+  const addToc = (title, fromPage, toPage) => {
+    tocEntries.push({ title, fromPage, toPage: toPage || fromPage });
   };
 
-  let html = '';
-
-  // ── Page 3 : Modes de jeu (8 / 12 / 16 joueurs) ──
+  // ── Page 3 : Modes de jeu ──
+  const modesStart = pageNum;
   html += page('Configuration', 'Modes de jeu', `
     <p style="text-align:left; margin-bottom:4mm">
       Choisir entre <strong>8</strong>, <strong>12</strong> ou <strong>16</strong> joueurs. Adapter le nombre de défis au nombre de joueurs.
@@ -4639,60 +4630,85 @@ function buildLivret() {
       <span>À 12 joueurs : Sheriff optionnel</span>
       <span>L'Ingenieur n'existe que dans la version 16 joueurs</span>
     </div>
-  `, 3);
+  `, pageNum++);
+  addToc('Modes de jeu', modesStart);
 
-  // ── Pages 4-6 : Règles du jeu (split en 3 pages) ──
-  // Sections dans l'ordre : 0=Présentation rôles, 1=Mise en place, 2=Défis,
-  //                         3=Déroulement, 4=Sabotages, 5=Morts, 6=Fin de partie
-  html += page('Chapitre 1', 'Rôles &amp; Mise en place', '<div class="rules-container" id="livret-rules-page-1"></div>', 4);
-  html += page('Chapitre 1 · suite', 'Défis &amp; Déroulement',  '<div class="rules-container" id="livret-rules-page-2"></div>', 5);
-  html += page('Chapitre 1 · fin',   'Morts &amp; Fin de partie', '<div class="rules-container" id="livret-rules-page-3"></div>', 6);
+  // ── Pages : Règles du jeu (split en 3 pages) ──
+  const rulesStart = pageNum;
+  html += page('Chapitre 1', 'Rôles &amp; Mise en place', '<div class="rules-container" id="livret-rules-page-1"></div>', pageNum++);
+  addToc('Règles · Rôles &amp; Mise en place', rulesStart);
+  html += page('Chapitre 1 · suite', 'Défis &amp; Déroulement',  '<div class="rules-container" id="livret-rules-page-2"></div>', pageNum++);
+  addToc('Règles · Défis &amp; Déroulement', rulesStart + 1);
+  html += page('Chapitre 1 · fin',   'Morts &amp; Fin de partie', '<div class="rules-container" id="livret-rules-page-3"></div>', pageNum++);
+  addToc('Règles · Morts &amp; Fin de partie', rulesStart + 2);
 
-  // ── Page 7 : Règles spéciales (Fantôme + Ingenieur sur la même page) ──
-  const sabotageSrc = document.querySelector('#tab-sabotage .sabotage-container');
-  html += page('Chapitre 2', 'Règles spéciales', '<div class="sabotage-container" id="livret-sabotage-merged"></div>', 7);
+  // ── Page : Règles spéciales (Fantôme + Ingenieur si applicable) ──
+  const sabStart = pageNum;
+  html += page('Chapitre 2', 'Règles spéciales', '<div class="sabotage-container" id="livret-sabotage-merged"></div>', pageNum++);
+  addToc('Règles spéciales', sabStart);
 
-  // ── Pages 8-9 : Défis étage (9 cartes split 5+4) ──
-  html += page('Chapitre 3', 'Défis · Étage · 1/2', `
-    <div class="defis-grid" id="livret-defis-red-1"></div>
-  `, 8);
-  html += page('Chapitre 3 · suite', 'Défis · Étage · 2/2', `
-    <div class="defis-grid" id="livret-defis-red-2"></div>
-  `, 9);
+  // ── Pages : Défis étage (rouges) — pagination dynamique selon le mode ──
+  const reds = DEFIS.filter(d => d.color === 'red'  && d.num <= cfg.missions);
+  const RED_PER_PAGE = 5;
+  const redPagesCount = Math.max(1, Math.ceil(reds.length / RED_PER_PAGE));
+  const redStart = pageNum;
+  for (let p = 0; p < redPagesCount; p++) {
+    const tag = p === 0 ? 'Chapitre 3' : 'Chapitre 3 · suite';
+    const title = redPagesCount === 1 ? 'Défis · Étage' : `Défis · Étage · ${p+1}/${redPagesCount}`;
+    html += page(tag, title, `<div class="defis-grid" id="livret-defis-red-${p+1}"></div>`, pageNum++);
+  }
+  addToc('Défis étage', redStart, pageNum - 1);
 
-  // ── Pages 10-11 : Défis RDC (7 cartes split 4+3) ──
-  html += page('Chapitre 3 · suite', 'Défis · RDC · 1/2', `
-    <div class="defis-grid" id="livret-defis-blue-1"></div>
-  `, 10);
-  html += page('Chapitre 3 · fin', 'Défis · RDC · 2/2', `
-    <div class="defis-grid" id="livret-defis-blue-2"></div>
-  `, 11);
+  // ── Pages : Défis RDC (bleus) — pagination dynamique ──
+  const blues = DEFIS.filter(d => d.color === 'blue' && d.num <= cfg.missions);
+  const BLUE_PER_PAGE = 4;
+  const bluePagesCount = Math.max(1, Math.ceil(blues.length / BLUE_PER_PAGE));
+  const blueStart = pageNum;
+  for (let p = 0; p < bluePagesCount; p++) {
+    const tag = (p === bluePagesCount - 1 && bluePagesCount > 1) ? 'Chapitre 3 · fin' : 'Chapitre 3 · suite';
+    const title = bluePagesCount === 1 ? 'Défis · RDC' : `Défis · RDC · ${p+1}/${bluePagesCount}`;
+    html += page(tag, title, `<div class="defis-grid" id="livret-defis-blue-${p+1}"></div>`, pageNum++);
+  }
+  addToc('Défis RDC', blueStart, pageNum - 1);
 
-  // ── Page 12 : Localisations des tâches (étage + RDC fusionnés) ──
-  html += page('Chapitre 4', 'Localisations des tâches', `
-    <div class="taches-grid" id="livret-taches-merged"></div>
-  `, 12);
+  // ── Page : Localisations des tâches ──
+  const locStart = pageNum;
+  html += page('Chapitre 4', 'Localisations des tâches', '<div class="taches-grid" id="livret-taches-merged"></div>', pageNum++);
+  addToc('Localisations des tâches', locStart);
 
-  // ── Pages 13-14 : Fiche Quests (split étage / RDC) ──
-  html += page('Chapitre 5', 'Fiche Quests · Étage', '<div class="quest-sheet" id="livret-quests-1"></div>', 13);
-  html += page('Chapitre 5 · suite', 'Fiche Quests · RDC', '<div class="quest-sheet" id="livret-quests-2"></div>', 14);
+  // ── Pages : Fiche Quests (1 ou 2 pages selon nb missions) ──
+  const questsPagesCount = cfg.missions > 9 ? 2 : 1;
+  const questsStart = pageNum;
+  for (let p = 0; p < questsPagesCount; p++) {
+    const tag = p === 0 ? 'Chapitre 5' : 'Chapitre 5 · suite';
+    const title = questsPagesCount === 1 ? 'Fiche Quests' : `Fiche Quests · ${p+1}/${questsPagesCount}`;
+    html += page(tag, title, `<div class="quest-sheet" id="livret-quests-${p+1}"></div>`, pageNum++);
+  }
+  addToc('Fiche Quests', questsStart, pageNum - 1);
 
-  // ── Pages 15-18 : Cartes de rôles (4 par page, 2×2) ──
+  // ── Pages : Cartes de rôles (4 par page, pagination dynamique selon nb cartes) ──
   const allCardsHTML = document.getElementById('all-grid')?.innerHTML || '';
-  html += page('Chapitre 6', 'Cartes de rôles · 1/4', `
-    <div class="livret-cards-grid livret-cards-grid-1"></div>
-  `, 15);
-  html += page('Chapitre 6 · suite', 'Cartes de rôles · 2/4', `
-    <div class="livret-cards-grid livret-cards-grid-2"></div>
-  `, 16);
-  html += page('Chapitre 6 · suite', 'Cartes de rôles · 3/4', `
-    <div class="livret-cards-grid livret-cards-grid-3"></div>
-  `, 17);
-  html += page('Chapitre 6 · fin', 'Cartes de rôles · 4/4', `
-    <div class="livret-cards-grid livret-cards-grid-4"></div>
-  `, 19);
+  const totalCards = cfg.crew + cfg.imp + (cfg.sheriff ? 1 : 0) + (cfg.engineer ? 1 : 0);
+  const CARDS_PER_PAGE = 4;
+  const cardPagesCount = Math.max(1, Math.ceil(totalCards / CARDS_PER_PAGE));
+  const cardsStart = pageNum;
+  for (let p = 0; p < cardPagesCount; p++) {
+    const tag = p === 0 ? 'Chapitre 6' : (p === cardPagesCount - 1 ? 'Chapitre 6 · fin' : 'Chapitre 6 · suite');
+    const title = cardPagesCount === 1 ? 'Cartes de rôles' : `Cartes de rôles · ${p+1}/${cardPagesCount}`;
+    html += page(tag, title, `<div class="livret-cards-grid livret-cards-grid-${p+1}"></div>`, pageNum++);
+  }
+  addToc('Cartes de rôles', cardsStart, pageNum - 1);
 
   container.innerHTML = html;
+
+  // ── Génère le sommaire dynamique ──
+  const tocList = document.getElementById('livret-toc-list');
+  if (tocList) {
+    tocList.innerHTML = tocEntries.map(e => {
+      const pageStr = e.fromPage === e.toPage ? `p. ${e.fromPage}` : `p. ${e.fromPage}–${e.toPage}`;
+      return `<li><a href="#livret-p${e.fromPage}"><span class="toc-title">${e.title}</span><span class="toc-page">${pageStr}</span></a></li>`;
+    }).join('');
+  }
 
   // ── Post-traitement : redistribution des contenus ──
 
@@ -4716,14 +4732,14 @@ function buildLivret() {
     distribute('livret-rules-page-3', [5, 6, 7]);
   }
 
-  // 2) QUESTS : on coupe par étage (le 1er .quest-floor-block sur p11, le reste sur p12)
+  // 2) QUESTS : pagination dynamique (1 ou 2 pages selon le mode)
   const questsSrc = document.querySelector('#tab-quests .quest-sheet');
-  const quests1Target = container.querySelector('#livret-quests-1');
-  const quests2Target = container.querySelector('#livret-quests-2');
-  if (questsSrc && quests1Target && quests2Target) {
+  if (questsSrc) {
     const blocks = Array.from(questsSrc.querySelectorAll(':scope > .quest-floor-block'));
-    if (blocks[0]) quests1Target.appendChild(blocks[0].cloneNode(true));
-    blocks.slice(1).forEach(b => quests2Target.appendChild(b.cloneNode(true)));
+    blocks.forEach((b, i) => {
+      const target = container.querySelector(`#livret-quests-${i + 1}`);
+      if (target) target.appendChild(b.cloneNode(true));
+    });
   }
 
   // 3) LOCALISATIONS : étage + RDC fusionnés sur une seule page (2 colonnes via .taches-grid)
@@ -4733,48 +4749,55 @@ function buildLivret() {
     Array.from(tachesSrc.children).forEach(b => tachesMerged.appendChild(b.cloneNode(true)));
   }
 
-  // 3.5) SABOTAGE : 2 cartes consolidées (Fantôme + Ingenieur) sur une seule page
+  // 3.5) SABOTAGE : Fantôme + (Ingenieur uniquement si cfg.engineer)
   const sabSrc = document.querySelector('#tab-sabotage .sabotage-container');
   const sabMerged = container.querySelector('#livret-sabotage-merged');
   if (sabSrc && sabMerged) {
     const cards = Array.from(sabSrc.querySelectorAll(':scope > .sabotage-card'));
-    cards.forEach(c => sabMerged.appendChild(c.cloneNode(true)));
+    cards.forEach(c => {
+      // En 8j/12j : on retire la carte Ingénieur (tag cyan) car le rôle n'existe pas
+      if (!cfg.engineer && c.querySelector('.tag.cyan')) return;
+      sabMerged.appendChild(c.cloneNode(true));
+    });
   }
 
-  // 3.6) DÉFIS ÉTAGE : 9 cartes split 5+4 sur 2 pages
+  // 3.6) DÉFIS ÉTAGE : pagination dynamique
   const defisRedSrc = document.getElementById('defis-red');
-  const defisRed1 = container.querySelector('#livret-defis-red-1');
-  const defisRed2 = container.querySelector('#livret-defis-red-2');
-  if (defisRedSrc && defisRed1 && defisRed2) {
+  if (defisRedSrc) {
     const cards = Array.from(defisRedSrc.querySelectorAll(':scope > .defi-card'));
-    cards.slice(0, 5).forEach(c => defisRed1.appendChild(c.cloneNode(true)));
-    cards.slice(5).forEach(c => defisRed2.appendChild(c.cloneNode(true)));
+    for (let p = 0; p < redPagesCount; p++) {
+      const target = container.querySelector(`#livret-defis-red-${p + 1}`);
+      if (!target) continue;
+      cards.slice(p * RED_PER_PAGE, (p + 1) * RED_PER_PAGE).forEach(c =>
+        target.appendChild(c.cloneNode(true))
+      );
+    }
   }
 
-  // 3.7) DÉFIS RDC : 7 cartes split 4+3 sur 2 pages
+  // 3.7) DÉFIS RDC : pagination dynamique
   const defisBlueSrc = document.getElementById('defis-blue');
-  const defisBlue1 = container.querySelector('#livret-defis-blue-1');
-  const defisBlue2 = container.querySelector('#livret-defis-blue-2');
-  if (defisBlueSrc && defisBlue1 && defisBlue2) {
+  if (defisBlueSrc) {
     const cards = Array.from(defisBlueSrc.querySelectorAll(':scope > .defi-card'));
-    cards.slice(0, 4).forEach(c => defisBlue1.appendChild(c.cloneNode(true)));
-    cards.slice(4).forEach(c => defisBlue2.appendChild(c.cloneNode(true)));
+    for (let p = 0; p < bluePagesCount; p++) {
+      const target = container.querySelector(`#livret-defis-blue-${p + 1}`);
+      if (!target) continue;
+      cards.slice(p * BLUE_PER_PAGE, (p + 1) * BLUE_PER_PAGE).forEach(c =>
+        target.appendChild(c.cloneNode(true))
+      );
+    }
   }
 
-  // 4) CARTES : on duplique le HTML des cartes (les originaux restent dans #all-grid)
-  // 4 cartes par page sur 4 pages (16 cartes au total)
-  const cardGrids = [
-    container.querySelector('.livret-cards-grid-1'),
-    container.querySelector('.livret-cards-grid-2'),
-    container.querySelector('.livret-cards-grid-3'),
-    container.querySelector('.livret-cards-grid-4'),
-  ];
-  if (cardGrids.every(g => g) && allCardsHTML) {
+  // 4) CARTES : duplication avec pagination dynamique (4 cartes par page)
+  if (allCardsHTML) {
     const tmp = document.createElement('div');
     tmp.innerHTML = allCardsHTML;
     const cards = Array.from(tmp.querySelectorAll('.card'));
+    const cardGrids = [];
+    for (let p = 0; p < cardPagesCount; p++) {
+      cardGrids.push(container.querySelector(`.livret-cards-grid-${p + 1}`));
+    }
     for (let i = 0; i < cards.length; i++) {
-      const gridIdx = Math.floor(i / 4);
+      const gridIdx = Math.floor(i / CARDS_PER_PAGE);
       if (cardGrids[gridIdx]) cardGrids[gridIdx].appendChild(cards[i].cloneNode(true));
     }
   }
@@ -4857,10 +4880,9 @@ function printLivret() {
   }, 200);
 }
 
-// applyGameMode() appelle populateGrids/buildQuestSheet/buildDefis/buildPrintPages/buildDefisPrintPages
-// avec filtrage selon le mode courant (8/12/16) lu depuis localStorage.
+// applyGameMode() appelle populateGrids/buildQuestSheet/buildDefis/buildLivret/
+// buildPrintPages/buildDefisPrintPages avec filtrage selon le mode courant.
 applyGameMode();
-buildLivret();
 buildPancartesPrintPages();
 initTrackers();
 loadTimerMode();
