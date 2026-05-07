@@ -3667,38 +3667,29 @@ function buildCard(type, colorObj, missions, extra = '') {
 // POPULATE GRIDS
 // ═══════════════════════════════════════════════════
 function populateGrids() {
-  const allCards  = [];
-  const crewCards = [];
-  const impCards  = [];
-  const sherCards = [];
-  const engCards  = [];
+  const cfg = getModeConfig(getCurrentMode());
+  const filterMissions = (missions) => missions.filter(m => m <= cfg.missions);
 
-  crewmatesData.forEach(c => {
-    const html = buildCard('crewmate', c.color, c.missions);
-    crewCards.push(html);
-    allCards.push(html);
-  });
+  const crewCards = crewmatesData.slice(0, cfg.crew).map(c =>
+    buildCard('crewmate', c.color, filterMissions(c.missions))
+  );
+  const impCards  = impostorsData.slice(0, cfg.imp).map(c =>
+    buildCard('impostor', c.color, filterMissions(c.missions))
+  );
+  const sherCards = cfg.sheriff
+    ? [buildCard('sheriff', sheriffData.color, filterMissions(sheriffData.missions))]
+    : [];
+  const engCards  = cfg.engineer
+    ? [buildCard('engineer', engineerData.color, filterMissions(engineerData.missions))]
+    : [];
 
-  impostorsData.forEach(c => {
-    const html = buildCard('impostor', c.color, c.missions);
-    impCards.push(html);
-    allCards.push(html);
-  });
+  const allCards = [...crewCards, ...impCards, ...sherCards, ...engCards];
 
-  const sherHtml = buildCard('sheriff', sheriffData.color, sheriffData.missions);
-  sherCards.push(sherHtml);
-  allCards.push(sherHtml);
-
-  const engHtml = buildCard('engineer', engineerData.color, engineerData.missions);
-  engCards.push(engHtml);
-  allCards.push(engHtml);
-
-  document.getElementById('all-grid').innerHTML    = allCards.join('');
-  document.getElementById('crew-grid').innerHTML   = crewCards.join('');
-  document.getElementById('imp-grid').innerHTML    = impCards.join('');
-  document.getElementById('sheriff-grid').innerHTML= sherCards.join('');
-  document.getElementById('eng-grid').innerHTML    = engCards.join('');
-
+  document.getElementById('all-grid').innerHTML     = allCards.join('');
+  document.getElementById('crew-grid').innerHTML    = crewCards.join('');
+  document.getElementById('imp-grid').innerHTML     = impCards.join('');
+  document.getElementById('sheriff-grid').innerHTML = sherCards.join('');
+  document.getElementById('eng-grid').innerHTML     = engCards.join('');
 }
 
 const BACK_CARD_HTML = `<div class="card-back">
@@ -3740,12 +3731,23 @@ function buildPrintPages() {
   const container = document.getElementById('print-pages-container');
   if (!container) return;
 
-  // Collecte des 16 cartes (recto) dans l'ordre Crewmates → Imposteurs → Sheriff → Ingenieur
+  const cfg = getModeConfig(getCurrentMode());
+  const filterMissions = (missions) => missions.filter(m => m <= cfg.missions);
+
+  // Collecte des cartes (recto) selon le mode courant
   const allCards = [];
-  crewmatesData.forEach(c => allCards.push(buildCard('crewmate', c.color, c.missions)));
-  impostorsData.forEach(c => allCards.push(buildCard('impostor', c.color, c.missions)));
-  allCards.push(buildCard('sheriff',  sheriffData.color,  sheriffData.missions));
-  allCards.push(buildCard('engineer', engineerData.color, engineerData.missions));
+  crewmatesData.slice(0, cfg.crew).forEach(c =>
+    allCards.push(buildCard('crewmate', c.color, filterMissions(c.missions)))
+  );
+  impostorsData.slice(0, cfg.imp).forEach(c =>
+    allCards.push(buildCard('impostor', c.color, filterMissions(c.missions)))
+  );
+  if (cfg.sheriff) {
+    allCards.push(buildCard('sheriff', sheriffData.color, filterMissions(sheriffData.missions)));
+  }
+  if (cfg.engineer) {
+    allCards.push(buildCard('engineer', engineerData.color, filterMissions(engineerData.missions)));
+  }
 
   const PER_PAGE = 9;
   let html = '';
@@ -3804,8 +3806,12 @@ const MISSIONS_DATA = [
 ];
 
 function buildQuestSheet() {
-  const page1 = MISSIONS_DATA.slice(0, 9);   // 9 premières missions
-  const page2 = MISSIONS_DATA.slice(9);      // 8 dernières missions
+  const cfg = getModeConfig(getCurrentMode());
+  const filtered = MISSIONS_DATA.filter(m => m.id <= cfg.missions);
+  // Repartit equitablement sur 2 pages (la 1ere prend la moitie superieure)
+  const half = Math.ceil(filtered.length / 2);
+  const page1 = filtered.slice(0, Math.min(9, half > 0 ? Math.max(half, 1) : 0));
+  const page2 = filtered.slice(page1.length);
 
   const rowHTML = (m) => `
     <div class="quest-row">
@@ -3889,8 +3895,23 @@ function showTab(name) {
   if (btn && btn.classList) btn.classList.add('active');
 }
 
-// Sélection du mode de jeu depuis la page d'accueil (étape 1 : stocke + sync timer + navigue)
+// Sélection du mode de jeu depuis la page d'accueil
 const GAME_MODE_KEY = 'among-us:game-mode:v1';
+
+function getCurrentMode() {
+  const stored = parseInt(localStorage.getItem(GAME_MODE_KEY) || '0', 10);
+  return [8, 12, 16].includes(stored) ? stored : 16; // defaut 16
+}
+
+// Configuration par mode (sub-config par defaut, ajustable plus tard via etape 3)
+function getModeConfig(mode) {
+  const configs = {
+    8:  { crew: 7,  imp: 1, sheriff: false, engineer: false, missions: 8  },
+    12: { crew: 10, imp: 2, sheriff: false, engineer: false, missions: 12 },
+    16: { crew: 11, imp: 3, sheriff: true,  engineer: true,  missions: 16 },
+  };
+  return configs[mode] || configs[16];
+}
 
 function setGameMode(mode) {
   if (![8, 12, 16].includes(mode)) return;
@@ -3903,13 +3924,38 @@ function setGameMode(mode) {
     if (btn) setTimerMode(minutes, btn);
   }
 
+  // Re-render tout le contenu selon le nouveau mode
+  applyGameMode();
+
   // Navigue vers Crewmates (point d'entrée naturel après sélection du mode)
   showTab('crewmate');
 }
 
-function loadGameMode() {
-  const stored = parseInt(localStorage.getItem(GAME_MODE_KEY) || '0', 10);
-  return [8, 12, 16].includes(stored) ? stored : null;
+// Re-render le contenu mode-dependant + ajuste la nav (Sheriff/Ingenieur visibles ?)
+function applyGameMode() {
+  const cfg = getModeConfig(getCurrentMode());
+
+  // Re-render des contenus dynamiques
+  if (typeof populateGrids === 'function')        populateGrids();
+  if (typeof buildQuestSheet === 'function')      buildQuestSheet();
+  if (typeof buildDefis === 'function')           buildDefis();
+  if (typeof buildPrintPages === 'function')      buildPrintPages();
+  if (typeof buildDefisPrintPages === 'function') buildDefisPrintPages();
+
+  // Cache les onglets Sheriff / Ingenieur si pas dans la config
+  const sheriffBtn  = document.querySelector('.tab-btn.sheriff');
+  const engineerBtn = document.querySelector('.tab-btn.engineer');
+  if (sheriffBtn)  sheriffBtn.style.display  = cfg.sheriff  ? '' : 'none';
+  if (engineerBtn) engineerBtn.style.display = cfg.engineer ? '' : 'none';
+
+  // Si l'onglet actif n'existe plus pour ce mode, bascule sur Crewmates
+  const active = document.querySelector('.tab-btn.active');
+  if (active) {
+    const cls = active.classList;
+    if ((cls.contains('sheriff') && !cfg.sheriff) || (cls.contains('engineer') && !cfg.engineer)) {
+      showTab('crewmate');
+    }
+  }
 }
 
 // Affiche un sous-onglet dans l'onglet Impressions (cards / defis / pancartes)
@@ -4047,8 +4093,9 @@ function buildDefisPrintPages() {
   const container = document.getElementById('defis-print-container');
   if (!container) return;
 
-  const reds  = DEFIS.filter(d => d.color === 'red');
-  const blues = DEFIS.filter(d => d.color === 'blue');
+  const cfg = getModeConfig(getCurrentMode());
+  const reds  = DEFIS.filter(d => d.color === 'red'  && d.num <= cfg.missions);
+  const blues = DEFIS.filter(d => d.color === 'blue' && d.num <= cfg.missions);
   const PER_PAGE = 4;
   const RED_HEX  = '#ff3860'; // var(--neon-red)
   const BLUE_HEX = '#6ba6ff'; // var(--neon-blue)
@@ -4158,8 +4205,11 @@ function defiIconSVG(color) {
 }
 
 function buildDefis() {
-  const reds  = DEFIS.filter(d => d.color === "red");
-  const blues = DEFIS.filter(d => d.color === "blue");
+  const cfg = getModeConfig(getCurrentMode());
+  const inMode = (item) => item.num <= cfg.missions;
+
+  const reds  = DEFIS.filter(d => d.color === "red"  && inMode(d));
+  const blues = DEFIS.filter(d => d.color === "blue" && inMode(d));
 
   const cardHTML = (d) => `
     <div class="defi-card ${d.color}">
@@ -4190,8 +4240,8 @@ function buildDefis() {
   `;
 
   document.getElementById("taches-zones").innerHTML =
-    zoneHTML("TÂCHES ÉTAGE", "", TACHES_ETAGE) +
-    zoneHTML("TÂCHES RDC",   "", TACHES_RDC);
+    zoneHTML("TÂCHES ÉTAGE", "", TACHES_ETAGE.filter(inMode)) +
+    zoneHTML("TÂCHES RDC",   "", TACHES_RDC.filter(inMode));
 }
 
 // ═══════════════════════════════════════════════════
@@ -4709,12 +4759,10 @@ function printLivret() {
   }, 200);
 }
 
-populateGrids();
-buildQuestSheet();
-buildDefis();
+// applyGameMode() appelle populateGrids/buildQuestSheet/buildDefis/buildPrintPages/buildDefisPrintPages
+// avec filtrage selon le mode courant (8/12/16) lu depuis localStorage.
+applyGameMode();
 buildLivret();
-buildPrintPages();
-buildDefisPrintPages();
 buildPancartesPrintPages();
 initTrackers();
 loadTimerMode();
