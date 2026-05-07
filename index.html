@@ -3668,6 +3668,7 @@ function showSubTab(id) {
 // Imprime l'onglet "Cartes à imprimer" (ajoute .print-active pour activer le layout print)
 function printCardsTab() {
   const tabPrint = document.getElementById('tab-print');
+  const wrapper = document.getElementById('tab-impressions');
   if (!tabPrint) return;
 
   // Neutralise les marges par defaut du browser (sinon elles s'ajoutent au padding CSS)
@@ -3680,16 +3681,23 @@ function printCardsTab() {
     document.head.appendChild(styleEl);
   }
 
+  // Le wrapper #tab-impressions doit aussi avoir print-active pour ne pas etre cache
+  // par la regle @media print { .section { display: none } }
+  if (wrapper) wrapper.classList.add('print-active');
   tabPrint.classList.add('print-active');
   setTimeout(() => {
     window.print();
-    setTimeout(() => tabPrint.classList.remove('print-active'), 400);
+    setTimeout(() => {
+      tabPrint.classList.remove('print-active');
+      if (wrapper) wrapper.classList.remove('print-active');
+    }, 400);
   }, 100);
 }
 
 // Imprime l'onglet "Défis à imprimer"
 function printDefisTab() {
   const tab = document.getElementById('tab-defis-print');
+  const wrapper = document.getElementById('tab-impressions');
   if (!tab) return;
 
   // Injecte une regle @page pour neutraliser les marges par defaut du browser
@@ -3703,10 +3711,14 @@ function printDefisTab() {
     document.head.appendChild(styleEl);
   }
 
+  if (wrapper) wrapper.classList.add('print-active');
   tab.classList.add('print-active');
   setTimeout(() => {
     window.print();
-    setTimeout(() => tab.classList.remove('print-active'), 400);
+    setTimeout(() => {
+      tab.classList.remove('print-active');
+      if (wrapper) wrapper.classList.remove('print-active');
+    }, 400);
   }, 100);
 }
 
@@ -3718,6 +3730,7 @@ function backCardHTMLColored(color) {
 // Imprime l'onglet "Pancartes à imprimer"
 function printPancartesTab() {
   const tab = document.getElementById('tab-pancartes-print');
+  const wrapper = document.getElementById('tab-impressions');
   if (!tab) return;
   let styleEl = document.getElementById('__pancartes-print-style');
   if (!styleEl) {
@@ -3727,10 +3740,14 @@ function printPancartesTab() {
     styleEl.textContent = `@page { size: A4 portrait; margin: 0 !important; }`;
     document.head.appendChild(styleEl);
   }
+  if (wrapper) wrapper.classList.add('print-active');
   tab.classList.add('print-active');
   setTimeout(() => {
     window.print();
-    setTimeout(() => tab.classList.remove('print-active'), 400);
+    setTimeout(() => {
+      tab.classList.remove('print-active');
+      if (wrapper) wrapper.classList.remove('print-active');
+    }, 400);
   }, 100);
 }
 
