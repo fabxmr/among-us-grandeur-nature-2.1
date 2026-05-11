@@ -616,24 +616,29 @@ function buildQuestSheet() {
     <div class="quest-progress">
       <div class="quest-progress-label">
         <span class="quest-progress-title">Progression des missions</span>
-        <span class="quest-progress-meta">
-          <span class="quest-progress-text">0 / 0</span>
-          <button type="button" class="quest-reset-btn" onclick="resetQuestProgress()">Réinitialiser</button>
-        </span>
+        <span class="quest-progress-text">0 / 0</span>
       </div>
       <div class="quest-progress-bar">
         <div class="quest-progress-bar-fill" style="width:0%"></div>
       </div>
+    </div>
+    <div class="quest-victory" style="display:none">
+      <div class="quest-victory-title">CREWMATES WIN</div>
+      <div class="quest-victory-sub">Toutes les missions ont été terminées</div>
+      <button type="button" class="quest-newgame-btn" onclick="newGame()">Nouvelle Partie</button>
     </div>
     ${pageBlockHTML(page1, page2.length === 0)}
     ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
   `;
   document.getElementById('quest-sheet-content').innerHTML = html;
   updateQuestProgress();
+  // Les .tracker-circle (BUZZ, SHERIFF) sont dans le HTML regenere : on reattache
+  // les listeners et on restaure l'etat coche depuis localStorage.
+  if (typeof initTrackers === 'function') initTrackers();
 }
 
 // Met à jour la barre (texte + remplissage) selon les cases joueur cochees.
-// Le sabotage-box (idx=3) n'est pas compte dans le total.
+// Bascule sur la banniere "Crewmates Win" lorsque tout est valide.
 function updateQuestProgress() {
   const content = document.getElementById('quest-sheet-content');
   if (!content) return;
@@ -647,18 +652,25 @@ function updateQuestProgress() {
   const text = content.querySelector('.quest-progress-text');
   if (fill) fill.style.width = pct + '%';
   if (text) text.textContent = `${done} / ${total}`;
+
+  const isVictory = total > 0 && done === total;
+  const progress = content.querySelector('.quest-progress');
+  const victory  = content.querySelector('.quest-victory');
+  if (progress) progress.style.display = isVictory ? 'none' : '';
+  if (victory)  victory.style.display  = isVictory ? 'block' : 'none';
 }
 
-// Reinitialise la progression et l'etat de sabotage pour le mode courant
-// (les autres modes gardent leur etat).
-function resetQuestProgress() {
-  if (!confirm('Réinitialiser la progression et le sabotage pour ce mode ?')) return;
+// Nouvelle partie : reinitialise progression, sabotage et trackers (BUZZ/SHERIFF)
+// pour le mode courant. Sans confirmation (declenche depuis l'ecran de victoire).
+function newGame() {
   const mode = getCurrentMode();
   const prefix = `${mode}|`;
   const state = loadQuestProgress();
   Object.keys(state).forEach(k => { if (k.startsWith(prefix)) delete state[k]; });
   saveQuestProgress(state);
   setSabotageForMode(mode, { used: false, missions: [] });
+  // Trackers (BUZZ + balle SHERIFF) sont globaux : remise a zero complete
+  localStorage.removeItem(TRACKERS_KEY);
   buildQuestSheet();
   if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
 }
@@ -668,20 +680,35 @@ function resetQuestProgress() {
 function triggerSabotage() {
   const mode = getCurrentMode();
   if (getSabotageForMode(mode).used) return;
-  if (!confirm('Déclencher le sabotage ? 3 missions seront tirées au hasard, et une case joueur (au hasard) sera décochée sur chacune. Un seul sabotage par partie.')) return;
 
   const cfg = getModeConfig(mode);
-  const pool = MISSIONS_DATA.filter(m => m.id <= cfg.missions).map(m => m.id);
+  const state = loadQuestProgress();
+  // Seules les missions ayant au moins 1 case joueur cochee sont sabotables :
+  // pas de sens de "saboter" une mission a laquelle personne n'a touche.
+  const eligible = MISSIONS_DATA
+    .filter(m => m.id <= cfg.missions)
+    .map(m => m.id)
+    .filter(id => [0, 1, 2].some(idx => state[questCheckKey(mode, id, idx)]));
+
+  if (eligible.length === 0) {
+    alert('Aucune mission validée à saboter. Au moins une case joueur doit être cochée.');
+    return;
+  }
+
+  const targetCount = Math.min(3, eligible.length);
   const picked = [];
-  while (picked.length < 3 && pool.length > 0) {
+  const pool = [...eligible];
+  while (picked.length < targetCount && pool.length > 0) {
     const idx = Math.floor(Math.random() * pool.length);
     picked.push(pool.splice(idx, 1)[0]);
   }
 
-  // Pour chaque mission sabotee : une seule case joueur (idx 0/1/2) decochee au hasard.
-  const state = loadQuestProgress();
+  // Pour chaque mission sabotee : decocher une case parmi celles qui sont cochees,
+  // pour garantir un impact reel.
   picked.forEach(missionId => {
-    const playerIdx = Math.floor(Math.random() * 3);
+    const checkedIdxs = [0, 1, 2].filter(idx => state[questCheckKey(mode, missionId, idx)]);
+    if (checkedIdxs.length === 0) return;
+    const playerIdx = checkedIdxs[Math.floor(Math.random() * checkedIdxs.length)];
     delete state[questCheckKey(mode, missionId, playerIdx)];
   });
   saveQuestProgress(state);
@@ -1401,6 +1428,9 @@ function initTrackers() {
   document.querySelectorAll('.tracker-circle').forEach((c, i) => {
     const key = `t${i}`;
     if (state[key]) c.classList.add('used');
+    else c.classList.remove('used');
+    if (c._trackerListenerAttached) return;
+    c._trackerListenerAttached = true;
     c.addEventListener('click', () => {
       c.classList.toggle('used');
       const newState = loadTrackers();

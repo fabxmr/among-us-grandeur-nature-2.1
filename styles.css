@@ -836,8 +836,9 @@
     }
     /* Masquer l'en-tête écran (le seul) */
     .quest-sheet-header { display: none !important; }
-    /* Barre de progression : ecran uniquement */
-    .quest-progress { display: none !important; }
+    /* Barre de progression et banniere de victoire : ecran uniquement */
+    .quest-progress,
+    .quest-victory { display: none !important; }
     /* Saut de page entre les deux blocs */
     .quest-floor-block + .quest-floor-block {
       page-break-before: always !important;
@@ -941,26 +942,63 @@
     margin-bottom: 10px;
   }
   .quest-progress-title { font-weight: 600; }
-  .quest-progress-meta  { display: flex; align-items: center; gap: 14px; }
   .quest-progress-text  { color: var(--neon-green); font-weight: 700; font-size: 12px; }
-  .quest-reset-btn {
+
+  /* Banniere de victoire : remplace la barre de progression quand tout est coche */
+  .quest-victory {
+    max-width: 1000px;
+    margin: 0 auto 22px;
+    padding: 32px 28px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(76, 255, 157, 0.18), rgba(41, 231, 255, 0.12));
+    border: 2px solid var(--neon-green);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 60px rgba(76, 255, 157, 0.30);
+    animation: victory-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes victory-pulse {
+    0%, 100% { box-shadow: 0 0 60px rgba(76, 255, 157, 0.30); }
+    50%      { box-shadow: 0 0 110px rgba(76, 255, 157, 0.55); }
+  }
+  .quest-victory-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 44px);
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #fff, #4cff9d 50%, #29e7ff);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 18px rgba(76, 255, 157, 0.45));
+  }
+  .quest-victory-sub {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.2px;
+    font-size: 11px;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 6px 14px;
+    color: var(--text-dim);
+    margin-bottom: 22px;
+  }
+  .quest-newgame-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 30px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 56, 96, .35);
-    color: var(--neon-red);
-    background: rgba(255, 56, 96, 0.08);
+    border: 1px solid rgba(76, 255, 157, 0.6);
+    color: var(--neon-green);
+    background: rgba(76, 255, 157, 0.12);
     cursor: pointer;
-    transition: background .15s, border-color .15s, transform .1s;
+    transition: background .15s, border-color .15s, transform .1s, box-shadow .2s;
   }
-  .quest-reset-btn:hover {
-    background: rgba(255, 56, 96, 0.18);
-    border-color: rgba(255, 56, 96, .6);
+  .quest-newgame-btn:hover {
+    background: rgba(76, 255, 157, 0.25);
+    border-color: rgba(76, 255, 157, 0.9);
+    box-shadow: 0 0 28px rgba(76, 255, 157, 0.5);
   }
-  .quest-reset-btn:active { transform: scale(0.95); }
+  .quest-newgame-btn:active { transform: scale(0.95); }
   .quest-progress-bar {
     height: 10px;
     background: rgba(255, 255, 255, 0.05);
@@ -1031,7 +1069,7 @@
   .tracker-circle {
     width: 32px; height: 32px;
     border: 2px solid rgba(180, 195, 230, 0.5);
-    border-radius: 50%;
+    border-radius: 8px;
     background: rgba(220, 228, 245, 0.92);
   }
   .tracker-circle.red { border-color: rgba(255, 56, 96, .65); background: rgba(255, 200, 210, 0.85); }
@@ -2376,24 +2414,31 @@
   }
   .fullscreen-card-wrap > .card:hover { transform: none !important; }
 
-  /* TRACKERS CLIQUABLES */
+  /* TRACKERS CLIQUABLES : style "case à cocher" comme la fiche quests */
   .tracker-circle {
     cursor: pointer;
-    transition: background .2s, transform .15s;
     user-select: none;
-  }
-  .tracker-circle:hover { transform: scale(1.12); }
-  .tracker-circle.used {
-    background: currentColor !important;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
     position: relative;
+    transition: background .2s, transform .1s, border-color .15s, box-shadow .2s;
+  }
+  .tracker-circle:hover {
+    transform: scale(1.05);
+    border-color: rgba(107,166,255,.7);
+  }
+  .tracker-circle:active { transform: scale(0.92); }
+  .tracker-circle.used {
+    background: var(--neon-green) !important;
+    border-color: var(--neon-green) !important;
+    box-shadow: 0 0 12px rgba(76, 255, 157, 0.45);
   }
   .tracker-circle.used::after {
-    content: '✕';
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--bg-0);
-    font-weight: 700;
-    font-size: 14px;
+    content: '✓';
+    color: #062614;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
   }
   .section.active .card { cursor: pointer; }
 
