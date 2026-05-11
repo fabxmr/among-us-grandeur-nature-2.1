@@ -2235,30 +2235,33 @@
     text-align: center;
     padding: 40px 20px 80px;
   }
-  /* Fond spatial minimaliste : etoiles tilees + 2 lueurs nebuleuses tres
-     discretes. Pose sur body.on-accueil pour couvrir toute la fenetre
-     (et non juste la section, qui laissait un carre central en grand ecran). */
+  /* Fond spatial minimaliste, pose sur body.on-accueil (couvre toute la
+     fenetre, pas seulement la section). On garde les degrades colores du
+     body en couches du fond, et on superpose les etoiles au-dessus. */
   body.on-accueil {
     background-image:
-      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(107, 166, 255, 0.08), transparent 70%),
-      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(255, 90, 170, 0.07), transparent 70%),
-      radial-gradient(1px 1px at 22px 38px,   rgba(255,255,255,0.50), transparent 60%),
-      radial-gradient(1px 1px at 88px 92px,   rgba(255,255,255,0.32), transparent 60%),
-      radial-gradient(1.5px 1.5px at 152px 28px, rgba(220,230,255,0.42), transparent 60%),
-      radial-gradient(1px 1px at 60px 168px,  rgba(255,255,255,0.28), transparent 60%),
-      radial-gradient(1px 1px at 210px 108px, rgba(255,255,255,0.36), transparent 60%),
-      radial-gradient(1.5px 1.5px at 260px 200px, rgba(200,210,255,0.40), transparent 60%),
-      radial-gradient(1px 1px at 320px 60px,  rgba(255,255,255,0.30), transparent 60%);
+      /* etoiles (en premier = au-dessus) */
+      radial-gradient(1.2px 1.2px at 22px 38px,   rgba(255,255,255,0.95), transparent 65%),
+      radial-gradient(1px 1px     at 88px 92px,   rgba(255,255,255,0.70), transparent 65%),
+      radial-gradient(1.5px 1.5px at 152px 28px,  rgba(220,230,255,0.85), transparent 65%),
+      radial-gradient(1px 1px     at 60px 168px,  rgba(255,255,255,0.60), transparent 65%),
+      radial-gradient(1.2px 1.2px at 210px 108px, rgba(255,255,255,0.80), transparent 65%),
+      radial-gradient(1.5px 1.5px at 260px 200px, rgba(200,210,255,0.85), transparent 65%),
+      radial-gradient(1px 1px     at 320px 60px,  rgba(255,255,255,0.65), transparent 65%),
+      /* degrades colores d'origine du body (en dessous) */
+      radial-gradient(ellipse 90% 60% at 80% -10%, rgba(184, 107, 255, 0.18), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 10% 110%, rgba(41, 231, 255, 0.14), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255, 56, 96, 0.06), transparent 70%),
+      linear-gradient(180deg, #06070d 0%, #08091a 50%, #06070d 100%);
     background-size:
-      100vw 100vh, 100vw 100vh,
       360px 240px, 360px 240px, 360px 240px,
       360px 240px, 360px 240px, 360px 240px,
-      360px 240px;
+      360px 240px,
+      auto, auto, auto, auto;
     background-repeat:
-      no-repeat, no-repeat,
+      repeat, repeat, repeat, repeat,
       repeat, repeat, repeat,
-      repeat, repeat, repeat,
-      repeat;
+      no-repeat, no-repeat, no-repeat, no-repeat;
     background-attachment: fixed;
   }
   .accueil-hero {
