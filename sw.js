@@ -1,9 +1,12 @@
-const CACHE = 'among-us-v57';
+const CACHE = 'among-us-v60';
 const PRECACHE = [
   './',
   './index.html',
+  './styles.css',
+  './app.js',
   './favicon.svg',
   './icon-512.svg',
+  './og-image.svg',
   './manifest.json'
 ];
 
