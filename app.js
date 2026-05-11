@@ -620,12 +620,6 @@ function buildQuestSheet() {
   `;
 
   const html = `
-    <div class="quest-sheet-header">
-      <h2>QUESTS</h2>
-      <div class="quest-sheet-meta">
-        Cocher au fur et à mesure les missions terminées par les joueurs.
-      </div>
-    </div>
     <div class="quest-timer-bar">
       <span class="quest-timer-label">⏱ Temps restant</span>
       <span class="quest-timer-display">40:00</span>

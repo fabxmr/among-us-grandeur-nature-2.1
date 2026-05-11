@@ -2328,7 +2328,10 @@
   @media (min-width: 1024px) {
     body.in-game { padding-left: 0 !important; }
   }
-  /* Controles fixes en mode partie : Quitter (gauche) + Reset (juste apres). */
+  /* Controles fixes en mode partie : Quitter (gauche) + Reset (juste apres).
+     Sur desktop : position fixed, toujours visibles.
+     Sur mobile : position en flow normal, scrollent avec la page pour ne
+     pas se superposer aux missions a cocher. */
   .ingame-controls {
     position: fixed;
     top: 18px; left: 18px;
@@ -2337,6 +2340,14 @@
     gap: 10px;
   }
   body.in-game .ingame-controls { display: flex; }
+  @media (max-width: 720px) {
+    .ingame-controls {
+      position: static;
+      top: auto; left: auto;
+      margin: 14px 14px 6px;
+      justify-content: flex-start;
+    }
+  }
   .ingame-exit, .ingame-reset {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10pt;
@@ -3305,6 +3316,39 @@
 
   /* Ajustements specifiques aux petits ecrans (telephones) : on reduit les
      gros titres qui debordent avec leurs gros letter-spacing. */
+  /* Mode partie sur ecran (>=720px) : on compacte la fiche quests pour
+     qu'elle tienne dans une viewport sans scroll. Les missions passent
+     en 2 colonnes, les separations entre les pages disparaissent, le
+     padding et la taille des cases sont reduits. */
+  @media (min-width: 720px) {
+    body.in-game .quest-sheet { padding: 22px 24px; }
+    body.in-game .quest-page-header { display: none !important; }
+    body.in-game .quest-rows {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 14px;
+    }
+    body.in-game .quest-row {
+      padding: 8px 14px;
+      gap: 10px;
+    }
+    body.in-game .quest-row-num {
+      font-size: 9.5px;
+      padding: 5px 3px;
+    }
+    body.in-game .quest-row-room { font-size: 13.5px; }
+    body.in-game .quest-checkboxes { gap: 6px; }
+    body.in-game .quest-checkbox { width: 28px; height: 28px; }
+    body.in-game .quest-floor-block + .quest-floor-block { margin-top: 6px; }
+    body.in-game .quest-timer-bar { padding: 8px 18px; margin-bottom: 10px; }
+    body.in-game .quest-timer-display { font-size: 22px; }
+    body.in-game .quest-progress { padding: 10px 18px 12px; margin-bottom: 12px; }
+    body.in-game .quest-progress-bar { height: 8px; }
+    body.in-game .tracker-row { gap: 10px; margin-top: 12px; }
+    body.in-game .tracker-card { padding: 10px 12px; }
+    body.in-game .tracker-title { font-size: 10px; margin-bottom: 8px; }
+  }
+
   @media (max-width: 480px) {
     .accueil-title { font-size: clamp(36px, 12vw, 60px); letter-spacing: -1px; }
     .accueil-subtitle { font-size: 11pt; letter-spacing: 4px; }
