@@ -483,10 +483,19 @@ const MISSIONS_DATA = [
 function buildQuestSheet() {
   const cfg = getModeConfig(getCurrentMode());
   const filtered = MISSIONS_DATA.filter(m => m.id <= cfg.missions);
-  // Repartit equitablement sur 2 pages (la 1ere prend la moitie superieure)
-  const half = Math.ceil(filtered.length / 2);
-  const page1 = filtered.slice(0, Math.min(9, half > 0 ? Math.max(half, 1) : 0));
-  const page2 = filtered.slice(page1.length);
+  // Pagination par mode :
+  //   8j  -> 1 page (8 missions)
+  //   12j -> 2 pages de 6
+  //   16j -> 2 pages de 8
+  let page1, page2;
+  if (filtered.length <= 8) {
+    page1 = filtered;
+    page2 = [];
+  } else {
+    const half = Math.ceil(filtered.length / 2);
+    page1 = filtered.slice(0, half);
+    page2 = filtered.slice(half);
+  }
 
   const rowHTML = (m) => `
     <div class="quest-row">
@@ -501,57 +510,54 @@ function buildQuestSheet() {
     </div>
   `;
 
+  const legendHTML = `
+    <div class="quest-legend">
+      <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
+      <div class="quest-legend-item"><span class="legend-box check">✓</span><span>Case cochée = joueur a terminé</span></div>
+      <div class="quest-legend-item"><span class="legend-box sab"></span><span>Case rouge cochée = sabotée</span></div>
+    </div>
+  `;
+
+  const trackersHTML = `
+    <div class="tracker-row">
+      <div class="tracker-card">
+        <div class="tracker-title">BUZZ RESTANTS (3 max)</div>
+        <div class="tracker-circles">
+          <div class="tracker-circle"></div>
+          <div class="tracker-circle"></div>
+          <div class="tracker-circle"></div>
+        </div>
+      </div>
+      <div class="tracker-card">
+        <div class="tracker-title">SHERIFF — BALLE</div>
+        <div class="tracker-circles"><div class="tracker-circle red"></div></div>
+        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
+      </div>
+    </div>
+  `;
+
+  // Les trackers vont toujours sur la derniere page rendue.
+  const pageBlockHTML = (rows, withTrackers) => `
+    <div class="quest-floor-block">
+      <div class="quest-page-header">
+        <div class="quest-page-header-title">QUESTS</div>
+        <div class="quest-page-header-meta">Cocher les missions au fur et à mesure</div>
+      </div>
+      <div class="quest-rows">${rows.map(rowHTML).join('')}</div>
+      ${legendHTML}
+      ${withTrackers ? trackersHTML : ''}
+    </div>
+  `;
+
   const html = `
-    <!-- En-tête écran uniquement -->
     <div class="quest-sheet-header">
       <h2>QUESTS</h2>
       <div class="quest-sheet-meta">
         Cocher au fur et à mesure les missions terminées par les joueurs.
       </div>
     </div>
-
-    <!-- ── PAGE 1 ── -->
-    <div class="quest-floor-block">
-      <div class="quest-page-header">
-        <div class="quest-page-header-title">QUESTS</div>
-        <div class="quest-page-header-meta">Cocher les missions au fur et à mesure</div>
-      </div>
-      <div class="quest-rows">${page1.map(rowHTML).join('')}</div>
-      <div class="quest-legend">
-        <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
-        <div class="quest-legend-item"><span class="legend-box check">✓</span><span>Case cochée = joueur a terminé</span></div>
-        <div class="quest-legend-item"><span class="legend-box sab"></span><span>Case rouge cochée = sabotée</span></div>
-      </div>
-    </div>
-
-    <!-- ── PAGE 2 ── -->
-    <div class="quest-floor-block">
-      <div class="quest-page-header">
-        <div class="quest-page-header-title">QUESTS</div>
-        <div class="quest-page-header-meta">Cocher les missions au fur et à mesure</div>
-      </div>
-      <div class="quest-rows">${page2.map(rowHTML).join('')}</div>
-      <div class="quest-legend">
-        <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
-        <div class="quest-legend-item"><span class="legend-box check">✓</span><span>Case cochée = joueur a terminé</span></div>
-        <div class="quest-legend-item"><span class="legend-box sab"></span><span>Case rouge cochée = sabotée</span></div>
-      </div>
-      <div class="tracker-row">
-        <div class="tracker-card">
-          <div class="tracker-title">BUZZ RESTANTS (3 max)</div>
-          <div class="tracker-circles">
-            <div class="tracker-circle"></div>
-            <div class="tracker-circle"></div>
-            <div class="tracker-circle"></div>
-          </div>
-        </div>
-        <div class="tracker-card">
-          <div class="tracker-title">SHERIFF — BALLE</div>
-          <div class="tracker-circles"><div class="tracker-circle red"></div></div>
-          <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
-        </div>
-      </div>
-    </div>
+    ${pageBlockHTML(page1, page2.length === 0)}
+    ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
   `;
   document.getElementById('quest-sheet-content').innerHTML = html;
 }
