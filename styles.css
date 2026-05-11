@@ -836,10 +836,11 @@
     }
     /* Masquer l'en-tête écran (le seul) */
     .quest-sheet-header { display: none !important; }
-    /* Barre de progression, mini-timer et banniere de victoire : ecran uniquement */
+    /* Barre de progression, mini-timer, banniere de victoire/defaite : ecran uniquement */
     .quest-progress,
     .quest-timer-bar,
-    .quest-victory { display: none !important; }
+    .quest-victory,
+    .quest-defeat { display: none !important; }
     /* Saut de page entre les deux blocs */
     .quest-floor-block + .quest-floor-block {
       page-break-before: always !important;
@@ -1060,6 +1061,58 @@
     box-shadow: 0 0 28px rgba(76, 255, 157, 0.5);
   }
   .quest-newgame-btn:active { transform: scale(0.95); }
+  /* Variante rouge pour l'overlay defaite */
+  .quest-newgame-btn.red {
+    border-color: rgba(255, 56, 96, 0.6);
+    color: var(--neon-red);
+    background: rgba(255, 56, 96, 0.12);
+  }
+  .quest-newgame-btn.red:hover {
+    background: rgba(255, 56, 96, 0.25);
+    border-color: rgba(255, 56, 96, 0.9);
+    box-shadow: 0 0 28px rgba(255, 56, 96, 0.5);
+  }
+
+  /* Overlay defaite : plein ecran rouge, declenche quand le timer atteint 00:00 */
+  .quest-defeat {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+    background: radial-gradient(ellipse at center, rgba(38, 8, 16, 0.92), rgba(8, 2, 4, 0.98));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    animation: victory-fadein 0.5s ease-out;
+  }
+  .quest-defeat-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: clamp(48px, 12vw, 120px);
+    line-height: 1;
+    letter-spacing: 8px;
+    background: linear-gradient(135deg, #fff, #ff5cc4 50%, #ff3860);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    margin-bottom: 18px;
+    filter: drop-shadow(0 0 28px rgba(255, 56, 96, 0.55));
+    animation: defeat-glow 2.4s ease-in-out infinite;
+  }
+  @keyframes defeat-glow {
+    0%, 100% { filter: drop-shadow(0 0 28px rgba(255, 56, 96, 0.55)); }
+    50%      { filter: drop-shadow(0 0 56px rgba(255, 56, 96, 0.85)); }
+  }
+  .quest-defeat-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(11px, 1.4vw, 14px);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 200, 210, 0.85);
+    margin-bottom: 40px;
+  }
   .quest-progress-bar {
     height: 10px;
     background: rgba(255, 255, 255, 0.05);

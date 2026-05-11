@@ -632,6 +632,11 @@ function buildQuestSheet() {
       <div class="quest-victory-sub">Toutes les missions ont été terminées</div>
       <button type="button" class="quest-newgame-btn" onclick="newGame()">Nouvelle Partie</button>
     </div>
+    <div class="quest-defeat" style="display:none">
+      <div class="quest-defeat-title">IMPOSTORS WIN</div>
+      <div class="quest-defeat-sub">Le temps est écoulé</div>
+      <button type="button" class="quest-newgame-btn red" onclick="newGame()">Nouvelle Partie</button>
+    </div>
     ${pageBlockHTML(page1, page2.length === 0)}
     ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
   `;
@@ -648,6 +653,8 @@ function buildQuestSheet() {
                      : TIMER_DURATION_MS;
     renderTimer(remaining);
   }
+  // Si le timer avait expire avant un reload : reaffiche l'overlay defaite
+  if (localStorage.getItem(TIMER_EXPIRED_KEY)) showDefeat();
 }
 
 // Met à jour la barre (texte + remplissage) selon les cases joueur cochees.
@@ -688,6 +695,7 @@ function newGame() {
   localStorage.removeItem(TRACKERS_KEY);
   // Remet le timer a la duree initiale du mode (arrete s'il etait en cours)
   if (typeof resetTimer === 'function') resetTimer();
+  localStorage.removeItem(TIMER_EXPIRED_KEY);
   buildQuestSheet();
   if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
 }
@@ -1329,11 +1337,23 @@ function startTimerInterval() {
       saveTimerState();
       releaseWakeLock();
       playAlarm();
+      // Marque la defaite et affiche l'overlay IMPOSTORS WIN
+      localStorage.setItem(TIMER_EXPIRED_KEY, '1');
+      showDefeat();
     } else {
       renderTimer(remaining);
     }
   }, 250);
   renderTimer(timerEndAt - Date.now());
+}
+
+// Cle qui survit aux rechargements : permet de re-afficher l'overlay defaite
+// si l'utilisateur recharge la page apres expiration sans cliquer "Nouvelle Partie".
+const TIMER_EXPIRED_KEY = 'among-us:timer-expired:v1';
+
+function showDefeat() {
+  const defeat = document.querySelector('#quest-sheet-content .quest-defeat');
+  if (defeat) defeat.style.display = 'flex';
 }
 function renderTimer(remainingMs) {
   const totalSec = Math.max(0, Math.ceil(remainingMs / 1000));
