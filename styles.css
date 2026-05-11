@@ -103,8 +103,11 @@
   }
   button:focus:not(:focus-visible) { outline: none; }
 
-  /* ── HEADER (mobile) ── */
+  /* HEADER decoratif : retire partout (titre AMONG US redondant avec
+     l'accueil-title et la sidebar). Bonus : retire le degrade rouge
+     qui apparaissait en haut de chaque page sur mobile. */
   .header {
+    display: none;
     text-align: center;
     padding: 36px 20px 20px;
     position: relative;
@@ -3298,5 +3301,24 @@
       min-height: 0;
       padding: 24px 18px;
     }
+  }
+
+  /* Ajustements specifiques aux petits ecrans (telephones) : on reduit les
+     gros titres qui debordent avec leurs gros letter-spacing. */
+  @media (max-width: 480px) {
+    .accueil-title { font-size: clamp(36px, 12vw, 60px); letter-spacing: -1px; }
+    .accueil-subtitle { font-size: 11pt; letter-spacing: 4px; }
+    .quest-victory-title,
+    .quest-defeat-title {
+      font-size: clamp(34px, 12vw, 60px);
+      letter-spacing: 4px;
+    }
+    .accueil-play-text {
+      font-size: 18px;
+      letter-spacing: 4px;
+    }
+    .accueil-play-btn { padding: 14px 40px; }
+    .accueil-mode { padding: 22px 28px; min-width: 130px; }
+    .accueil-mode .amode-num { font-size: 44pt; }
   }
 
