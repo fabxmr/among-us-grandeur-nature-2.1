@@ -480,8 +480,24 @@ const MISSIONS_DATA = [
   { id:16, room:"Grande Salle"        },
 ];
 
+// Etat persiste des cases cochees de la fiche quests, indexe par mode.
+// Une case = `${mode}|${missionId}|${idx}` ou idx 0..2 = joueur, 3 = sabotage.
+const QUEST_PROGRESS_KEY = 'among-us:quest-progress:v1';
+function loadQuestProgress() {
+  try { return JSON.parse(localStorage.getItem(QUEST_PROGRESS_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveQuestProgress(state) {
+  localStorage.setItem(QUEST_PROGRESS_KEY, JSON.stringify(state));
+}
+function questCheckKey(mode, missionId, idx) {
+  return `${mode}|${missionId}|${idx}`;
+}
+
 function buildQuestSheet() {
   const cfg = getModeConfig(getCurrentMode());
+  const mode = getCurrentMode();
+  const state = loadQuestProgress();
   const filtered = MISSIONS_DATA.filter(m => m.id <= cfg.missions);
   // Pagination par mode :
   //   8j  -> 1 page (8 missions)
@@ -497,15 +513,17 @@ function buildQuestSheet() {
     page2 = filtered.slice(half);
   }
 
+  const isChecked = (missionId, idx) => state[questCheckKey(mode, missionId, idx)] ? ' checked' : '';
+
   const rowHTML = (m) => `
     <div class="quest-row">
       <div class="quest-row-num ${MISSION_FLOOR_BY_ID[m.id]}">N°${String(m.id).padStart(2,'0')}</div>
       <div class="quest-row-room">${m.room}</div>
       <div class="quest-checkboxes">
-        <div class="quest-checkbox" title="Joueur 1"></div>
-        <div class="quest-checkbox" title="Joueur 2"></div>
-        <div class="quest-checkbox" title="Joueur 3"></div>
-        <div class="quest-checkbox sabotage-box" title="Mission sabotée"></div>
+        <div class="quest-checkbox${isChecked(m.id, 0)}" data-mission="${m.id}" data-idx="0" title="Joueur 1"></div>
+        <div class="quest-checkbox${isChecked(m.id, 1)}" data-mission="${m.id}" data-idx="1" title="Joueur 2"></div>
+        <div class="quest-checkbox${isChecked(m.id, 2)}" data-mission="${m.id}" data-idx="2" title="Joueur 3"></div>
+        <div class="quest-checkbox sabotage-box${isChecked(m.id, 3)}" data-mission="${m.id}" data-idx="3" title="Mission sabotée"></div>
       </div>
     </div>
   `;
@@ -556,10 +574,61 @@ function buildQuestSheet() {
         Cocher au fur et à mesure les missions terminées par les joueurs.
       </div>
     </div>
+    <div class="quest-progress">
+      <div class="quest-progress-label">
+        <span class="quest-progress-title">Progression des missions</span>
+        <span class="quest-progress-text">0 / 0</span>
+      </div>
+      <div class="quest-progress-bar">
+        <div class="quest-progress-bar-fill" style="width:0%"></div>
+      </div>
+    </div>
     ${pageBlockHTML(page1, page2.length === 0)}
     ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
   `;
   document.getElementById('quest-sheet-content').innerHTML = html;
+  updateQuestProgress();
+}
+
+// Met à jour la barre (texte + remplissage) selon les cases joueur cochees.
+// Le sabotage-box (idx=3) n'est pas compte dans le total.
+function updateQuestProgress() {
+  const content = document.getElementById('quest-sheet-content');
+  if (!content) return;
+  const playerBoxes = content.querySelectorAll(
+    '.quest-checkbox[data-idx="0"], .quest-checkbox[data-idx="1"], .quest-checkbox[data-idx="2"]'
+  );
+  const total = playerBoxes.length;
+  const done  = Array.from(playerBoxes).filter(b => b.classList.contains('checked')).length;
+  const pct   = total ? Math.round((done / total) * 100) : 0;
+  const fill = content.querySelector('.quest-progress-bar-fill');
+  const text = content.querySelector('.quest-progress-text');
+  if (fill) fill.style.width = pct + '%';
+  if (text) text.textContent = `${done} / ${total}`;
+}
+
+// Listener delegue : un seul handler sur #quest-sheet-content, qui reagit aux clics
+// sur n'importe quelle .quest-checkbox (les enfants sont remplaces a chaque rebuild).
+function initQuestSheetListeners() {
+  const content = document.getElementById('quest-sheet-content');
+  if (!content || content._questListenerAttached) return;
+  content.addEventListener('click', (e) => {
+    const box = e.target.closest('.quest-checkbox');
+    if (!box || !content.contains(box)) return;
+    const mission = box.dataset.mission;
+    const idx = box.dataset.idx;
+    if (mission == null || idx == null) return;
+    box.classList.toggle('checked');
+    const state = loadQuestProgress();
+    const key = questCheckKey(getCurrentMode(), mission, idx);
+    if (box.classList.contains('checked')) state[key] = true;
+    else delete state[key];
+    saveQuestProgress(state);
+    updateQuestProgress();
+    // Met a jour le clone dans "Suivi a imprimer" pour qu'il reflete l'etat
+    if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
+  });
+  content._questListenerAttached = true;
 }
 
 // ═══════════════════════════════════════════════════
@@ -1578,6 +1647,7 @@ renderModeButtons();
 applyGameMode();
 buildPancartesPrintPages();
 initTrackers();
+initQuestSheetListeners();
 loadTimerMode();
 loadTimerState();
 initCardClicks();
