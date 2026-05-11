@@ -3321,32 +3321,32 @@
      en 2 colonnes, les separations entre les pages disparaissent, le
      padding et la taille des cases sont reduits. */
   @media (min-width: 720px) {
-    body.in-game .quest-sheet { padding: 22px 24px; }
+    body.in-game .quest-sheet { padding: 24px 26px; }
     body.in-game .quest-page-header { display: none !important; }
     body.in-game .quest-rows {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px 14px;
+      gap: 8px 16px;
     }
     body.in-game .quest-row {
-      padding: 8px 14px;
-      gap: 10px;
+      padding: 11px 18px;
+      gap: 13px;
     }
     body.in-game .quest-row-num {
-      font-size: 9.5px;
-      padding: 5px 3px;
+      font-size: 11px;
+      padding: 7px 5px;
     }
-    body.in-game .quest-row-room { font-size: 13.5px; }
-    body.in-game .quest-checkboxes { gap: 6px; }
-    body.in-game .quest-checkbox { width: 28px; height: 28px; }
-    body.in-game .quest-floor-block + .quest-floor-block { margin-top: 6px; }
-    body.in-game .quest-timer-bar { padding: 8px 18px; margin-bottom: 10px; }
-    body.in-game .quest-timer-display { font-size: 22px; }
-    body.in-game .quest-progress { padding: 10px 18px 12px; margin-bottom: 12px; }
-    body.in-game .quest-progress-bar { height: 8px; }
-    body.in-game .tracker-row { gap: 10px; margin-top: 12px; }
-    body.in-game .tracker-card { padding: 10px 12px; }
-    body.in-game .tracker-title { font-size: 10px; margin-bottom: 8px; }
+    body.in-game .quest-row-room { font-size: 15.5px; }
+    body.in-game .quest-checkboxes { gap: 8px; }
+    body.in-game .quest-checkbox { width: 32px; height: 32px; }
+    body.in-game .quest-floor-block + .quest-floor-block { margin-top: 8px; }
+    body.in-game .quest-timer-bar { padding: 11px 20px; margin-bottom: 12px; }
+    body.in-game .quest-timer-display { font-size: 24px; }
+    body.in-game .quest-progress { padding: 12px 20px 14px; margin-bottom: 14px; }
+    body.in-game .quest-progress-bar { height: 9px; }
+    body.in-game .tracker-row { gap: 12px; margin-top: 14px; }
+    body.in-game .tracker-card { padding: 12px 14px; }
+    body.in-game .tracker-title { font-size: 11px; margin-bottom: 10px; }
   }
 
   @media (max-width: 480px) {
