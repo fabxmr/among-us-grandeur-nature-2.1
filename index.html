@@ -256,6 +256,7 @@
     <button class="subtab-btn active" data-target="tab-print"           onclick="showSubTab('tab-print')">Cartes à imprimer</button>
     <button class="subtab-btn"        data-target="tab-defis-print"     onclick="showSubTab('tab-defis-print')">Défis à imprimer</button>
     <button class="subtab-btn"        data-target="tab-pancartes-print" onclick="showSubTab('tab-pancartes-print')">Pancartes à imprimer</button>
+    <button class="subtab-btn"        data-target="tab-suivi-print"     onclick="showSubTab('tab-suivi-print')">Suivi à imprimer</button>
   </div>
 
   <div class="subtab active" id="tab-print">
@@ -277,6 +278,13 @@
       <button onclick="printPancartesTab()">Imprimer les pancartes</button>
     </div>
     <div class="print-pages-container" id="pancartes-print-container"></div>
+  </div>
+
+  <div class="subtab" id="tab-suivi-print">
+    <div class="cards-print-toolbar">
+      <button onclick="printSuiviTab()">Imprimer le suivi</button>
+    </div>
+    <div class="print-pages-container" id="suivi-print-container"></div>
   </div>
 </div>
 

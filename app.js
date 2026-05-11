@@ -680,6 +680,7 @@ function applyGameMode() {
   if (typeof buildLivret === 'function')          buildLivret();
   if (typeof buildPrintPages === 'function')      buildPrintPages();
   if (typeof buildDefisPrintPages === 'function') buildDefisPrintPages();
+  if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
 
   // Cache les onglets Sheriff / Ingenieur si pas dans la config
   const sheriffBtn  = document.querySelector('.tab-btn.sheriff');
@@ -784,6 +785,39 @@ function printDefisTab() {
 // Construit le HTML d'un dos de carte en remplaçant l'orange par une autre couleur
 function backCardHTMLColored(color) {
   return BACK_CARD_HTML.replaceAll('#ff6b00', color);
+}
+
+// Construit la version imprimable du suivi de partie en clonant la fiche quests
+// (deja adaptee au mode courant). Appelee depuis applyGameMode().
+function buildSuiviPrintPages() {
+  const container = document.getElementById('suivi-print-container');
+  const src = document.getElementById('quest-sheet-content');
+  if (!container || !src) return;
+  container.innerHTML = `<div class="quest-sheet">${src.innerHTML}</div>`;
+}
+
+// Imprime l'onglet "Suivi à imprimer"
+function printSuiviTab() {
+  const tab = document.getElementById('tab-suivi-print');
+  const wrapper = document.getElementById('tab-impressions');
+  if (!tab) return;
+  let styleEl = document.getElementById('__suivi-print-style');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = '__suivi-print-style';
+    styleEl.media = 'print';
+    styleEl.textContent = `@page { size: A4 portrait; margin: 0 !important; }`;
+    document.head.appendChild(styleEl);
+  }
+  if (wrapper) wrapper.classList.add('print-active');
+  tab.classList.add('print-active');
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      tab.classList.remove('print-active');
+      if (wrapper) wrapper.classList.remove('print-active');
+    }, 400);
+  }, 100);
 }
 
 // Imprime l'onglet "Pancartes à imprimer"

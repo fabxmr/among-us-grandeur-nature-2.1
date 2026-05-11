@@ -1849,6 +1849,14 @@
       transform: translate(-2mm, -2mm) !important;
     }
     #tab-print.print-active .print-page.verso .card-back::before { display: none !important; }
+
+    /* Suivi a imprimer : clone de la fiche quests, deja adaptee au mode */
+    #tab-suivi-print.print-active { padding: 0 !important; }
+    #tab-suivi-print.print-active > .section-title,
+    #tab-suivi-print.print-active .cards-print-toolbar { display: none !important; }
+    #tab-suivi-print.print-active .print-pages-container {
+      display: block !important; gap: 0 !important; padding: 0 !important;
+    }
   }
 
   /* ═══════════ TIMER ═══════════ */
