@@ -78,7 +78,7 @@
     </button>
 
     <a class="accueil-rules-link" href="#" onclick="showTab('rules'); return false;">
-      Règles &amp; Règles spéciales
+      Règles
     </a>
   </div>
 </div>
@@ -552,6 +552,9 @@
     </div>
   </div>
 </div>
+
+<!-- Bouton "Quitter" affiche uniquement en mode de partie (body.in-game) -->
+<button type="button" class="ingame-exit" onclick="exitGame()" aria-label="Quitter la partie">✕ Quitter</button>
 
 <!-- Overlay plein écran pour cartes -->
 <div id="fullscreen-overlay" class="fullscreen-overlay" style="display:none">

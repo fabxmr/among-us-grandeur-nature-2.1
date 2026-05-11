@@ -2230,6 +2230,50 @@
     .mode-indicator { display: none !important; }
   }
 
+  /* Sur l'accueil : le badge "Mode XX joueurs" n'a pas de sens (on n'a pas
+     encore choisi a quoi on joue) — on le masque. */
+  body.on-accueil .mode-indicator { display: none !important; }
+
+  /* ═══════════ MODE PARTIE (body.in-game) ═══════════
+     Active depuis le bouton "Jouer" : la sidebar et le badge mode sont
+     masques pour offrir une interface dediee a la partie. Un bouton
+     "Quitter" fixe en haut a gauche permet de revenir a l'accueil. */
+  body.in-game .tabs { display: none !important; }
+  body.in-game .mode-indicator { display: none !important; }
+  @media (min-width: 1024px) {
+    body.in-game { padding-left: 0 !important; }
+  }
+  .ingame-exit {
+    position: fixed;
+    top: 18px; left: 18px;
+    z-index: 91;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(20, 24, 44, 0.75);
+    color: var(--neon-red);
+    border: 1px solid rgba(255, 56, 96, .55);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
+    transition: transform .15s, box-shadow .2s, background .15s;
+  }
+  body.in-game .ingame-exit { display: inline-block; }
+  .ingame-exit:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 56, 96, 0.15);
+    box-shadow: 0 4px 16px rgba(255, 56, 96, .22);
+  }
+  .ingame-exit:active { transform: scale(0.96); }
+  @media print {
+    .ingame-exit { display: none !important; }
+  }
+
   /* ═══════════ PAGE D'ACCUEIL ═══════════ */
   #tab-accueil {
     text-align: center;

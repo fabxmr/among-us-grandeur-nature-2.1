@@ -1397,10 +1397,18 @@ function toggleQuestTimer() {
   else            startTimer();
 }
 
-// Lance la partie : navigue vers la fiche quests et demarre le timer si pas en cours.
+// Lance la partie : passe en mode "en jeu" (sidebar + badge mode caches),
+// navigue vers la fiche quests et demarre le timer si pas en cours.
 function playGame() {
+  document.body.classList.add('in-game');
   showTab('quests');
   if (!timerEndAt) startTimer();
+}
+
+// Sort du mode partie : reaffiche la sidebar, retourne a l'accueil.
+function exitGame() {
+  document.body.classList.remove('in-game');
+  showTab('accueil');
 }
 function playAlarm() {
   // Suite de bips simples via Web Audio API (pas de fichier audio nécessaire)
