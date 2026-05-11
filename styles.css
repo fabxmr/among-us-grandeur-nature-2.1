@@ -165,7 +165,7 @@
   .tab-btn.defis    { color: var(--neon-orange); border-color: rgba(255, 155, 59, .35); }
   .tab-btn.rules    { color: var(--neon-blue);   border-color: rgba(107, 166, 255, .35); }
   .tab-btn.livret   { color: var(--neon-pink);   border-color: rgba(255, 90, 170, .35); }
-  .tab-btn.all      { color: #fff;               border-color: rgba(255, 255, 255, .25); }
+  .tab-btn.all      { color: var(--neon-purple); border-color: rgba(184, 107, 255, .35); }
   .tab-btn.home     { color: #fff;               border-color: rgba(255, 255, 255, .35); }
 
   .tab-btn:hover {
@@ -354,6 +354,88 @@
   .card.impostor::before { color: var(--neon-red); }
   .card.sheriff::before  { color: var(--neon-yellow); }
   .card.engineer::before { color: var(--neon-cyan); }
+
+  /* ── FLIP 3D : la carte devient un container 3D, le contenu visuel est
+     porte par .card-front, le dos par .card-explain (apparait au flip). ── */
+  .card {
+    background: transparent;
+    border: none;
+    padding: 0;
+    overflow: visible;
+    perspective: 1100px;
+  }
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(.2, .8, .25, 1);
+    border-radius: var(--radius-lg);
+  }
+  .card.flipped .card-inner {
+    transform: rotateY(180deg);
+  }
+  .card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 14px 14px;
+    box-sizing: border-box;
+  }
+  .card-front {
+    justify-content: space-between;
+    background: linear-gradient(160deg, rgba(40, 46, 78, 0.85), rgba(22, 26, 50, 0.92));
+    border: 1px solid var(--line-2);
+  }
+  .card.crewmate .card-front { border-color: rgba(76, 255, 157, .35); }
+  .card.impostor .card-front { border-color: rgba(255, 56, 96, .35); }
+  .card.sheriff  .card-front { border-color: rgba(255, 224, 85, .35); }
+  .card.engineer .card-front { border-color: rgba(41, 231, 255, .35); }
+  .card.crewmate:hover .card-front { border-color: var(--neon-green); }
+  .card.impostor:hover .card-front { border-color: var(--neon-red); }
+  .card.sheriff:hover  .card-front { border-color: var(--neon-yellow); }
+  .card.engineer:hover .card-front { border-color: var(--neon-cyan); }
+
+  /* Dos de la carte : explication du role */
+  .card-explain {
+    transform: rotateY(180deg);
+    justify-content: center;
+    padding: 30px 22px 26px;
+    text-align: center;
+    background: linear-gradient(160deg, rgba(18, 22, 46, 0.96), rgba(10, 14, 30, 0.99));
+    border: 1px solid var(--line-2);
+  }
+  .card.crewmate .card-explain { border-color: rgba(76, 255, 157, .45); box-shadow: inset 0 0 36px rgba(76, 255, 157, .12); }
+  .card.impostor .card-explain { border-color: rgba(255, 56, 96, .45); box-shadow: inset 0 0 36px rgba(255, 56, 96, .14); }
+  .card.sheriff  .card-explain { border-color: rgba(255, 224, 85, .45); box-shadow: inset 0 0 36px rgba(255, 224, 85, .12); }
+  .card.engineer .card-explain { border-color: rgba(41, 231, 255, .45); box-shadow: inset 0 0 36px rgba(41, 231, 255, .12); }
+  .card-explain-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .card.crewmate .card-explain-title { color: var(--neon-green); }
+  .card.impostor .card-explain-title { color: var(--neon-red); }
+  .card.sheriff  .card-explain-title { color: var(--neon-yellow); }
+  .card.engineer .card-explain-title { color: var(--neon-cyan); }
+  .card-explain-text {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+  .card-explain-text strong {
+    color: var(--text);
+    font-weight: 700;
+  }
 
   /* ── CARD INNER ── */
   .card-title {

@@ -315,6 +315,22 @@ function rgbToHex(r, g, b) {
 // ═══════════════════════════════════════════════════
 // BUILD CARDS
 // ═══════════════════════════════════════════════════
+// Explication courte affichee au dos de la carte (apparait au flip).
+function getRoleExplanation(type) {
+  switch (type) {
+    case 'crewmate':
+      return `Termine toutes les <strong>missions</strong> dans le temps imparti, ou démasque tous les Impostors.`;
+    case 'impostor':
+      return `<strong>Élimine</strong> tous les joueurs sans te faire repérer — touche leur épaule. Tu gagnes aussi si le temps expire.`;
+    case 'sheriff':
+      return `Tu as <strong>1 balle</strong>. Tirer sur un Crewmate = tu meurs à sa place. Tirer sur un Impostor = tu vis mais désarmé.`;
+    case 'engineer':
+      return `Tu peux entrer et <strong>réparer</strong> une pièce sabotée (10 s). Tu peux valider <strong>1 mission posthume</strong>.`;
+    default:
+      return '';
+  }
+}
+
 function buildCard(type, colorObj, missions, extra = '') {
   const typeLabel = { crewmate: 'CREWMATE', impostor: 'IMPOSTOR', sheriff: 'SHERIFF', engineer: 'INGENIEUR' }[type];
   const isImp  = type === 'impostor';
@@ -325,15 +341,23 @@ function buildCard(type, colorObj, missions, extra = '') {
   const numsHTML = missions.map(m => `<span class="mission-num">${m}</span>`).join('');
 
   return `<div class="card ${type}">
-    <div class="color-dot" style="background:${colorObj.hex}"></div>
-    <div class="card-title">${typeLabel}</div>
-    <div class="char-area">${svg}</div>
-    <div class="missions">
-      <div class="missions-label">${colorObj.name.toUpperCase()} · MISSIONS</div>
-      <div class="missions-nums">${numsHTML}</div>
-      ${extra ? `<div class="mission-extra">${extra}</div>` : ''}
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="color-dot" style="background:${colorObj.hex}"></div>
+        <div class="card-title">${typeLabel}</div>
+        <div class="char-area">${svg}</div>
+        <div class="missions">
+          <div class="missions-label">${colorObj.name.toUpperCase()} · MISSIONS</div>
+          <div class="missions-nums">${numsHTML}</div>
+          ${extra ? `<div class="mission-extra">${extra}</div>` : ''}
+        </div>
+        <div class="card-back-hint"></div>
+      </div>
+      <div class="card-face card-explain">
+        <div class="card-explain-title">${typeLabel}</div>
+        <div class="card-explain-text">${getRoleExplanation(type)}</div>
+      </div>
     </div>
-    <div class="card-back-hint"></div>
   </div>`;
 }
 
@@ -1460,15 +1484,16 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeFullscreen();
 });
-// Click sur n'importe quelle carte → afficher en grand (sauf en mode impression / dans la révélation)
+// Click sur n'importe quelle carte interactive -> flip 3D pour reveler l'explication
+// du role au dos. Les cartes en mode impression / dans l'overlay sont ignorees.
 function initCardClicks() {
   document.body.addEventListener('click', e => {
     const card = e.target.closest('.card');
     if (!card) return;
-    if (card.closest('.print-page')) return;     // pas en mode impression
-    if (card.closest('.fullscreen-content')) return; // pas dans l'overlay
+    if (card.closest('.print-page')) return;
+    if (card.closest('.fullscreen-content')) return;
     if (card.classList.contains('card-back')) return;
-    showFullscreen(`<div class="fullscreen-card-wrap">${card.outerHTML}</div>`);
+    card.classList.toggle('flipped');
   });
 }
 
