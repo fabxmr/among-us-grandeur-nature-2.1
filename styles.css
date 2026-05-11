@@ -2325,10 +2325,16 @@
   @media (min-width: 1024px) {
     body.in-game { padding-left: 0 !important; }
   }
-  .ingame-exit {
+  /* Controles fixes en mode partie : Quitter (gauche) + Reset (juste apres). */
+  .ingame-controls {
     position: fixed;
     top: 18px; left: 18px;
     z-index: 91;
+    display: none;
+    gap: 10px;
+  }
+  body.in-game .ingame-controls { display: flex; }
+  .ingame-exit, .ingame-reset {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10pt;
     font-weight: 600;
@@ -2337,23 +2343,26 @@
     padding: 8px 16px;
     border-radius: 999px;
     background: rgba(20, 24, 44, 0.75);
-    color: var(--neon-red);
-    border: 1px solid rgba(255, 56, 96, .55);
     cursor: pointer;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    display: none;
     transition: transform .15s, box-shadow .2s, background .15s;
   }
-  body.in-game .ingame-exit { display: inline-block; }
+  .ingame-exit { color: var(--neon-red); border: 1px solid rgba(255, 56, 96, .55); }
   .ingame-exit:hover {
     transform: translateY(-1px);
     background: rgba(255, 56, 96, 0.15);
     box-shadow: 0 4px 16px rgba(255, 56, 96, .22);
   }
-  .ingame-exit:active { transform: scale(0.96); }
+  .ingame-reset { color: var(--neon-orange); border: 1px solid rgba(255, 155, 59, .55); }
+  .ingame-reset:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 155, 59, 0.15);
+    box-shadow: 0 4px 16px rgba(255, 155, 59, .22);
+  }
+  .ingame-exit:active, .ingame-reset:active { transform: scale(0.96); }
   @media print {
-    .ingame-exit { display: none !important; }
+    .ingame-controls { display: none !important; }
   }
 
   /* ═══════════ PAGE D'ACCUEIL ═══════════ */

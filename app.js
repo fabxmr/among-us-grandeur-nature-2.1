@@ -1410,6 +1410,7 @@ function toggleQuestTimer() {
 // navigue vers la fiche quests et demarre le timer si pas en cours.
 function playGame() {
   document.body.classList.add('in-game');
+  setQuestsTitle('Partie en cours');
   showTab('quests');
   if (!timerEndAt) startTimer();
 }
@@ -1417,7 +1418,22 @@ function playGame() {
 // Sort du mode partie : reaffiche la sidebar, retourne a l'accueil.
 function exitGame() {
   document.body.classList.remove('in-game');
+  setQuestsTitle('Fiche Quests');
   showTab('accueil');
+}
+
+// Met a jour le titre de la section quests selon le mode (in-game ou non).
+function setQuestsTitle(text) {
+  const title = document.querySelector('#tab-quests .section-title');
+  if (title) title.textContent = text;
+}
+
+// Reinitialise toute la partie en cours sans quitter le mode in-game.
+// Memes effets que newGame mais avec confirmation parce que destructif
+// alors que la partie peut etre en cours.
+function resetCurrentGame() {
+  if (!confirm('Réinitialiser toute la partie en cours ?\n(cases cochées, sabotage, BUZZ, balle du SHERIFF, timer)')) return;
+  newGame();
 }
 function playAlarm() {
   // Suite de bips simples via Web Audio API (pas de fichier audio nécessaire)

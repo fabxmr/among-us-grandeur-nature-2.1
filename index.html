@@ -555,8 +555,11 @@
   </div>
 </div>
 
-<!-- Bouton "Quitter" affiche uniquement en mode de partie (body.in-game) -->
-<button type="button" class="ingame-exit" onclick="exitGame()" aria-label="Quitter la partie">✕ Quitter</button>
+<!-- Controles affiches uniquement en mode de partie (body.in-game) -->
+<div class="ingame-controls">
+  <button type="button" class="ingame-exit" onclick="exitGame()" aria-label="Quitter la partie">✕ Quitter</button>
+  <button type="button" class="ingame-reset" onclick="resetCurrentGame()" aria-label="Réinitialiser la partie">↻ Reset</button>
+</div>
 
 <!-- Overlay plein écran pour cartes -->
 <div id="fullscreen-overlay" class="fullscreen-overlay" style="display:none">
