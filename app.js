@@ -570,14 +570,6 @@ function buildQuestSheet() {
     </div>
   `;
 
-  const legendHTML = `
-    <div class="quest-legend">
-      <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
-      <div class="quest-legend-item"><span class="legend-box check">✓</span><span>Case cochée = joueur a terminé</span></div>
-      <div class="quest-legend-item"><span class="legend-box sab"></span><span>Ligne rouge = mission sabotée à refaire</span></div>
-    </div>
-  `;
-
   // Carte sabotage : un seul declenchement par partie, qui decoche 3 missions au hasard.
   const sabotage = getSabotageForMode(mode);
   const sabotageCardHTML = sabotage.used
@@ -587,14 +579,12 @@ function buildQuestSheet() {
         <div class="sabotage-used-missions">
           ${sabotage.missions.map(n => `<span class="sabotage-mission-pill">N°${String(n).padStart(2,'0')}</span>`).join('')}
         </div>
-        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">À refaire 1× chacune</div>
       </div>
     `
     : `
       <div class="tracker-card sabotage-card">
         <div class="tracker-title">SABOTAGE (1 max)</div>
-        <button type="button" class="sabotage-btn" onclick="triggerSabotage()">⚡ Déclencher</button>
-        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Sabote 3 missions au hasard</div>
+        <button type="button" class="sabotage-btn" onclick="triggerSabotage()">Déclencher</button>
       </div>
     `;
 
@@ -625,7 +615,6 @@ function buildQuestSheet() {
         <div class="quest-page-header-meta">Cocher les missions au fur et à mesure</div>
       </div>
       <div class="quest-rows">${rows.map(rowHTML).join('')}</div>
-      ${legendHTML}
       ${withTrackers ? trackersHTML : ''}
     </div>
   `;
