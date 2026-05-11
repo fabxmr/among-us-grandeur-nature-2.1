@@ -613,6 +613,11 @@ function buildQuestSheet() {
         Cocher au fur et à mesure les missions terminées par les joueurs.
       </div>
     </div>
+    <div class="quest-timer-bar">
+      <span class="quest-timer-label">⏱ Temps restant</span>
+      <span class="quest-timer-display">40:00</span>
+      <button type="button" class="quest-timer-btn" onclick="toggleQuestTimer()" title="Lancer / mettre en pause le timer">▶</button>
+    </div>
     <div class="quest-progress">
       <div class="quest-progress-label">
         <span class="quest-progress-title">Progression des missions</span>
@@ -635,6 +640,14 @@ function buildQuestSheet() {
   // Les .tracker-circle (BUZZ, SHERIFF) sont dans le HTML regenere : on reattache
   // les listeners et on restaure l'etat coche depuis localStorage.
   if (typeof initTrackers === 'function') initTrackers();
+  // Sync immediate du mini-timer apres rebuild (sinon il affiche 40:00 jusqu'au
+  // prochain tick de l'interval).
+  if (typeof renderTimer === 'function') {
+    const remaining = timerEndAt ? Math.max(0, timerEndAt - Date.now())
+                     : timerPausedRemaining != null ? timerPausedRemaining
+                     : TIMER_DURATION_MS;
+    renderTimer(remaining);
+  }
 }
 
 // Met à jour la barre (texte + remplissage) selon les cases joueur cochees.
@@ -657,7 +670,8 @@ function updateQuestProgress() {
   const progress = content.querySelector('.quest-progress');
   const victory  = content.querySelector('.quest-victory');
   if (progress) progress.style.display = isVictory ? 'none' : '';
-  if (victory)  victory.style.display  = isVictory ? 'block' : 'none';
+  // 'flex' pour centrer le contenu de l'overlay plein ecran
+  if (victory)  victory.style.display  = isVictory ? 'flex' : 'none';
 }
 
 // Nouvelle partie : reinitialise progression, sabotage et trackers (BUZZ/SHERIFF)
@@ -1319,23 +1333,51 @@ function startTimerInterval() {
   renderTimer(timerEndAt - Date.now());
 }
 function renderTimer(remainingMs) {
-  const display = document.getElementById('timer-display');
-  if (!display) return;
   const totalSec = Math.max(0, Math.ceil(remainingMs / 1000));
   const min = Math.floor(totalSec / 60);
   const sec = totalSec % 60;
-  display.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-  display.className = 'timer-display';
-  if (remainingMs <= 0) display.classList.add('finished');
-  else if (remainingMs <= 60000) display.classList.add('critical');
-  else if (remainingMs <= 5 * 60000) display.classList.add('warning');
-  else if (timerEndAt) display.classList.add('running');
+  const text = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  const stateCls = remainingMs <= 0          ? 'finished'
+                 : remainingMs <= 60000      ? 'critical'
+                 : remainingMs <= 5 * 60000  ? 'warning'
+                 : timerEndAt                ? 'running' : '';
+
+  const display = document.getElementById('timer-display');
+  if (display) {
+    display.textContent = text;
+    display.className = 'timer-display';
+    if (stateCls) display.classList.add(stateCls);
+  }
+
+  // Mini-timer dans la fiche quests (peut etre present plusieurs fois si clone du suivi imprimable)
+  document.querySelectorAll('.quest-timer-display').forEach(el => {
+    el.textContent = text;
+    el.classList.remove('finished', 'critical', 'warning', 'running');
+    if (stateCls) el.classList.add(stateCls);
+  });
+  // Bouton play/pause du mini-timer
+  document.querySelectorAll('.quest-timer-btn').forEach(btn => {
+    btn.textContent = timerEndAt ? '⏸' : '▶';
+  });
+
   const startBtn = document.getElementById('timer-start');
   const pauseBtn = document.getElementById('timer-pause');
   if (startBtn && pauseBtn) {
     if (timerEndAt) { startBtn.style.display = 'none'; pauseBtn.style.display = ''; }
     else            { startBtn.style.display = '';     pauseBtn.style.display = 'none'; }
   }
+}
+
+// Toggle start/pause depuis le mini-timer de la fiche quests.
+function toggleQuestTimer() {
+  if (timerEndAt) pauseTimer();
+  else            startTimer();
+}
+
+// Lance la partie : navigue vers la fiche quests et demarre le timer si pas en cours.
+function playGame() {
+  showTab('quests');
+  if (!timerEndAt) startTimer();
 }
 function playAlarm() {
   // Suite de bips simples via Web Audio API (pas de fichier audio nécessaire)

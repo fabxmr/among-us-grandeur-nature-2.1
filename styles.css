@@ -836,8 +836,9 @@
     }
     /* Masquer l'en-tête écran (le seul) */
     .quest-sheet-header { display: none !important; }
-    /* Barre de progression et banniere de victoire : ecran uniquement */
+    /* Barre de progression, mini-timer et banniere de victoire : ecran uniquement */
     .quest-progress,
+    .quest-timer-bar,
     .quest-victory { display: none !important; }
     /* Saut de page entre les deux blocs */
     .quest-floor-block + .quest-floor-block {
@@ -944,40 +945,100 @@
   .quest-progress-title { font-weight: 600; }
   .quest-progress-text  { color: var(--neon-green); font-weight: 700; font-size: 12px; }
 
-  /* Banniere de victoire : remplace la barre de progression quand tout est coche */
-  .quest-victory {
+  /* Mini-timer dans la fiche quests : compact, en haut, sync via renderTimer */
+  .quest-timer-bar {
     max-width: 1000px;
-    margin: 0 auto 22px;
-    padding: 32px 28px;
-    text-align: center;
-    background: linear-gradient(135deg, rgba(76, 255, 157, 0.18), rgba(41, 231, 255, 0.12));
-    border: 2px solid var(--neon-green);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 0 60px rgba(76, 255, 157, 0.30);
-    animation: victory-pulse 2.4s ease-in-out infinite;
+    margin: 0 auto 16px;
+    padding: 12px 22px;
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(20, 24, 44, 0.55);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-md);
   }
-  @keyframes victory-pulse {
-    0%, 100% { box-shadow: 0 0 60px rgba(76, 255, 157, 0.30); }
-    50%      { box-shadow: 0 0 110px rgba(76, 255, 157, 0.55); }
+  .quest-timer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    flex: 1;
+  }
+  .quest-timer-display {
+    font-family: 'Space Grotesk', 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: #5cf2d6;
+    text-shadow: 0 0 14px rgba(92, 242, 214, .35);
+    transition: color .3s, text-shadow .3s;
+  }
+  .quest-timer-display.running  { color: #fff; text-shadow: 0 0 18px rgba(255,255,255,.4); }
+  .quest-timer-display.warning  { color: var(--neon-orange); text-shadow: 0 0 18px rgba(255, 155, 59, .55); }
+  .quest-timer-display.critical { color: var(--neon-red);    text-shadow: 0 0 18px rgba(255, 56, 96, .65); animation: quest-timer-pulse 0.8s ease-in-out infinite; }
+  @keyframes quest-timer-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .quest-timer-display.finished { color: var(--neon-red);    text-shadow: 0 0 22px rgba(255, 56, 96, .8); }
+  .quest-timer-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(76, 255, 157, .5);
+    color: var(--neon-green);
+    background: rgba(76, 255, 157, 0.10);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s, transform .1s;
+  }
+  .quest-timer-btn:hover {
+    background: rgba(76, 255, 157, 0.22);
+    border-color: var(--neon-green);
+  }
+  .quest-timer-btn:active { transform: scale(0.92); }
+
+  /* Banniere de victoire : overlay plein ecran */
+  .quest-victory {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+    background: radial-gradient(ellipse at center, rgba(8, 24, 14, 0.92), rgba(2, 4, 8, 0.98));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    animation: victory-fadein 0.5s ease-out;
+  }
+  @keyframes victory-fadein {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
   }
   .quest-victory-title {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
-    font-size: clamp(28px, 5vw, 44px);
-    letter-spacing: 4px;
+    font-size: clamp(48px, 12vw, 120px);
+    line-height: 1;
+    letter-spacing: 8px;
     background: linear-gradient(135deg, #fff, #4cff9d 50%, #29e7ff);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
-    margin-bottom: 8px;
-    filter: drop-shadow(0 0 18px rgba(76, 255, 157, 0.45));
+    margin-bottom: 18px;
+    filter: drop-shadow(0 0 28px rgba(76, 255, 157, 0.55));
+    animation: victory-glow 2.4s ease-in-out infinite;
+  }
+  @keyframes victory-glow {
+    0%, 100% { filter: drop-shadow(0 0 28px rgba(76, 255, 157, 0.55)); }
+    50%      { filter: drop-shadow(0 0 56px rgba(76, 255, 157, 0.85)); }
   }
   .quest-victory-sub {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
+    font-size: clamp(11px, 1.4vw, 14px);
+    letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 22px;
+    color: rgba(170, 220, 200, 0.85);
+    margin-bottom: 40px;
   }
   .quest-newgame-btn {
     font-family: 'Space Grotesk', sans-serif;
@@ -2240,6 +2301,31 @@
     color: transparent;
   }
   .accueil-mode.pink .amode-meta { color: var(--neon-pink); }
+
+  /* Bouton "Jouer" : action principale de l'accueil. Demarre le timer + navigue vers la fiche quests. */
+  .accueil-play-btn {
+    display: inline-block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    padding: 18px 56px;
+    margin: 28px 0 22px;
+    border-radius: 999px;
+    border: 2px solid var(--neon-green);
+    color: #062614;
+    background: linear-gradient(135deg, #4cff9d, #29e7ff);
+    cursor: pointer;
+    box-shadow: 0 0 36px rgba(76, 255, 157, 0.45);
+    transition: transform .12s, box-shadow .2s, filter .15s;
+  }
+  .accueil-play-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 60px rgba(76, 255, 157, 0.7);
+    filter: brightness(1.08);
+  }
+  .accueil-play-btn:active { transform: scale(0.97); }
 
   .accueil-rules-link {
     display: inline-block;
