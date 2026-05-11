@@ -674,8 +674,9 @@ function updateQuestProgress() {
   if (victory)  victory.style.display  = isVictory ? 'flex' : 'none';
 }
 
-// Nouvelle partie : reinitialise progression, sabotage et trackers (BUZZ/SHERIFF)
-// pour le mode courant. Sans confirmation (declenche depuis l'ecran de victoire).
+// Nouvelle partie : reinitialise progression, sabotage, trackers (BUZZ/SHERIFF)
+// et le timer pour le mode courant. Sans confirmation (declenche depuis l'ecran
+// de victoire).
 function newGame() {
   const mode = getCurrentMode();
   const prefix = `${mode}|`;
@@ -685,6 +686,8 @@ function newGame() {
   setSabotageForMode(mode, { used: false, missions: [] });
   // Trackers (BUZZ + balle SHERIFF) sont globaux : remise a zero complete
   localStorage.removeItem(TRACKERS_KEY);
+  // Remet le timer a la duree initiale du mode (arrete s'il etait en cours)
+  if (typeof resetTimer === 'function') resetTimer();
   buildQuestSheet();
   if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
 }
