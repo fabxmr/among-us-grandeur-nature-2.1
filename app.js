@@ -904,48 +904,32 @@ function buildDefisPrintPages() {
 // ═══════════════════════════════════════════════════
 // DÉFIS & TÂCHES
 // ═══════════════════════════════════════════════════
+// La couleur d'un défi (rouge=étage / bleu=RDC) et la zone d'une tâche
+// dérivent de MISSIONS_DATA — source unique de vérité.
+const MISSION_FLOOR_BY_ID = Object.fromEntries(MISSIONS_DATA.map(m => [m.id, m.floor]));
+const FLOOR_COLOR = { etage: 'red', rdc: 'blue' };
+
 const DEFIS = [
-  // ── ROUGES : missions étage (N°01 à 10) ──────────────────────
-  { num:  1, color: "red",  text: "Danse pendant une minute sans t'arrêter, peu importe où tu te trouves." },
-  { num:  2, color: "blue",  text: "Tu n'as plus le droit de descendre jusqu'à la fin du prochain meeting." },
-  { num:  3, color: "red",  text: "Tu dois te déplacer sans faire aucun bruit jusqu'au prochain meeting." },
-  { num:  4, color: "red",  text: "Fais la statue devant le Hublot en prenant une drôle de pose pendant 30 secondes. Si quelqu'un te voit, tu dois rester dans cette position jusqu'à ce qu'une autre personne te parle." },
-  { num:  5, color: "blue",  text: "Tu dois te déplacer en marche arrière jusqu'à la fin du prochain meeting." },
-  { num:  6, color: "blue",  text: "Suis le joueur le plus proche de toi pendant 10 secondes sans lui expliquer pourquoi." },
-  { num:  7, color: "blue",  text: "Mets tes chaussures dans tes mains et applaudis dès que tu entres dans une pièce, jusqu'à ce que tu reviennes dans la Grande Salle." },
-  { num:  8, color: "red",  text: "Fais 5 pompes immédiatement. Si tu ne peux pas, chante une comptine à la place." },
-  { num:  9, color: "red",  text: "Pendant 2 minutes tu dois parler uniquement en chuchotant." },
-  { num: 10, color: "red",  text: "Baisse les bras, marche les jambes écartées et dis « suspect » à chaque personne que tu croises, jusqu'au prochain meeting." },
+  { num:  1, text: "Danse pendant une minute sans t'arrêter, peu importe où tu te trouves." },
+  { num:  2, text: "Tu n'as plus le droit de descendre jusqu'à la fin du prochain meeting." },
+  { num:  3, text: "Tu dois te déplacer sans faire aucun bruit jusqu'au prochain meeting." },
+  { num:  4, text: "Fais la statue devant le Hublot en prenant une drôle de pose pendant 30 secondes. Si quelqu'un te voit, tu dois rester dans cette position jusqu'à ce qu'une autre personne te parle." },
+  { num:  5, text: "Tu dois te déplacer en marche arrière jusqu'à la fin du prochain meeting." },
+  { num:  6, text: "Suis le joueur le plus proche de toi pendant 10 secondes sans lui expliquer pourquoi." },
+  { num:  7, text: "Mets tes chaussures dans tes mains et applaudis dès que tu entres dans une pièce, jusqu'à ce que tu reviennes dans la Grande Salle." },
+  { num:  8, text: "Fais 5 pompes immédiatement. Si tu ne peux pas, chante une comptine à la place." },
+  { num:  9, text: "Pendant 2 minutes tu dois parler uniquement en chuchotant." },
+  { num: 10, text: "Baisse les bras, marche les jambes écartées et dis « suspect » à chaque personne que tu croises, jusqu'au prochain meeting." },
+  { num: 11, text: "Tu n'as plus le droit d'aller à l'étage jusqu'à la fin du prochain meeting." },
+  { num: 12, text: "Répète tout ce que dit le joueur le plus proche de toi jusqu'au prochain meeting." },
+  { num: 13, text: "Raconte une blague à un autre joueur. S'il rit, il lui est interdit de parler jusqu'au prochain meeting." },
+  { num: 14, text: "Monte et descends les escaliers 2 fois de suite avant de pouvoir aller où tu veux." },
+  { num: 15, text: "Tu dois faire semblant de parler dans un talkie-walkie à chaque fois que tu t'adresses à quelqu'un, jusqu'au prochain meeting. N'oublie pas de dire « Terminé » à la fin de chaque phrase." },
+  { num: 16, text: "Interdiction de prononcer le prénom d'un autre joueur. Tu dois inventer un surnom pour chacun jusqu'à la fin de la partie." },
+].map(d => ({ ...d, color: FLOOR_COLOR[MISSION_FLOOR_BY_ID[d.num]] }));
 
-  // ── BLEUS : missions RDC (N°11 à 17) ─────────────────────────
-  { num: 11, color: "red", text: "Tu n'as plus le droit d'aller à l'étage jusqu'à la fin du prochain meeting." },
-  { num: 12, color: "blue", text: "Répète tout ce que dit le joueur le plus proche de toi jusqu'au prochain meeting." },
-  { num: 13, color: "blue", text: "Raconte une blague à un autre joueur. S'il rit, il lui est interdit de parler jusqu'au prochain meeting." },
-  { num: 14, color: "red", text: "Monte et descends les escaliers 2 fois de suite avant de pouvoir aller où tu veux." },
-  { num: 15, color: "blue", text: "Tu dois faire semblant de parler dans un talkie-walkie à chaque fois que tu t'adresses à quelqu'un, jusqu'au prochain meeting. N'oublie pas de dire « Terminé » à la fin de chaque phrase." },
-  { num: 16, color: "red", text: "Interdiction de prononcer le prénom d'un autre joueur. Tu dois inventer un surnom pour chacun jusqu'à la fin de la partie." },
-];
-
-const TACHES_ETAGE = [
-  { num:  1, lieu: "Salle de danse" },
-  { num:  3, lieu: "Salle des trois marches" },
-  { num:  4, lieu: "Salle Hublot" },
-  { num:  8, lieu: "Salle des trois marches" },
-  { num:  9, lieu: "Couloir Haut" },
-  { num: 10, lieu: "Salle de danse" },
-  { num: 11, lieu: "Couloir Bas" },
-  { num: 14, lieu: "Info Jeunes" },
-  { num: 16, lieu: "Grande Salle" },
-];
-const TACHES_RDC = [
-  { num:  2, lieu: "Couloir Haut" },
-  { num:  5, lieu: "Couloir Haut" },
-  { num:  6, lieu: "Salle de danse" },
-  { num:  7, lieu: "Salle Hublot" },
-  { num: 12, lieu: "Grande Salle" },
-  { num: 13, lieu: "Cuisine" },
-  { num: 15, lieu: "Salle d'attente" },
-];
+const TACHES_ETAGE = MISSIONS_DATA.filter(m => m.floor === 'etage').map(m => ({ num: m.id, lieu: m.room }));
+const TACHES_RDC   = MISSIONS_DATA.filter(m => m.floor === 'rdc').map(m => ({ num: m.id, lieu: m.room }));
 
 function defiIconSVG(color) {
   const stroke = color === "red" ? "#ff2244" : "#4a9eff";
