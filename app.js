@@ -481,7 +481,7 @@ const MISSIONS_DATA = [
 ];
 
 // Etat persiste des cases cochees de la fiche quests, indexe par mode.
-// Une case = `${mode}|${missionId}|${idx}` ou idx 0..2 = joueur, 3 = sabotage.
+// Une case = `${mode}|${missionId}|${idx}` ou idx 0..2 = joueur.
 const QUEST_PROGRESS_KEY = 'among-us:quest-progress:v1';
 function loadQuestProgress() {
   try { return JSON.parse(localStorage.getItem(QUEST_PROGRESS_KEY) || '{}'); }
@@ -492,6 +492,25 @@ function saveQuestProgress(state) {
 }
 function questCheckKey(mode, missionId, idx) {
   return `${mode}|${missionId}|${idx}`;
+}
+
+// Etat du sabotage global : 1 declenchement max par partie, 3 missions tirees
+// aleatoirement et decoche des leurs cases joueurs.
+const SABOTAGE_KEY = 'among-us:sabotage:v1';
+function loadSabotage() {
+  try { return JSON.parse(localStorage.getItem(SABOTAGE_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveSabotage(state) {
+  localStorage.setItem(SABOTAGE_KEY, JSON.stringify(state));
+}
+function getSabotageForMode(mode) {
+  return loadSabotage()[mode] || { used: false, missions: [] };
+}
+function setSabotageForMode(mode, value) {
+  const all = loadSabotage();
+  all[mode] = value;
+  saveSabotage(all);
 }
 
 function buildQuestSheet() {
@@ -516,14 +535,13 @@ function buildQuestSheet() {
   const isChecked = (missionId, idx) => state[questCheckKey(mode, missionId, idx)] ? ' checked' : '';
 
   const rowHTML = (m) => `
-    <div class="quest-row">
+    <div class="quest-row" data-row-mission="${m.id}">
       <div class="quest-row-num ${MISSION_FLOOR_BY_ID[m.id]}">N°${String(m.id).padStart(2,'0')}</div>
       <div class="quest-row-room">${m.room}</div>
       <div class="quest-checkboxes">
         <div class="quest-checkbox${isChecked(m.id, 0)}" data-mission="${m.id}" data-idx="0" title="Joueur 1"></div>
         <div class="quest-checkbox${isChecked(m.id, 1)}" data-mission="${m.id}" data-idx="1" title="Joueur 2"></div>
         <div class="quest-checkbox${isChecked(m.id, 2)}" data-mission="${m.id}" data-idx="2" title="Joueur 3"></div>
-        <div class="quest-checkbox sabotage-box${isChecked(m.id, 3)}" data-mission="${m.id}" data-idx="3" title="Mission sabotée"></div>
       </div>
     </div>
   `;
@@ -532,9 +550,29 @@ function buildQuestSheet() {
     <div class="quest-legend">
       <div class="quest-legend-item"><span class="legend-box"></span><span>Case vide = à faire</span></div>
       <div class="quest-legend-item"><span class="legend-box check">✓</span><span>Case cochée = joueur a terminé</span></div>
-      <div class="quest-legend-item"><span class="legend-box sab"></span><span>Case rouge cochée = sabotée</span></div>
+      <div class="quest-legend-item"><span class="legend-box sab"></span><span>Ligne rouge = mission sabotée à refaire</span></div>
     </div>
   `;
+
+  // Carte sabotage : un seul declenchement par partie, qui decoche 3 missions au hasard.
+  const sabotage = getSabotageForMode(mode);
+  const sabotageCardHTML = sabotage.used
+    ? `
+      <div class="tracker-card sabotage-card used">
+        <div class="tracker-title">SABOTAGE — DÉCLENCHÉ</div>
+        <div class="sabotage-used-missions">
+          ${sabotage.missions.map(n => `<span class="sabotage-mission-pill">N°${String(n).padStart(2,'0')}</span>`).join('')}
+        </div>
+        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">À refaire 1× chacune</div>
+      </div>
+    `
+    : `
+      <div class="tracker-card sabotage-card">
+        <div class="tracker-title">SABOTAGE (1 max)</div>
+        <button type="button" class="sabotage-btn" onclick="triggerSabotage()">⚡ Déclencher</button>
+        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Sabote 3 missions au hasard</div>
+      </div>
+    `;
 
   const trackersHTML = `
     <div class="tracker-row">
@@ -551,6 +589,7 @@ function buildQuestSheet() {
         <div class="tracker-circles"><div class="tracker-circle red"></div></div>
         <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
       </div>
+      ${sabotageCardHTML}
     </div>
   `;
 
@@ -577,7 +616,10 @@ function buildQuestSheet() {
     <div class="quest-progress">
       <div class="quest-progress-label">
         <span class="quest-progress-title">Progression des missions</span>
-        <span class="quest-progress-text">0 / 0</span>
+        <span class="quest-progress-meta">
+          <span class="quest-progress-text">0 / 0</span>
+          <button type="button" class="quest-reset-btn" onclick="resetQuestProgress()">Réinitialiser</button>
+        </span>
       </div>
       <div class="quest-progress-bar">
         <div class="quest-progress-bar-fill" style="width:0%"></div>
@@ -605,6 +647,59 @@ function updateQuestProgress() {
   const text = content.querySelector('.quest-progress-text');
   if (fill) fill.style.width = pct + '%';
   if (text) text.textContent = `${done} / ${total}`;
+}
+
+// Reinitialise la progression et l'etat de sabotage pour le mode courant
+// (les autres modes gardent leur etat).
+function resetQuestProgress() {
+  if (!confirm('Réinitialiser la progression et le sabotage pour ce mode ?')) return;
+  const mode = getCurrentMode();
+  const prefix = `${mode}|`;
+  const state = loadQuestProgress();
+  Object.keys(state).forEach(k => { if (k.startsWith(prefix)) delete state[k]; });
+  saveQuestProgress(state);
+  setSabotageForMode(mode, { used: false, missions: [] });
+  buildQuestSheet();
+  if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
+}
+
+// Declenche le sabotage : tire 3 missions au hasard parmi celles du mode courant,
+// decoche leurs cases joueurs, marque le sabotage comme utilise (1 max par partie).
+function triggerSabotage() {
+  const mode = getCurrentMode();
+  if (getSabotageForMode(mode).used) return;
+  if (!confirm('Déclencher le sabotage ? 3 missions seront tirées au hasard, et une case joueur (au hasard) sera décochée sur chacune. Un seul sabotage par partie.')) return;
+
+  const cfg = getModeConfig(mode);
+  const pool = MISSIONS_DATA.filter(m => m.id <= cfg.missions).map(m => m.id);
+  const picked = [];
+  while (picked.length < 3 && pool.length > 0) {
+    const idx = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(idx, 1)[0]);
+  }
+
+  // Pour chaque mission sabotee : une seule case joueur (idx 0/1/2) decochee au hasard.
+  const state = loadQuestProgress();
+  picked.forEach(missionId => {
+    const playerIdx = Math.floor(Math.random() * 3);
+    delete state[questCheckKey(mode, missionId, playerIdx)];
+  });
+  saveQuestProgress(state);
+  setSabotageForMode(mode, { used: true, missions: picked.sort((a, b) => a - b) });
+
+  buildQuestSheet();
+  if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
+
+  // Flash visuel sur les 3 lignes touchees
+  setTimeout(() => {
+    picked.forEach(id => {
+      document.querySelectorAll(`#quest-sheet-content .quest-row[data-row-mission="${id}"]`)
+        .forEach(row => {
+          row.classList.add('sabotage-flash');
+          setTimeout(() => row.classList.remove('sabotage-flash'), 1800);
+        });
+    });
+  }, 50);
 }
 
 // Listener delegue : un seul handler sur #quest-sheet-content, qui reagit aux clics

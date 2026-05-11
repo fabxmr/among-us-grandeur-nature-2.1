@@ -941,7 +941,26 @@
     margin-bottom: 10px;
   }
   .quest-progress-title { font-weight: 600; }
+  .quest-progress-meta  { display: flex; align-items: center; gap: 14px; }
   .quest-progress-text  { color: var(--neon-green); font-weight: 700; font-size: 12px; }
+  .quest-reset-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 56, 96, .35);
+    color: var(--neon-red);
+    background: rgba(255, 56, 96, 0.08);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s;
+  }
+  .quest-reset-btn:hover {
+    background: rgba(255, 56, 96, 0.18);
+    border-color: rgba(255, 56, 96, .6);
+  }
+  .quest-reset-btn:active { transform: scale(0.95); }
   .quest-progress-bar {
     height: 10px;
     background: rgba(255, 255, 255, 0.05);
@@ -1018,6 +1037,57 @@
   .tracker-circle.red { border-color: rgba(255, 56, 96, .65); background: rgba(255, 200, 210, 0.85); }
   .tracker-line { height: 22px; border-bottom: 1.5px solid var(--line-2); flex: 1; margin-top: 8px; }
   .tracker-lines { display: flex; flex-direction: column; gap: 8px; }
+
+  /* Carte sabotage : 1 declenchement max, decoche 3 missions au hasard */
+  .sabotage-card {
+    border-color: rgba(255, 56, 96, .35);
+    background: linear-gradient(135deg, rgba(255, 56, 96, .10), rgba(20, 24, 44, .5));
+  }
+  .sabotage-card .tracker-title { color: var(--neon-red); }
+  .sabotage-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 56, 96, .55);
+    color: var(--neon-red);
+    background: rgba(255, 56, 96, 0.12);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s, box-shadow .2s;
+  }
+  .sabotage-btn:hover {
+    background: rgba(255, 56, 96, 0.25);
+    border-color: rgba(255, 56, 96, .8);
+    box-shadow: 0 0 18px rgba(255, 56, 96, 0.35);
+  }
+  .sabotage-btn:active { transform: scale(0.95); }
+  .sabotage-card.used { opacity: 0.92; }
+  .sabotage-used-missions {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+  }
+  .sabotage-mission-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--neon-red);
+    background: rgba(255, 56, 96, 0.18);
+    border: 1px solid rgba(255, 56, 96, .4);
+  }
+
+  /* Animation flash au moment du sabotage */
+  @keyframes sabotage-flash {
+    0%, 100% { background: rgba(20, 24, 44, 0.5); border-color: var(--line); }
+    50%      { background: rgba(255, 56, 96, 0.30); border-color: rgba(255, 56, 96, .75); }
+  }
+  .quest-row.sabotage-flash {
+    animation: sabotage-flash 0.45s ease-in-out 4;
+  }
 
   /* ═══════════ DÉFIS & TÂCHES ═══════════ */
   .defis-container { max-width: 1000px; margin: 0 auto; }
