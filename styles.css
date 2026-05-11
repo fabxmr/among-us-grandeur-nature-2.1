@@ -2355,36 +2355,36 @@
   }
   .accueil-mode.pink .amode-meta { color: var(--neon-pink); }
 
-  /* Bouton "Jouer" : meme look "card" que les boutons de mode, aux couleurs
-     du titre AMONG US (degrade blanc -> rose pale -> violet pale). */
+  /* Bouton "Jouer" : forme arrondie pilule, taille initiale, couleurs du
+     titre AMONG US (degrade blanc -> rose pale -> violet pale). */
   .accueil-play-btn {
     background: rgba(20, 24, 44, 0.6);
     border: 2px solid rgba(255, 170, 210, .42);
-    border-radius: 18px;
-    padding: 26px 64px;
+    border-radius: 999px;
+    padding: 18px 56px;
     margin: 28px 0 22px;
     cursor: pointer;
     transition: all .25s cubic-bezier(.2,.7,.3,1);
   }
   .accueil-play-btn:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     border-color: rgba(255, 170, 210, .8);
-    box-shadow: 0 16px 40px rgba(255, 90, 170, .28);
+    box-shadow: 0 12px 32px rgba(255, 90, 170, .28);
     background: linear-gradient(160deg, rgba(32, 18, 32, .9), rgba(20, 24, 44, .95));
   }
-  .accueil-play-btn:active { transform: translateY(-2px) scale(0.98); }
+  .accueil-play-btn:active { transform: scale(0.97); }
   .accueil-play-text {
     display: inline-block;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
-    font-size: clamp(28px, 5vw, 44px);
+    font-size: 22px;
     line-height: 1;
-    letter-spacing: 6px;
+    letter-spacing: 5px;
     text-transform: uppercase;
     background: linear-gradient(135deg, #fff 0%, #ffaad2 50%, #b6a4ff 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 18px rgba(255, 90, 170, .35));
+    filter: drop-shadow(0 0 14px rgba(255, 90, 170, .35));
   }
 
   .accueil-rules-link {
