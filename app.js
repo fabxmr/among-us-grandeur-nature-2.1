@@ -884,8 +884,8 @@ function setGameMode(mode) {
   // Re-render tout le contenu selon le nouveau mode
   applyGameMode();
 
-  // Navigue vers Crewmates (point d'entrée naturel après sélection du mode)
-  showTab('crewmate');
+  // Navigue vers la grille de cartes (point d'entree naturel apres selection du mode)
+  showTab('all');
 }
 
 // Re-render le contenu mode-dependant + ajuste la nav (Sheriff/Ingenieur visibles ?)
@@ -903,21 +903,6 @@ function applyGameMode() {
   if (typeof buildPrintPages === 'function')      buildPrintPages();
   if (typeof buildDefisPrintPages === 'function') buildDefisPrintPages();
   if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
-
-  // Cache les onglets Sheriff / Ingenieur si pas dans la config
-  const sheriffBtn  = document.querySelector('.tab-btn.sheriff');
-  const engineerBtn = document.querySelector('.tab-btn.engineer');
-  if (sheriffBtn)  sheriffBtn.style.display  = cfg.sheriff  ? '' : 'none';
-  if (engineerBtn) engineerBtn.style.display = cfg.engineer ? '' : 'none';
-
-  // Si l'onglet actif n'existe plus pour ce mode, bascule sur Crewmates
-  const active = document.querySelector('.tab-btn.active');
-  if (active) {
-    const cls = active.classList;
-    if ((cls.contains('sheriff') && !cfg.sheriff) || (cls.contains('engineer') && !cfg.engineer)) {
-      showTab('crewmate');
-    }
-  }
 
   // Met a jour l'indicateur de mode (badge flottant top-right)
   const indicator = document.getElementById('mode-indicator');
@@ -1763,7 +1748,9 @@ function buildLivret() {
 }
 
 function printLivret() {
-  // 1) Injecter une feuille de style dédiée à l'impression A5 — supprime tous les @page concurrents
+  // Feuille de style print dediee : on cible directement #livret-book pour
+  // que le livret soit imprimable depuis n'importe ou il vit dans le DOM
+  // (sous-onglet de tab-impressions apres reorganisation).
   let styleEl = document.getElementById('__livret-print-style');
   if (!styleEl) {
     styleEl = document.createElement('style');
@@ -1773,12 +1760,14 @@ function printLivret() {
       @page { size: 210mm 297mm; margin: 0 !important; }
       html, body { width: 210mm !important; margin: 0 !important; padding: 0 !important; background: #0a0e1a !important; }
       body * { visibility: hidden !important; }
-      body.printing-livret #tab-livret,
-      body.printing-livret #tab-livret * { visibility: visible !important; }
-      body.printing-livret #tab-livret {
+      body.printing-livret #livret-book,
+      body.printing-livret #livret-book * { visibility: visible !important; }
+      body.printing-livret #livret-book {
         position: absolute !important;
         left: 0 !important; top: 0 !important;
         width: 210mm !important;
+        display: block !important;
+        gap: 0 !important; margin: 0 !important; padding: 0 !important; max-width: none !important;
       }
       body.printing-livret .livret-page {
         width: 210mm !important;
@@ -1815,32 +1804,49 @@ function printLivret() {
         page-break-after: auto !important;
         break-after: auto !important;
       }
-      body.printing-livret .livret-toolbar,
-      body.printing-livret #tab-livret > .section-title { display: none !important; }
-      body.printing-livret .livret-book { display: block !important; gap: 0 !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
+      body.printing-livret .livret-toolbar { display: none !important; }
     `;
     document.head.appendChild(styleEl);
   }
 
   document.body.classList.add('printing-livret');
-  // On force le tab livret à être visible (sans toucher aux autres états)
-  const livret = document.getElementById('tab-livret');
-  const wasActive = livret?.classList.contains('active');
-  if (livret && !wasActive) livret.classList.add('active', '__livret-temp-active');
 
   setTimeout(() => {
     window.print();
     setTimeout(() => {
       document.body.classList.remove('printing-livret');
-      if (livret?.classList.contains('__livret-temp-active')) {
-        livret.classList.remove('active', '__livret-temp-active');
-      }
     }, 300);
   }, 200);
 }
 
 // applyGameMode() appelle populateGrids/buildQuestSheet/buildDefis/buildLivret/
 // buildPrintPages/buildDefisPrintPages avec filtrage selon le mode courant.
+// Injection des regles speciales (clonees depuis #tab-sabotage) dans #tab-rules.
+// On garde #tab-sabotage dans le DOM (cache de la sidebar) parce que c'est la
+// source des pancartes utilisee par buildPancartesPrintPages.
+function injectRulesSpeciales() {
+  const anchor = document.getElementById('rules-speciales-anchor');
+  const source = document.querySelector('#tab-sabotage .sabotage-container');
+  if (!anchor || !source || anchor.hasChildNodes()) return;
+  anchor.appendChild(source.cloneNode(true));
+}
+
+// Le Livret est integre comme sous-onglet de tab-impressions : on deplace
+// son contenu (livret-toolbar + livret-book) depuis #tab-livret au boot.
+function moveLivretToImpressions() {
+  const target = document.getElementById('tab-livret-print');
+  const livretSection = document.getElementById('tab-livret');
+  if (!target || !livretSection || target.hasChildNodes()) return;
+  const toolbar = livretSection.querySelector('.livret-toolbar');
+  const book    = livretSection.querySelector('#livret-book');
+  if (toolbar) target.appendChild(toolbar);
+  if (book)    target.appendChild(book);
+  // La section #tab-livret residuelle (vide + section-title) est cachee
+  livretSection.style.display = 'none';
+}
+
+injectRulesSpeciales();
+moveLivretToImpressions();
 renderModeButtons();
 applyGameMode();
 buildPancartesPrintPages();

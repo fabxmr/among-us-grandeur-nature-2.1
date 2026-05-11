@@ -47,18 +47,10 @@
 <div class="tabs">
   <div class="sidebar-title">AMONG US</div>
   <button class="tab-btn home active"    onclick="showTab('accueil')">Accueil</button>
-  <button class="tab-btn crewmate"       onclick="showTab('crewmate')">Crewmates</button>
-  <button class="tab-btn impostor"       onclick="showTab('impostor')">Impostors</button>
-  <button class="tab-btn sheriff"        onclick="showTab('sheriff')">Sheriff</button>
-  <button class="tab-btn engineer"       onclick="showTab('engineer')">Ingenieur</button>
+  <button class="tab-btn all"            onclick="showTab('all')">Cartes</button>
   <button class="tab-btn rules"          onclick="showTab('rules')">Règles</button>
-  <button class="tab-btn sabotage"       onclick="showTab('sabotage')">Règles spéciales</button>
-  <button class="tab-btn quests"         onclick="showTab('quests')">Fiche Quests</button>
   <button class="tab-btn defis"          onclick="showTab('defis')">Défis</button>
-  <button class="tab-btn timer"          onclick="showTab('timer')">Timer</button>
   <button class="tab-btn printtab"       onclick="showTab('impressions')">Impressions</button>
-  <button class="tab-btn livret"         onclick="showTab('livret')">Livret</button>
-  <button class="tab-btn all"            onclick="showTab('all')" style="display:none">Toutes</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -87,7 +79,7 @@
      ALL / CREWMATES
 ════════════════════════════════════════════════════ -->
 <div class="section" id="tab-all">
-  <div class="section-title" style="color:#8899bb">Toutes</div>
+  <div class="section-title" style="color:#8899bb">Cartes</div>
   <div class="cards-grid" id="all-grid"></div>
 </div>
 
@@ -261,6 +253,7 @@
     <button class="subtab-btn"        data-target="tab-defis-print"     onclick="showSubTab('tab-defis-print')">Défis à imprimer</button>
     <button class="subtab-btn"        data-target="tab-pancartes-print" onclick="showSubTab('tab-pancartes-print')">Pancartes à imprimer</button>
     <button class="subtab-btn"        data-target="tab-suivi-print"     onclick="showSubTab('tab-suivi-print')">Suivi à imprimer</button>
+    <button class="subtab-btn"        data-target="tab-livret-print"    onclick="showSubTab('tab-livret-print')">Livret</button>
   </div>
 
   <div class="subtab active" id="tab-print">
@@ -290,6 +283,9 @@
     </div>
     <div class="print-pages-container" id="suivi-print-container"></div>
   </div>
+
+  <!-- Livret : contenu deplace depuis #tab-livret par moveLivretToImpressions() au boot -->
+  <div class="subtab" id="tab-livret-print"></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════
@@ -497,6 +493,12 @@
           <li><strong>Fantôme</strong> — interdit de parler/voter. Continue ses défis. Un Impostor fantôme peut saboter.</li>
         </ul>
       </div>
+    </div>
+
+    <!-- POUVOIRS SPÉCIAUX (clone de tab-sabotage injecté par injectRulesSpeciales() au boot) -->
+    <div class="rules-section">
+      <div class="rules-section-header purple">POUVOIRS SPÉCIAUX</div>
+      <div class="rules-section-body" id="rules-speciales-anchor"></div>
     </div>
   </div>
 </div>
