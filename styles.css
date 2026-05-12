@@ -47,6 +47,9 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
+  /* Safety : aucun debordement horizontal possible sur n'importe quel ecran */
+  html, body { overflow-x: hidden; max-width: 100%; }
+  img, svg, video { max-width: 100%; height: auto; }
 
   body {
     background: var(--bg-0);
