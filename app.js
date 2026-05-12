@@ -519,6 +519,73 @@ function questCheckKey(mode, missionId, idx) {
   return `${mode}|${missionId}|${idx}`;
 }
 
+// Roster + etat des joueurs vivants/morts en partie, indexe par mode.
+// Clef = `${mode}|${rosterId}`. rosterId = identifiant stable de chaque
+// personnage (crewmate-i, impostor-i, sheriff, engineer).
+const PLAYERS_STATE_KEY = 'among-us:players:v1';
+function loadPlayersState() {
+  try { return JSON.parse(localStorage.getItem(PLAYERS_STATE_KEY) || '{}'); }
+  catch { return {}; }
+}
+function savePlayersState(state) {
+  localStorage.setItem(PLAYERS_STATE_KEY, JSON.stringify(state));
+}
+function playerKey(mode, id) { return `${mode}|${id}`; }
+
+// Liste ordonnee des personnages du mode courant (couleur + role + id).
+function getCurrentRoster() {
+  const cfg = getModeConfig(getCurrentMode());
+  const r = [];
+  crewmatesData.slice(0, cfg.crew).forEach((c, i) => r.push({ id: `crewmate-${i}`, color: c.color, type: 'crewmate' }));
+  impostorsData.slice(0, cfg.imp).forEach((c, i) => r.push({ id: `impostor-${i}`, color: c.color, type: 'impostor' }));
+  if (cfg.sheriff) r.push({ id: 'sheriff', color: sheriffData.color, type: 'sheriff' });
+  if (cfg.engineer) r.push({ id: 'engineer', color: engineerData.color, type: 'engineer' });
+  return r;
+}
+
+// HTML du bandeau "Joueurs en vie" : compteur + barre + pastilles.
+function renderPlayersBar() {
+  const mode = getCurrentMode();
+  const state = loadPlayersState();
+  const roster = getCurrentRoster();
+  const total = roster.length;
+  const alive = roster.filter(p => !state[playerKey(mode, p.id)]).length;
+  const pct = total ? Math.round((alive / total) * 100) : 0;
+  const pills = roster.map(p => {
+    const dead = !!state[playerKey(mode, p.id)];
+    return `<button type="button"
+        class="player-pill${dead ? ' dead' : ''}"
+        style="--c:${p.color.hex}"
+        onclick="togglePlayer('${p.id}')"
+        title="${p.color.name}${dead ? ' — éliminé' : ''}"
+        aria-label="${p.color.name}${dead ? ' éliminé' : ', cliquer pour éliminer'}"></button>`;
+  }).join('');
+  return `
+    <div class="players-bar">
+      <div class="players-bar-header">
+        <span class="players-bar-title">Joueurs en vie</span>
+        <span class="players-bar-count">${alive} / ${total}</span>
+      </div>
+      <div class="players-bar-progress">
+        <div class="players-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="players-list">${pills}</div>
+    </div>
+  `;
+}
+
+// Toggle vivant <-> elimine pour un joueur et rebuild le bandeau seul.
+function togglePlayer(id) {
+  const mode = getCurrentMode();
+  const state = loadPlayersState();
+  const key = playerKey(mode, id);
+  if (state[key]) delete state[key];
+  else state[key] = true;
+  savePlayersState(state);
+  const bar = document.querySelector('#quest-sheet-content .players-bar');
+  if (bar) bar.outerHTML = renderPlayersBar();
+}
+
 // Etat du sabotage global : 1 declenchement max par partie, 3 missions tirees
 // aleatoirement et decoche des leurs cases joueurs.
 const SABOTAGE_KEY = 'among-us:sabotage:v1';
@@ -645,6 +712,7 @@ function buildQuestSheet() {
       <div class="quest-defeat-sub">Le temps est écoulé</div>
       <button type="button" class="quest-newgame-btn red" onclick="newGame()">Nouvelle Partie</button>
     </div>
+    ${renderPlayersBar()}
     ${pageBlockHTML(page1, page2.length === 0)}
     ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
   `;
@@ -701,6 +769,10 @@ function newGame() {
   setSabotageForMode(mode, { used: false, missions: [] });
   // Trackers (BUZZ + balle SHERIFF) sont globaux : remise a zero complete
   localStorage.removeItem(TRACKERS_KEY);
+  // Joueurs vivants/morts pour ce mode : remise a zero
+  const playersState = loadPlayersState();
+  Object.keys(playersState).forEach(k => { if (k.startsWith(prefix)) delete playersState[k]; });
+  savePlayersState(playersState);
   // Remet le timer a la duree initiale du mode (arrete s'il etait en cours)
   if (typeof resetTimer === 'function') resetTimer();
   localStorage.removeItem(TIMER_EXPIRED_KEY);
