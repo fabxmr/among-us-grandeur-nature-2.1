@@ -715,33 +715,35 @@ function buildQuestSheet() {
   `;
 
   const html = `
-    <div class="quest-timer-bar">
-      <span class="quest-timer-label">⏱ Temps restant</span>
-      <span class="quest-timer-display">40:00</span>
-      <button type="button" class="quest-timer-btn" onclick="toggleQuestTimer()" title="Lancer / mettre en pause le timer">▶</button>
-    </div>
-    <div class="quest-progress">
-      <div class="quest-progress-label">
-        <span class="quest-progress-title">Progression des missions</span>
-        <span class="quest-progress-text">0 / 0</span>
+    <div class="quest-main">
+      <div class="quest-timer-bar">
+        <span class="quest-timer-label">⏱ Temps restant</span>
+        <span class="quest-timer-display">40:00</span>
+        <button type="button" class="quest-timer-btn" onclick="toggleQuestTimer()" title="Lancer / mettre en pause le timer">▶</button>
       </div>
-      <div class="quest-progress-bar">
-        <div class="quest-progress-bar-fill" style="width:0%"></div>
+      <div class="quest-progress">
+        <div class="quest-progress-label">
+          <span class="quest-progress-title">Progression des missions</span>
+          <span class="quest-progress-text">0 / 0</span>
+        </div>
+        <div class="quest-progress-bar">
+          <div class="quest-progress-bar-fill" style="width:0%"></div>
+        </div>
       </div>
-    </div>
-    <div class="quest-victory" style="display:none">
-      <div class="quest-victory-title">CREWMATES WIN</div>
-      <div class="quest-victory-sub">Toutes les missions ont été terminées</div>
-      <button type="button" class="quest-newgame-btn" onclick="newGame()">Nouvelle Partie</button>
-    </div>
-    <div class="quest-defeat" style="display:none">
-      <div class="quest-defeat-title">IMPOSTORS WIN</div>
-      <div class="quest-defeat-sub">Le temps est écoulé</div>
-      <button type="button" class="quest-newgame-btn red" onclick="newGame()">Nouvelle Partie</button>
+      <div class="quest-victory" style="display:none">
+        <div class="quest-victory-title">CREWMATES WIN</div>
+        <div class="quest-victory-sub">Toutes les missions ont été terminées</div>
+        <button type="button" class="quest-newgame-btn" onclick="newGame()">Nouvelle Partie</button>
+      </div>
+      <div class="quest-defeat" style="display:none">
+        <div class="quest-defeat-title">IMPOSTORS WIN</div>
+        <div class="quest-defeat-sub">Le temps est écoulé</div>
+        <button type="button" class="quest-newgame-btn red" onclick="newGame()">Nouvelle Partie</button>
+      </div>
+      ${pageBlockHTML(page1, page2.length === 0)}
+      ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
     </div>
     ${renderPlayersPanel()}
-    ${pageBlockHTML(page1, page2.length === 0)}
-    ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
   `;
   document.getElementById('quest-sheet-content').innerHTML = html;
   updateQuestProgress();

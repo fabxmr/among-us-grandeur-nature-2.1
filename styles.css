@@ -1311,22 +1311,35 @@
     box-shadow: 0 0 8px rgba(255, 56, 96, .5);
   }
 
-  /* Desktop in-game : panneau en position fixe a droite. Le contenu
-     de la fiche quests a un padding-right pour ne pas passer en dessous. */
+  /* Desktop in-game : flex layout — colonne principale (.quest-main) a
+     gauche, panneau joueurs a droite, etire a la meme hauteur. */
   @media (min-width: 900px) {
-    body.in-game .quest-sheet { padding-right: 264px !important; max-width: 1200px; }
+    body.in-game .quest-sheet {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      max-width: 1280px;
+    }
+    body.in-game .quest-main { flex: 1; min-width: 0; }
     body.in-game .players-panel {
-      position: fixed;
-      top: 70px;
-      right: 16px;
-      width: 232px;
-      max-height: calc(100vh - 90px);
-      overflow-y: auto;
+      flex: 0 0 320px;
       margin: 0;
-      z-index: 50;
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
     }
     body.in-game .players-list {
       grid-template-columns: repeat(3, 1fr);
+      gap: 10px 6px;
+      flex: 1;
+      align-content: start;
+    }
+    body.in-game .player-card { padding: 6px 2px 6px; }
+    body.in-game .player-card-svg { width: 64px; height: 74px; }
+    body.in-game .player-card-name { font-size: 10px; letter-spacing: 0.8px; }
+    body.in-game .player-card.dead::before {
+      top: 34px; left: 8px; right: 8px;
+      height: 3px;
     }
   }
   @media print { .players-panel { display: none !important; } }
