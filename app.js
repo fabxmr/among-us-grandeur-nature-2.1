@@ -316,16 +316,17 @@ function rgbToHex(r, g, b) {
 // BUILD CARDS
 // ═══════════════════════════════════════════════════
 // Explication courte affichee au dos de la carte (apparait au flip).
+// Formulee a la 3e personne, sans pronom personnel.
 function getRoleExplanation(type) {
   switch (type) {
     case 'crewmate':
-      return `Termine toutes les <strong>missions</strong> dans le temps imparti, ou démasque tous les Impostors.`;
+      return `Doit terminer toutes les <strong>missions</strong> dans le temps imparti, ou démasquer tous les Impostors.`;
     case 'impostor':
-      return `<strong>Élimine</strong> tous les joueurs sans te faire repérer — touche leur épaule. Tu gagnes aussi si le temps expire.`;
+      return `Doit <strong>éliminer</strong> tous les joueurs sans se faire repérer — toucher leur épaule. Victoire également si le temps expire.`;
     case 'sheriff':
-      return `Tu as <strong>1 balle</strong>. Tirer sur un Crewmate = tu meurs à sa place. Tirer sur un Impostor = tu vis mais désarmé.`;
+      return `1 <strong>balle</strong> disponible. Crewmate touché = Sheriff meurt à sa place. Impostor touché = Sheriff survit, désarmé.`;
     case 'engineer':
-      return `Tu peux entrer et <strong>réparer</strong> une pièce sabotée (10 s). Tu peux valider <strong>1 mission posthume</strong>.`;
+      return `Peut <strong>réparer</strong> une pièce sabotée (10 s). Peut valider <strong>1 mission posthume</strong>.`;
     default:
       return '';
   }
