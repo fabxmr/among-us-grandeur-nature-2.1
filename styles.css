@@ -2696,7 +2696,7 @@
      degrade comme le titre AMONG US. */
   .accueil-play-btn {
     background:
-      linear-gradient(rgba(20, 24, 44, 0.6), rgba(20, 24, 44, 0.6)) padding-box,
+      linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95)) padding-box,
       linear-gradient(135deg, #6ba6ff 0%, #ff9b3b 50%, #b86bff 100%) border-box;
     border: 2px solid transparent;
     border-radius: 999px;
@@ -2705,18 +2705,18 @@
     cursor: pointer;
     transition: all .25s cubic-bezier(.2,.7,.3,1);
     box-shadow:
-      0 0 22px rgba(107, 166, 255, .22),
-      0 0 22px rgba(255, 155, 59, .18),
-      0 0 22px rgba(184, 107, 255, .24);
+      0 10px 34px rgba(107, 166, 255, .36),
+      0 10px 34px rgba(255, 155, 59, .30),
+      0 10px 34px rgba(184, 107, 255, .40);
   }
   .accueil-play-btn:hover {
     transform: translateY(-2px);
     box-shadow:
-      0 10px 34px rgba(107, 166, 255, .36),
-      0 10px 34px rgba(255, 155, 59, .30),
-      0 10px 34px rgba(184, 107, 255, .40);
+      0 0 22px rgba(107, 166, 255, .22),
+      0 0 22px rgba(255, 155, 59, .18),
+      0 0 22px rgba(184, 107, 255, .24);
     background:
-      linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95)) padding-box,
+      linear-gradient(rgba(20, 24, 44, 0.6), rgba(20, 24, 44, 0.6)) padding-box,
       linear-gradient(135deg, #6ba6ff 0%, #ff9b3b 50%, #b86bff 100%) border-box;
   }
   .accueil-play-btn:active { transform: scale(0.97); }
