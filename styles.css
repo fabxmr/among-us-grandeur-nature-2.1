@@ -167,17 +167,9 @@
     flex-shrink: 0;
     white-space: nowrap;
   }
-  .tab-btn.crewmate { color: var(--neon-green);  border-color: rgba(76, 255, 157, .35); }
-  .tab-btn.impostor { color: var(--neon-red);    border-color: rgba(255, 56, 96, .35); }
-  .tab-btn.sheriff  { color: var(--neon-yellow); border-color: rgba(255, 224, 85, .35); }
-  .tab-btn.engineer { color: var(--neon-cyan);   border-color: rgba(41, 231, 255, .35); }
-  .tab-btn.sabotage { color: var(--neon-purple); border-color: rgba(184, 107, 255, .35); }
-  .tab-btn.quests   { color: #6ee7c7;            border-color: rgba(110, 231, 199, .3); }
   .tab-btn.printtab { color: var(--neon-cyan);   border-color: rgba(41, 231, 255, .35); }
-  .tab-btn.timer    { color: #5cf2d6;            border-color: rgba(92, 242, 214, .35); }
   .tab-btn.defis    { color: var(--neon-orange); border-color: rgba(255, 155, 59, .35); }
   .tab-btn.rules    { color: var(--neon-blue);   border-color: rgba(107, 166, 255, .35); }
-  .tab-btn.livret   { color: var(--neon-pink);   border-color: rgba(255, 90, 170, .35); }
   .tab-btn.all      { color: var(--neon-purple); border-color: rgba(184, 107, 255, .35); }
   .tab-btn.home     { color: #fff;               border-color: rgba(255, 255, 255, .35); }
 
@@ -2387,6 +2379,12 @@
   .sidebar-mode-btn.blue:hover   { background: rgba(107, 166, 255, .12); }
   .sidebar-mode-btn.orange:hover { background: rgba(255, 155, 59, .12); }
   .sidebar-mode-btn.pink:hover   { background: rgba(184, 107, 255, .12); }
+  /* Marqueur subtil pour le mode actuellement consulte : bordure +1px,
+     fond a peine tinte. Pas de halo. */
+  .sidebar-mode-btn.active { border-width: 2px; }
+  .sidebar-mode-btn.blue.active   { background: rgba(107, 166, 255, .14); }
+  .sidebar-mode-btn.orange.active { background: rgba(255, 155, 59, .14); }
+  .sidebar-mode-btn.pink.active   { background: rgba(184, 107, 255, .14); }
   @media (min-width: 1024px) {
     .sidebar-mode-selector {
       width: 100%;
@@ -2601,15 +2599,6 @@
     background: linear-gradient(90deg, transparent, rgba(255, 90, 170, .55), transparent);
     margin: 32px 0;
   }
-  .accueil-prompt {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11pt;
-    color: var(--text-dim);
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    opacity: .85;
-  }
 
   .accueil-modes {
     display: flex; gap: 22px;
@@ -2734,12 +2723,20 @@
     filter: drop-shadow(0 0 14px rgba(255, 90, 170, .30));
   }
 
+  /* Wrapper des liens secondaires de l'accueil (Regles + Explorer). */
+  .accueil-secondary-links {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
   /* Bouton "Règles" : meme principe que Jouer (bordure degradee + halo),
      mais en degrade violace uniquement. Inversion base/hover identique. */
   .accueil-rules-link {
     display: inline-block;
     padding: 11px 32px;
-    margin-top: 12px;
     background:
       linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95)) padding-box,
       linear-gradient(135deg, #c8a2ff 0%, #b86bff 50%, #8a4ad8 100%) border-box;
@@ -3572,11 +3569,6 @@
     }
     .accueil-subtitle { font-size: 11pt; letter-spacing: 4px; margin-top: 8px; }
     .accueil-rule { margin: 14px 0; }
-    .accueil-prompt {
-      font-size: 10pt;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
-    }
     .accueil-modes {
       gap: 10px;
       margin-bottom: 18px;
