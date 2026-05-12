@@ -2337,6 +2337,71 @@
     .mode-indicator { display: none !important; }
   }
 
+  /* Selecteur de mode dans la sidebar : visible hors accueil/partie pour
+     permettre l'exploration des cartes/defis/livret d'un autre mode sans
+     lancer une partie. */
+  .sidebar-mode-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: rgba(20, 24, 44, 0.5);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+  body.on-accueil .sidebar-mode-selector,
+  body.in-game .sidebar-mode-selector { display: none !important; }
+  .sidebar-mode-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding-left: 4px;
+  }
+  .sidebar-mode-buttons {
+    display: flex;
+    gap: 3px;
+  }
+  .sidebar-mode-btn {
+    width: 28px; height: 28px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--line-2);
+    background: rgba(20, 24, 44, 0.6);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: border-color .2s, color .2s, background .2s, box-shadow .2s;
+    padding: 0;
+    line-height: 1;
+  }
+  .sidebar-mode-btn:hover {
+    border-color: var(--neon-purple);
+    color: var(--neon-purple);
+  }
+  .sidebar-mode-btn.active {
+    background: rgba(184, 107, 255, 0.18);
+    border-color: var(--neon-purple);
+    color: var(--neon-purple);
+    box-shadow: 0 0 10px rgba(184, 107, 255, .25);
+  }
+  @media (min-width: 1024px) {
+    .sidebar-mode-selector {
+      width: 100%;
+      margin: 6px 0 14px;
+      border-radius: 12px;
+      justify-content: center;
+      padding: 8px 12px;
+    }
+    .sidebar-mode-btn { width: 30px; height: 30px; font-size: 12px; }
+  }
+  @media print {
+    .sidebar-mode-selector { display: none !important; }
+  }
+
   /* Modal "Combien de joueurs ?" affiche au clic sur "Jouer" */
   .play-mode-modal {
     position: fixed;

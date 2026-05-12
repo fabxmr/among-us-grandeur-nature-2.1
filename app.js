@@ -863,6 +863,23 @@ function renderModeButtons() {
       </button>`;
     }).join('');
   }
+  renderSidebarModeSelector();
+}
+
+// Selecteur de mode dans la sidebar (visible hors accueil/partie) : permet
+// d'explorer les cartes/defis/livret d'un mode different sans lancer la partie.
+function renderSidebarModeSelector() {
+  const el = document.getElementById('sidebar-mode-selector');
+  if (!el) return;
+  const current = getCurrentMode();
+  el.innerHTML = `
+    <span class="sidebar-mode-label">Mode</span>
+    <div class="sidebar-mode-buttons">
+      ${MODE_NUMBERS.map(n => `
+        <button type="button" class="sidebar-mode-btn${n === current ? ' active' : ''}" onclick="setExplorationMode(${n})" aria-label="Mode ${n} joueurs">${n}</button>
+      `).join('')}
+    </div>
+  `;
 }
 
 // Genere 3 missions equitables pour un joueur (decalage N/3 pour eviter les missions consecutives)
@@ -890,22 +907,30 @@ function getCardMissions(role, indexInRole, cfg, globalIdx) {
   return generateMissionsForPlayer(globalIdx, cfg.missions);
 }
 
-function setGameMode(mode) {
-  if (!MODE_NUMBERS.includes(mode)) return;
+// Applique un mode sans naviguer ailleurs : persiste, sync timer, re-render
+// le contenu mode-dependant. Brique commune a setGameMode / startGame /
+// setExplorationMode.
+function applyModeNoNav(mode) {
+  if (!MODE_NUMBERS.includes(mode)) return false;
   localStorage.setItem(GAME_MODE_KEY, String(mode));
-
-  // Sync avec le timer
   const minutes = MODES[mode].durationMin;
   if (minutes && typeof setTimerMode === 'function') {
     const btn = document.querySelector(`.timer-mode-btn[data-duration="${minutes}"]`);
     if (btn) setTimerMode(minutes, btn);
   }
-
-  // Re-render tout le contenu selon le nouveau mode
   applyGameMode();
+  if (typeof renderSidebarModeSelector === 'function') renderSidebarModeSelector();
+  return true;
+}
 
-  // Navigue vers la grille de cartes (point d'entree naturel apres selection du mode)
-  showTab('all');
+function setGameMode(mode) {
+  if (applyModeNoNav(mode)) showTab('all');
+}
+
+// Change le mode d'exploration depuis le selecteur de la sidebar (hors partie).
+// L'utilisateur reste sur la page courante, juste les donnees affichees changent.
+function setExplorationMode(mode) {
+  applyModeNoNav(mode);
 }
 
 // Re-render le contenu mode-dependant + ajuste la nav (Sheriff/Ingenieur visibles ?)
@@ -1422,17 +1447,10 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closePlayModal();
 });
 
-// Applique le mode choisi (sans navigation vers tab-all) puis lance la partie :
-// sidebar et badge caches, navigation vers la fiche quests, demarrage du timer.
+// Applique le mode choisi puis lance la partie : sidebar et badge caches,
+// navigation vers la fiche quests, demarrage du timer.
 function startGame(mode) {
-  if (!MODE_NUMBERS.includes(mode)) return;
-  localStorage.setItem(GAME_MODE_KEY, String(mode));
-  const minutes = MODES[mode].durationMin;
-  if (minutes && typeof setTimerMode === 'function') {
-    const btn = document.querySelector(`.timer-mode-btn[data-duration="${minutes}"]`);
-    if (btn) setTimerMode(minutes, btn);
-  }
-  applyGameMode();
+  if (!applyModeNoNav(mode)) return;
   closePlayModal();
   document.body.classList.add('in-game');
   setQuestsTitle('Partie en cours');

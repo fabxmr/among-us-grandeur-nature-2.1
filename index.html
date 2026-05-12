@@ -46,6 +46,7 @@
 
 <div class="tabs">
   <div class="sidebar-title">AMONG US</div>
+  <div class="sidebar-mode-selector" id="sidebar-mode-selector"><!-- rendu par renderSidebarModeSelector() --></div>
   <button class="tab-btn home active"    onclick="showTab('accueil')">Accueil</button>
   <button class="tab-btn all"            onclick="showTab('all')">Cartes</button>
   <button class="tab-btn rules"          onclick="showTab('rules')">Règles</button>
@@ -61,13 +62,12 @@
     <h1 class="accueil-title">AMONG US</h1>
     <div class="accueil-subtitle">Grandeur Nature</div>
     <div class="accueil-rule"></div>
-    <div class="accueil-prompt">Sélectionne le nombre de joueurs</div>
-
-    <div class="accueil-modes" id="accueil-modes"><!-- rendu par renderModeButtons() --></div>
 
     <button type="button" class="accueil-play-btn" onclick="playGame()">
       <span class="accueil-play-text">Jouer</span>
     </button>
+
+    <a class="accueil-rules-link" href="#" onclick="showTab('rules'); return false;">Règles</a>
   </div>
 </div>
 
