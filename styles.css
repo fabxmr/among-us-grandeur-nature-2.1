@@ -2690,22 +2690,29 @@
   }
   .accueil-mode.pink .amode-meta { color: var(--neon-pink); }
 
-  /* Bouton "Jouer" : forme arrondie pilule, taille initiale, couleurs du
-     titre AMONG US (degrade blanc -> rose pale -> violet pale). */
+  /* Bouton "Jouer" : pilule, melange des 3 couleurs des modes
+     (bleu / orange / violet). */
   .accueil-play-btn {
     background: rgba(20, 24, 44, 0.6);
-    border: 2px solid rgba(255, 170, 210, .42);
+    border: 2px solid rgba(184, 107, 255, .45);
     border-radius: 999px;
     padding: 18px 56px;
     margin: 28px 0 22px;
     cursor: pointer;
     transition: all .25s cubic-bezier(.2,.7,.3,1);
+    box-shadow:
+      0 0 18px rgba(107, 166, 255, .12),
+      0 0 18px rgba(255, 155, 59, .10),
+      0 0 18px rgba(184, 107, 255, .15);
   }
   .accueil-play-btn:hover {
     transform: translateY(-2px);
-    border-color: rgba(255, 170, 210, .8);
-    box-shadow: 0 12px 32px rgba(255, 90, 170, .28);
-    background: linear-gradient(160deg, rgba(32, 18, 32, .9), rgba(20, 24, 44, .95));
+    border-color: rgba(184, 107, 255, .85);
+    box-shadow:
+      0 10px 28px rgba(107, 166, 255, .22),
+      0 10px 28px rgba(255, 155, 59, .18),
+      0 10px 28px rgba(184, 107, 255, .26);
+    background: linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95));
   }
   .accueil-play-btn:active { transform: scale(0.97); }
   .accueil-play-text {
@@ -2716,29 +2723,43 @@
     line-height: 1;
     letter-spacing: 5px;
     text-transform: uppercase;
+    background: linear-gradient(135deg, #6ba6ff 0%, #ff9b3b 50%, #b86bff 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 14px rgba(184, 107, 255, .35));
+  }
+
+  /* Bouton "Règles" : reprend les couleurs initiales du bouton Jouer
+     (blanc -> rose pale -> violet pale), version plus petite/secondaire. */
+  .accueil-rules-link {
+    display: inline-block;
+    padding: 11px 32px;
+    margin-top: 12px;
+    background: rgba(20, 24, 44, 0.6);
+    border: 2px solid rgba(255, 170, 210, .42);
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .25s cubic-bezier(.2,.7,.3,1);
+  }
+  .accueil-rules-link:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 170, 210, .8);
+    box-shadow: 0 8px 24px rgba(255, 90, 170, .22);
+    background: linear-gradient(160deg, rgba(32, 18, 32, .9), rgba(20, 24, 44, .95));
+  }
+  .accueil-rules-text {
+    display: inline-block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 4px;
+    text-transform: uppercase;
     background: linear-gradient(135deg, #fff 0%, #ffaad2 50%, #b6a4ff 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 14px rgba(255, 90, 170, .35));
-  }
-
-  .accueil-rules-link {
-    display: inline-block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11pt;
-    color: var(--text-dim);
-    text-decoration: none;
-    letter-spacing: 1.5px;
-    padding: 12px 24px;
-    border-radius: 999px;
-    border: 1px solid var(--line-2);
-    transition: all .2s;
-  }
-  .accueil-rules-link:hover {
-    color: var(--neon-cyan);
-    border-color: rgba(41, 231, 255, .55);
-    background: rgba(41, 231, 255, .08);
-    transform: translateY(-1px);
+    filter: drop-shadow(0 0 10px rgba(255, 90, 170, .25));
   }
 
   #tab-timer { text-align: center; padding: 50px 20px 80px; }
