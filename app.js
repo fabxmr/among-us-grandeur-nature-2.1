@@ -829,7 +829,7 @@ function getModeConfig(mode) {
   return MODES[mode] || MODES[DEFAULT_MODE];
 }
 
-// Génère les boutons de sélection de mode (accueil + timer) depuis MODES.
+// Génère les boutons de sélection de mode (accueil + timer + modal Jouer) depuis MODES.
 function renderModeButtons() {
   const home = document.getElementById('accueil-modes');
   if (home) {
@@ -848,6 +848,19 @@ function renderModeButtons() {
       const m = MODES[n];
       const activeCls = n === DEFAULT_MODE ? ' active' : '';
       return `<button class="timer-mode-btn ${m.accent}${activeCls}" data-duration="${m.durationMin}" onclick="setTimerMode(${m.durationMin}, this)">${n} joueurs · ${m.durationMin} min</button>`;
+    }).join('');
+  }
+  // Modal "Combien de joueurs ?" au clic sur Jouer : memes visuels, mais
+  // chaque bouton lance directement la partie via startGame().
+  const playModal = document.getElementById('play-mode-options');
+  if (playModal) {
+    playModal.innerHTML = MODE_NUMBERS.map(n => {
+      const m = MODES[n];
+      return `<button class="accueil-mode ${m.accent}" onclick="startGame(${n})">
+        <span class="amode-num">${n}</span>
+        <span class="amode-label">joueurs</span>
+        <span class="amode-meta">${m.durationMin} min</span>
+      </button>`;
     }).join('');
   }
 }
@@ -1389,9 +1402,38 @@ function toggleQuestTimer() {
   else            startTimer();
 }
 
-// Lance la partie : passe en mode "en jeu" (sidebar + badge mode caches),
-// navigue vers la fiche quests et demarre le timer si pas en cours.
+// Ouvre le modal "Combien de joueurs ?" : l'utilisateur choisit explicitement
+// le nombre de joueurs avant que la partie ne se lance. Le mode "exploration"
+// (boutons 8/12/16 de l'accueil) ne lance plus automatiquement la partie.
 function playGame() {
+  const modal = document.getElementById('play-mode-modal');
+  if (modal) modal.style.display = 'flex';
+}
+function closePlayModal() {
+  const modal = document.getElementById('play-mode-modal');
+  if (modal) modal.style.display = 'none';
+}
+// Click hors-zone + ESC ferment le modal.
+document.addEventListener('click', e => {
+  const modal = document.getElementById('play-mode-modal');
+  if (modal && e.target === modal) closePlayModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePlayModal();
+});
+
+// Applique le mode choisi (sans navigation vers tab-all) puis lance la partie :
+// sidebar et badge caches, navigation vers la fiche quests, demarrage du timer.
+function startGame(mode) {
+  if (!MODE_NUMBERS.includes(mode)) return;
+  localStorage.setItem(GAME_MODE_KEY, String(mode));
+  const minutes = MODES[mode].durationMin;
+  if (minutes && typeof setTimerMode === 'function') {
+    const btn = document.querySelector(`.timer-mode-btn[data-duration="${minutes}"]`);
+    if (btn) setTimerMode(minutes, btn);
+  }
+  applyGameMode();
+  closePlayModal();
   document.body.classList.add('in-game');
   setQuestsTitle('Partie en cours');
   showTab('quests');
