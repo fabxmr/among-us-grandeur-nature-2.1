@@ -2690,28 +2690,28 @@
   }
   .accueil-mode.pink .amode-meta { color: var(--neon-pink); }
 
-  /* Bouton "Jouer" : pilule, melange des 3 couleurs des modes
-     (bleu / orange / violet). */
+  /* Bouton "Jouer" : pilule, pas de bordure coloree — l'effet vient
+     d'un box-shadow multi-couches bleu / orange / violet. Texte en
+     degrade comme le titre AMONG US (blanc -> rose pale -> violet pale). */
   .accueil-play-btn {
     background: rgba(20, 24, 44, 0.6);
-    border: 2px solid rgba(184, 107, 255, .45);
+    border: 2px solid transparent;
     border-radius: 999px;
     padding: 18px 56px;
     margin: 28px 0 22px;
     cursor: pointer;
     transition: all .25s cubic-bezier(.2,.7,.3,1);
     box-shadow:
-      0 0 18px rgba(107, 166, 255, .12),
-      0 0 18px rgba(255, 155, 59, .10),
-      0 0 18px rgba(184, 107, 255, .15);
+      0 0 22px rgba(107, 166, 255, .22),
+      0 0 22px rgba(255, 155, 59, .18),
+      0 0 22px rgba(184, 107, 255, .24);
   }
   .accueil-play-btn:hover {
     transform: translateY(-2px);
-    border-color: rgba(184, 107, 255, .85);
     box-shadow:
-      0 10px 28px rgba(107, 166, 255, .22),
-      0 10px 28px rgba(255, 155, 59, .18),
-      0 10px 28px rgba(184, 107, 255, .26);
+      0 10px 34px rgba(107, 166, 255, .36),
+      0 10px 34px rgba(255, 155, 59, .30),
+      0 10px 34px rgba(184, 107, 255, .40);
     background: linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95));
   }
   .accueil-play-btn:active { transform: scale(0.97); }
@@ -2723,10 +2723,10 @@
     line-height: 1;
     letter-spacing: 5px;
     text-transform: uppercase;
-    background: linear-gradient(135deg, #6ba6ff 0%, #ff9b3b 50%, #b86bff 100%);
+    background: linear-gradient(135deg, #fff 0%, #ffaad2 50%, #b6a4ff 100%);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 14px rgba(184, 107, 255, .35));
+    filter: drop-shadow(0 0 14px rgba(255, 90, 170, .30));
   }
 
   /* Bouton "Règles" : reprend les couleurs initiales du bouton Jouer
