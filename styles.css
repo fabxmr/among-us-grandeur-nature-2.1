@@ -1319,8 +1319,10 @@
     body.in-game #tab-quests {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      min-height: calc(100vh - 32px);
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 20px;
+      padding-bottom: 20px;
     }
     body.in-game .quest-sheet {
       display: flex;
