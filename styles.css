@@ -1032,8 +1032,9 @@
   }
   .quest-progress-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    letter-spacing: 3px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: none;
   }
   .quest-progress-text  { color: var(--neon-green); font-weight: 700; font-size: 12px; }
 
@@ -1049,10 +1050,10 @@
   }
   .quest-timer-label {
     font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    text-transform: none;
     color: var(--text-dim);
     flex: 1;
   }
@@ -1245,8 +1246,9 @@
   }
   .players-panel-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    letter-spacing: 3px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: none;
   }
   .players-panel-count { color: var(--neon-green); font-weight: 700; font-size: 12px; }
   .players-panel-progress {
