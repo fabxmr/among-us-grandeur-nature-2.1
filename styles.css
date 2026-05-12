@@ -1314,11 +1314,21 @@
   /* Desktop in-game : flex layout — colonne principale (.quest-main) a
      gauche, panneau joueurs a droite, etire a la meme hauteur. */
   @media (min-width: 900px) {
+    /* Tab-quests en flex pour centrer la fiche partie horizontalement
+       et verticalement par rapport a la viewport en mode in-game. */
+    body.in-game #tab-quests {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: calc(100vh - 32px);
+    }
     body.in-game .quest-sheet {
       display: flex;
       gap: 24px;
       align-items: stretch;
       max-width: 1360px;
+      width: 100%;
+      margin: 0 auto;
     }
     body.in-game .quest-main { flex: 1; min-width: 0; }
     body.in-game .players-panel {
