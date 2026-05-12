@@ -2322,6 +2322,14 @@
      encore choisi a quoi on joue) — on le masque. */
   body.on-accueil .mode-indicator { display: none !important; }
 
+  /* Mobile / tablette : la sidebar des onglets est en haut, le badge fixed
+     top-right vient se superposer dessus et masque le clic sur les boutons.
+     On le cache en dessous de 1024px — la navigation vers l'accueil reste
+     possible via l'onglet "Accueil" de la sidebar. */
+  @media (max-width: 1023px) {
+    .mode-indicator { display: none !important; }
+  }
+
   /* ═══════════ MODE PARTIE (body.in-game) ═══════════
      Active depuis le bouton "Jouer" : la sidebar et le badge mode sont
      masques pour offrir une interface dediee a la partie. Un bouton
