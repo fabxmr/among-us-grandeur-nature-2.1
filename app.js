@@ -875,9 +875,10 @@ function renderSidebarModeSelector() {
   el.innerHTML = `
     <span class="sidebar-mode-label">Mode</span>
     <div class="sidebar-mode-buttons">
-      ${MODE_NUMBERS.map(n => `
-        <button type="button" class="sidebar-mode-btn${n === current ? ' active' : ''}" onclick="setExplorationMode(${n})" aria-label="Mode ${n} joueurs">${n}</button>
-      `).join('')}
+      ${MODE_NUMBERS.map(n => {
+        const m = MODES[n];
+        return `<button type="button" class="sidebar-mode-btn ${m.accent}${n === current ? ' active' : ''}" onclick="setExplorationMode(${n})" aria-label="Mode ${n} joueurs">${n}</button>`;
+      }).join('')}
     </div>
   `;
 }

@@ -2339,12 +2339,13 @@
 
   /* Selecteur de mode dans la sidebar : visible hors accueil/partie pour
      permettre l'exploration des cartes/defis/livret d'un autre mode sans
-     lancer une partie. */
+     lancer une partie. Chaque bouton garde sa couleur d'accent (bleu 8,
+     orange 12, violet 16). */
   .sidebar-mode-selector {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
+    gap: 10px;
+    padding: 8px 14px;
     background: rgba(20, 24, 44, 0.5);
     border: 1px solid var(--line);
     border-radius: 999px;
@@ -2354,7 +2355,7 @@
   body.in-game .sidebar-mode-selector { display: none !important; }
   .sidebar-mode-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-size: 10.5px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--text-dim);
@@ -2362,13 +2363,13 @@
   }
   .sidebar-mode-buttons {
     display: flex;
-    gap: 3px;
+    gap: 5px;
   }
   .sidebar-mode-btn {
-    width: 28px; height: 28px;
+    width: 36px; height: 36px;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     border-radius: 50%;
     border: 1px solid var(--line-2);
     background: rgba(20, 24, 44, 0.6);
@@ -2378,25 +2379,27 @@
     padding: 0;
     line-height: 1;
   }
-  .sidebar-mode-btn:hover {
-    border-color: var(--neon-purple);
-    color: var(--neon-purple);
-  }
-  .sidebar-mode-btn.active {
-    background: rgba(184, 107, 255, 0.18);
-    border-color: var(--neon-purple);
-    color: var(--neon-purple);
-    box-shadow: 0 0 10px rgba(184, 107, 255, .25);
-  }
+  /* Variantes par mode : 8 = bleu, 12 = orange, 16 = violet (l'accent
+     du mode 16 est nomme "pink" dans MODES mais on l'affiche en violet). */
+  .sidebar-mode-btn.blue   { color: var(--neon-blue);   border-color: rgba(107, 166, 255, .55); }
+  .sidebar-mode-btn.orange { color: var(--neon-orange); border-color: rgba(255, 155, 59, .55); }
+  .sidebar-mode-btn.pink   { color: var(--neon-purple); border-color: rgba(184, 107, 255, .55); }
+  .sidebar-mode-btn.blue:hover   { background: rgba(107, 166, 255, .12); }
+  .sidebar-mode-btn.orange:hover { background: rgba(255, 155, 59, .12); }
+  .sidebar-mode-btn.pink:hover   { background: rgba(184, 107, 255, .12); }
+  .sidebar-mode-btn.blue.active   { background: rgba(107, 166, 255, .22); box-shadow: 0 0 12px rgba(107, 166, 255, .35); }
+  .sidebar-mode-btn.orange.active { background: rgba(255, 155, 59, .22); box-shadow: 0 0 12px rgba(255, 155, 59, .35); }
+  .sidebar-mode-btn.pink.active   { background: rgba(184, 107, 255, .22); box-shadow: 0 0 12px rgba(184, 107, 255, .35); }
   @media (min-width: 1024px) {
     .sidebar-mode-selector {
       width: 100%;
-      margin: 6px 0 14px;
-      border-radius: 12px;
+      margin: 6px 0 16px;
+      border-radius: 14px;
       justify-content: center;
-      padding: 8px 12px;
+      padding: 12px 16px;
     }
-    .sidebar-mode-btn { width: 30px; height: 30px; font-size: 12px; }
+    .sidebar-mode-btn { width: 40px; height: 40px; font-size: 14px; }
+    .sidebar-mode-label { font-size: 11px; }
   }
   @media print {
     .sidebar-mode-selector { display: none !important; }
