@@ -1030,7 +1030,11 @@
     color: var(--text-dim);
     margin-bottom: 10px;
   }
-  .quest-progress-title { font-weight: 600; }
+  .quest-progress-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
   .quest-progress-text  { color: var(--neon-green); font-weight: 700; font-size: 12px; }
 
   /* Mini-timer dans la fiche quests : compact, en haut, sync via renderTimer */
@@ -1044,9 +1048,10 @@
     border-radius: var(--radius-md);
   }
   .quest-timer-label {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
     font-size: 11px;
-    letter-spacing: 1.5px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--text-dim);
     flex: 1;
@@ -1238,7 +1243,11 @@
     color: var(--text-dim);
     margin-bottom: 8px;
   }
-  .players-panel-title { font-weight: 600; }
+  .players-panel-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
   .players-panel-count { color: var(--neon-green); font-weight: 700; font-size: 12px; }
   .players-panel-progress {
     height: 8px;
