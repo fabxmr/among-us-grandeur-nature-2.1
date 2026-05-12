@@ -3690,9 +3690,13 @@
   }
 
   /* Trackers dupliques : visibles dans players-panel SEULEMENT en desktop
-     in-game, et dans le quest-main sinon (mobile + print). */
+     in-game, et dans le quest-main sinon (mobile + print).
+     Exception : mode 16j ou les missions sont nombreuses -> trackers sous
+     les missions (quest-main) pour reserver le panel aux 16 mini-perso. */
   @media (min-width: 900px) {
     body.in-game .quest-main .tracker-row { display: none; }
+    body.in-game.mode-16 .quest-main .tracker-row { display: grid; }
+    body.in-game.mode-16 .players-panel .tracker-row { display: none; }
   }
   @media (max-width: 899px) {
     body.in-game .players-panel .tracker-row { display: none; }

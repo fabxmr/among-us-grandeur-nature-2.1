@@ -1072,6 +1072,10 @@ function applyGameMode() {
   const mode = getCurrentMode();
   const cfg = getModeConfig(mode);
 
+  // Classe mode-N sur le body pour les regles CSS specifiques au mode courant
+  document.body.classList.remove('mode-8', 'mode-12', 'mode-16');
+  document.body.classList.add(`mode-${mode}`);
+
   // Re-render des contenus dynamiques
   // Ordre important : populateGrids/buildQuestSheet/buildDefis avant buildLivret
   // (buildLivret clone depuis #all-grid, #tab-defis, #tab-quests qui doivent etre a jour)
