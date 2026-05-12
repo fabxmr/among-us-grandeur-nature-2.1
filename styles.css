@@ -140,25 +140,32 @@
 
   /* ── TABS (mobile : ligne en haut) ── */
   .tabs {
-    display: flex; flex-wrap: wrap; gap: 6px;
+    display: flex; flex-wrap: nowrap; gap: 6px;
     justify-content: center;
-    padding: 14px 16px 18px;
+    padding: 14px 14px 18px;
     border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
+  .tabs::-webkit-scrollbar { height: 3px; }
+  .tabs::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
   .tab-btn {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
-    font-size: 11px;
-    padding: 9px 14px;
+    font-size: 12.5px;
+    padding: 10px 16px;
     border: 1px solid;
     border-radius: 999px;
     cursor: pointer;
     transition: all .25s cubic-bezier(.2,.7,.3,1);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     background: rgba(20, 24, 44, 0.55);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    flex-shrink: 0;
+    white-space: nowrap;
   }
   .tab-btn.crewmate { color: var(--neon-green);  border-color: rgba(76, 255, 157, .35); }
   .tab-btn.impostor { color: var(--neon-red);    border-color: rgba(255, 56, 96, .35); }
