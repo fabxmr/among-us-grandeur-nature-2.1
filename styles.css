@@ -1318,11 +1318,11 @@
       display: flex;
       gap: 24px;
       align-items: stretch;
-      max-width: 1340px;
+      max-width: 1360px;
     }
     body.in-game .quest-main { flex: 1; min-width: 0; }
     body.in-game .players-panel {
-      flex: 0 0 360px;
+      flex: 0 0 380px;
       margin: 0;
       padding: 14px 16px 16px;
       display: flex;
@@ -1336,10 +1336,10 @@
       align-content: start;
     }
     body.in-game .player-card { padding: 6px 2px; }
-    body.in-game .player-card-svg { width: 68px; height: 78px; }
+    body.in-game .player-card-svg { width: 72px; height: 82px; }
     body.in-game .player-card-name { font-size: 10px; letter-spacing: 0.8px; }
     body.in-game .player-card.dead::before {
-      top: 36px; left: 8px; right: 8px;
+      top: 38px; left: 8px; right: 8px;
       height: 3px;
     }
   }
