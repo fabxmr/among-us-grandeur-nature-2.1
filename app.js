@@ -543,8 +543,49 @@ function getCurrentRoster() {
   return r;
 }
 
+// HTML des trackers BUZZ / SHERIFF / SABOTAGE, place a la fois sous les
+// missions (pour le print/mobile) et a la fin du players-panel (pour
+// desktop in-game). Le data-tracker permet de synchroniser les jumeaux
+// quand on en clique un.
+function getTrackersHTML(mode) {
+  const sabotage = getSabotageForMode(mode);
+  const sabotageCardHTML = sabotage.used
+    ? `
+      <div class="tracker-card sabotage-card used">
+        <div class="tracker-title">SABOTAGE — DÉCLENCHÉ</div>
+        <div class="sabotage-used-missions">
+          ${sabotage.missions.map(n => `<span class="sabotage-mission-pill">N°${String(n).padStart(2,'0')}</span>`).join('')}
+        </div>
+      </div>
+    `
+    : `
+      <div class="tracker-card sabotage-card">
+        <div class="tracker-title">SABOTAGE (1 max)</div>
+        <button type="button" class="sabotage-btn" onclick="triggerSabotage()">Déclencher</button>
+      </div>
+    `;
+  return `
+    <div class="tracker-row">
+      <div class="tracker-card">
+        <div class="tracker-title">BUZZ RESTANTS (3 max)</div>
+        <div class="tracker-circles">
+          <div class="tracker-circle" data-tracker="buzz-1"></div>
+          <div class="tracker-circle" data-tracker="buzz-2"></div>
+          <div class="tracker-circle" data-tracker="buzz-3"></div>
+        </div>
+      </div>
+      <div class="tracker-card">
+        <div class="tracker-title">SHERIFF — BALLE</div>
+        <div class="tracker-circles"><div class="tracker-circle red" data-tracker="sheriff"></div></div>
+        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
+      </div>
+      ${sabotageCardHTML}
+    </div>
+  `;
+}
+
 // HTML du panneau "Joueurs en vie" : compteur + barre + mini-cartes
-// (SVG du personnage + nom de couleur). Place a droite en partie desktop.
+// (SVG du personnage + nom de couleur) + trackers en bas.
 function renderPlayersPanel() {
   const mode = getCurrentMode();
   const state = loadPlayersState();
@@ -578,6 +619,7 @@ function renderPlayersPanel() {
         <div class="players-panel-fill" style="width:${pct}%"></div>
       </div>
       <div class="players-list">${cards}</div>
+      ${getTrackersHTML(mode)}
     </div>
   `;
 }
@@ -681,42 +723,7 @@ function buildQuestSheet() {
     </div>
   `;
 
-  // Carte sabotage : un seul declenchement par partie, qui decoche 3 missions au hasard.
-  const sabotage = getSabotageForMode(mode);
-  const sabotageCardHTML = sabotage.used
-    ? `
-      <div class="tracker-card sabotage-card used">
-        <div class="tracker-title">SABOTAGE — DÉCLENCHÉ</div>
-        <div class="sabotage-used-missions">
-          ${sabotage.missions.map(n => `<span class="sabotage-mission-pill">N°${String(n).padStart(2,'0')}</span>`).join('')}
-        </div>
-      </div>
-    `
-    : `
-      <div class="tracker-card sabotage-card">
-        <div class="tracker-title">SABOTAGE (1 max)</div>
-        <button type="button" class="sabotage-btn" onclick="triggerSabotage()">Déclencher</button>
-      </div>
-    `;
-
-  const trackersHTML = `
-    <div class="tracker-row">
-      <div class="tracker-card">
-        <div class="tracker-title">BUZZ RESTANTS (3 max)</div>
-        <div class="tracker-circles">
-          <div class="tracker-circle"></div>
-          <div class="tracker-circle"></div>
-          <div class="tracker-circle"></div>
-        </div>
-      </div>
-      <div class="tracker-card">
-        <div class="tracker-title">SHERIFF — BALLE</div>
-        <div class="tracker-circles"><div class="tracker-circle red"></div></div>
-        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
-      </div>
-      ${sabotageCardHTML}
-    </div>
-  `;
+  const trackersHTML = getTrackersHTML(mode);
 
   // Les trackers vont toujours sur la derniere page rendue.
   const pageBlockHTML = (rows, withTrackers) => `
@@ -1724,16 +1731,20 @@ function loadTrackers() {
 function saveTrackers(state) { localStorage.setItem(TRACKERS_KEY, JSON.stringify(state)); }
 function initTrackers() {
   const state = loadTrackers();
-  document.querySelectorAll('.tracker-circle').forEach((c, i) => {
-    const key = `t${i}`;
+  document.querySelectorAll('.tracker-circle[data-tracker]').forEach(c => {
+    const key = c.dataset.tracker;
     if (state[key]) c.classList.add('used');
     else c.classList.remove('used');
     if (c._trackerListenerAttached) return;
     c._trackerListenerAttached = true;
     c.addEventListener('click', () => {
-      c.classList.toggle('used');
+      const isUsed = !c.classList.contains('used');
+      // Sync tous les jumeaux (mobile/desktop in-game ont chacun leur copie)
+      document.querySelectorAll(`.tracker-circle[data-tracker="${key}"]`).forEach(twin => {
+        twin.classList.toggle('used', isUsed);
+      });
       const newState = loadTrackers();
-      newState[key] = c.classList.contains('used');
+      newState[key] = isUsed;
       saveTrackers(newState);
     });
   });
