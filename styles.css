@@ -3688,6 +3688,27 @@
     .cards-grid { max-width: 1400px; margin: 0 auto; }
   }
 
+  /* Onglet "Cartes" (tab-all) : on adapte la taille des cartes selon le
+     mode pour que toutes les cartes tiennent dans la viewport sans scroll
+     vertical. Le zoom CSS reduit aussi le layout space — les cartes se
+     repartissent en 4 (mode 8), 6 (mode 12) ou 8 (mode 16) colonnes. */
+  @media (min-width: 900px) {
+    #tab-all .cards-grid {
+      gap: 12px;
+      justify-content: center;
+      align-content: flex-start;
+    }
+    body.mode-8 #tab-all .card  { zoom: 0.82; }
+    body.mode-12 #tab-all .card { zoom: 0.70; }
+    body.mode-16 #tab-all .card { zoom: 0.55; }
+  }
+  @media (min-width: 1536px) {
+    /* Sur grand ecran, on peut se permettre des cartes plus grandes */
+    body.mode-8 #tab-all .card  { zoom: 0.95; }
+    body.mode-12 #tab-all .card { zoom: 0.82; }
+    body.mode-16 #tab-all .card { zoom: 0.68; }
+  }
+
   /* Ajustements specifiques aux petits ecrans (telephones) : on reduit les
      gros titres qui debordent avec leurs gros letter-spacing. */
   /* Mode partie sur ecran (>=720px) : on compacte la fiche quests pour
