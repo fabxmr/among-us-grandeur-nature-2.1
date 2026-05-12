@@ -2690,11 +2690,14 @@
   }
   .accueil-mode.pink .amode-meta { color: var(--neon-pink); }
 
-  /* Bouton "Jouer" : pilule, pas de bordure coloree — l'effet vient
-     d'un box-shadow multi-couches bleu / orange / violet. Texte en
-     degrade comme le titre AMONG US (blanc -> rose pale -> violet pale). */
+  /* Bouton "Jouer" : pilule avec bordure en degrade tri-couleur
+     (bleu -> orange -> violet) obtenue via double-background +
+     border transparente. Halo multi-couches assorti. Texte en
+     degrade comme le titre AMONG US. */
   .accueil-play-btn {
-    background: rgba(20, 24, 44, 0.6);
+    background:
+      linear-gradient(rgba(20, 24, 44, 0.6), rgba(20, 24, 44, 0.6)) padding-box,
+      linear-gradient(135deg, #6ba6ff 0%, #ff9b3b 50%, #b86bff 100%) border-box;
     border: 2px solid transparent;
     border-radius: 999px;
     padding: 18px 56px;
@@ -2712,7 +2715,9 @@
       0 10px 34px rgba(107, 166, 255, .36),
       0 10px 34px rgba(255, 155, 59, .30),
       0 10px 34px rgba(184, 107, 255, .40);
-    background: linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95));
+    background:
+      linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95)) padding-box,
+      linear-gradient(135deg, #6ba6ff 0%, #ff9b3b 50%, #b86bff 100%) border-box;
   }
   .accueil-play-btn:active { transform: scale(0.97); }
   .accueil-play-text {
