@@ -3324,6 +3324,27 @@
     }
   }
 
+  /* Cibles tactiles minimales sur mobile : checkboxes / boutons assez
+     gros pour eviter les rate-clic au doigt. */
+  @media (max-width: 720px) {
+    .quest-checkbox { width: 36px; height: 36px; }
+    .tracker-circle { width: 36px; height: 36px; }
+    .section { padding: 24px 14px; }
+  }
+
+  /* Tablette (entre mobile et desktop) : padding et grilles ajustes
+     pour bien exploiter la largeur sans surcharger. */
+  @media (min-width: 721px) and (max-width: 1023px) {
+    .section { padding: 36px 28px; }
+    .cards-grid { gap: 18px; }
+  }
+
+  /* Tres grands ecrans : on plafonne le contenu pour eviter le "trop large". */
+  @media (min-width: 1600px) {
+    .section { max-width: 1500px; }
+    .cards-grid { max-width: 1400px; margin: 0 auto; }
+  }
+
   /* Ajustements specifiques aux petits ecrans (telephones) : on reduit les
      gros titres qui debordent avec leurs gros letter-spacing. */
   /* Mode partie sur ecran (>=720px) : on compacte la fiche quests pour
