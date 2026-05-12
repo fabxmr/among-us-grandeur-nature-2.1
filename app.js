@@ -322,11 +322,11 @@ function getRoleExplanation(type) {
     case 'crewmate':
       return `Doit terminer toutes les <strong>missions</strong> dans le temps imparti, ou démasquer tous les Impostors.`;
     case 'impostor':
-      return `Doit <strong>éliminer</strong> tous les joueurs sans se faire repérer — toucher leur épaule. Victoire également si le temps expire.`;
+      return `Doit <strong>éliminer</strong> tous les joueurs sans se faire repérer en touchant leur épaule pour gagner. Gagne également si le timer tombe à zéro.`;
     case 'sheriff':
-      return `1 <strong>balle</strong> disponible. Crewmate touché = Sheriff meurt à sa place. Impostor touché = Sheriff survit, désarmé.`;
+      return `Possède un <strong>fusil avec une seule balle</strong>. Au moindre soupçon il peut l'utiliser.`;
     case 'engineer':
-      return `Peut <strong>réparer</strong> une pièce sabotée (10 s). Peut valider <strong>1 mission posthume</strong>.`;
+      return `Peut <strong>réparer</strong> une pièce sabotée et <strong>valider une mission</strong> à la place d'un Crewmate mort.`;
     default:
       return '';
   }
