@@ -2097,7 +2097,9 @@ loadTimerMode();
 loadTimerState();
 initCardClicks();
 
-// Au chargement initial : applique la classe on-accueil si l'accueil est l'onglet actif
-if (document.querySelector('#tab-accueil.active')) {
-  document.body.classList.add('on-accueil');
+// Au chargement initial : la classe on-accueil est deja pre-appliquee dans
+// le HTML pour eviter un flash entre le rendu initial et le boot JS. On la
+// retire si la section active n'est plus l'accueil (cas edge).
+if (!document.querySelector('#tab-accueil.active')) {
+  document.body.classList.remove('on-accueil');
 }
