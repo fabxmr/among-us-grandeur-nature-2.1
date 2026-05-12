@@ -583,7 +583,8 @@ function renderPlayersPanel() {
 }
 
 // Toggle vivant <-> elimine pour un joueur, rebuild le panneau, et
-// declenche la verification de victoire des Impostors par parite.
+// declenche la verification des deux conditions de fin de partie :
+// parite Impostors (defaite) ou tous Impostors elimines (victoire).
 function togglePlayer(id) {
   const mode = getCurrentMode();
   const state = loadPlayersState();
@@ -594,6 +595,7 @@ function togglePlayer(id) {
   const panel = document.querySelector('#quest-sheet-content .players-panel');
   if (panel) panel.outerHTML = renderPlayersPanel();
   checkImpostorVictory();
+  checkCrewmateVictory();
 }
 
 // Victoire automatique des Impostors quand ils sont aussi nombreux que
@@ -610,6 +612,20 @@ function checkImpostorVictory() {
   ).length;
   if (aliveImps > 0 && aliveImps >= aliveOthers) {
     showDefeat('parity');
+  }
+}
+
+// Victoire automatique des Crewmates quand tous les Impostors sont elimines.
+function checkCrewmateVictory() {
+  const mode = getCurrentMode();
+  const state = loadPlayersState();
+  const roster = getCurrentRoster();
+  const totalImps = roster.filter(p => p.type === 'impostor').length;
+  const aliveImps = roster.filter(p =>
+    p.type === 'impostor' && !state[playerKey(mode, p.id)]
+  ).length;
+  if (totalImps > 0 && aliveImps === 0) {
+    showVictory('impostors-down');
   }
 }
 
@@ -763,10 +779,15 @@ function buildQuestSheet() {
     const reason = localStorage.getItem(DEFEAT_REASON_KEY) || 'time';
     showDefeat(reason);
   }
+  if (localStorage.getItem(VICTORY_KEY)) {
+    const reason = localStorage.getItem(VICTORY_REASON_KEY) || 'missions';
+    showVictory(reason);
+  }
 }
 
 // Met à jour la barre (texte + remplissage) selon les cases joueur cochees.
-// Bascule sur la banniere "Crewmates Win" lorsque tout est valide.
+// Declenche la victoire "missions" lorsque toutes les cases sont cochees.
+// Une fois la victoire/defaite declenchee, l'overlay reste jusqu'au newGame().
 function updateQuestProgress() {
   const content = document.getElementById('quest-sheet-content');
   if (!content) return;
@@ -781,12 +802,9 @@ function updateQuestProgress() {
   if (fill) fill.style.width = pct + '%';
   if (text) text.textContent = `${done} / ${total}`;
 
-  const isVictory = total > 0 && done === total;
-  const progress = content.querySelector('.quest-progress');
-  const victory  = content.querySelector('.quest-victory');
-  if (progress) progress.style.display = isVictory ? 'none' : '';
-  // 'flex' pour centrer le contenu de l'overlay plein ecran
-  if (victory)  victory.style.display  = isVictory ? 'flex' : 'none';
+  if (total > 0 && done === total && !localStorage.getItem(VICTORY_KEY)) {
+    showVictory('missions');
+  }
 }
 
 // Nouvelle partie : reinitialise progression, sabotage, trackers (BUZZ/SHERIFF)
@@ -809,6 +827,8 @@ function newGame() {
   if (typeof resetTimer === 'function') resetTimer();
   localStorage.removeItem(TIMER_EXPIRED_KEY);
   localStorage.removeItem(DEFEAT_REASON_KEY);
+  localStorage.removeItem(VICTORY_KEY);
+  localStorage.removeItem(VICTORY_REASON_KEY);
   buildQuestSheet();
   if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
 }
@@ -1483,10 +1503,13 @@ function startTimerInterval() {
   renderTimer(timerEndAt - Date.now());
 }
 
-// Cle qui survit aux rechargements : permet de re-afficher l'overlay defaite
-// si l'utilisateur recharge la page apres expiration ou parite Impostors.
+// Cles qui survivent aux rechargements : permettent de re-afficher
+// l'overlay victoire/defaite si l'utilisateur recharge la page apres
+// la fin de partie sans cliquer "Nouvelle Partie".
 const TIMER_EXPIRED_KEY = 'among-us:timer-expired:v1';
 const DEFEAT_REASON_KEY = 'among-us:defeat-reason:v1';
+const VICTORY_KEY = 'among-us:victory:v1';
+const VICTORY_REASON_KEY = 'among-us:victory-reason:v1';
 
 function showDefeat(reason = 'time') {
   localStorage.setItem(TIMER_EXPIRED_KEY, '1');
@@ -1500,6 +1523,24 @@ function showDefeat(reason = 'time') {
       : 'Le temps est écoulé';
   }
   defeat.style.display = 'flex';
+}
+
+function showVictory(reason = 'missions') {
+  localStorage.setItem(VICTORY_KEY, '1');
+  localStorage.setItem(VICTORY_REASON_KEY, reason);
+  const content = document.getElementById('quest-sheet-content');
+  if (!content) return;
+  const victory = content.querySelector('.quest-victory');
+  if (!victory) return;
+  const sub = victory.querySelector('.quest-victory-sub');
+  if (sub) {
+    sub.textContent = reason === 'impostors-down'
+      ? 'Tous les Impostors ont été éliminés'
+      : 'Toutes les missions ont été terminées';
+  }
+  victory.style.display = 'flex';
+  const progress = content.querySelector('.quest-progress');
+  if (progress) progress.style.display = 'none';
 }
 function renderTimer(remainingMs) {
   const totalSec = Math.max(0, Math.ceil(remainingMs / 1000));
