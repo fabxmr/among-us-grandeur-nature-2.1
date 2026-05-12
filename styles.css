@@ -2416,7 +2416,7 @@
   .accueil-hero {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    min-height: 70vh;
+    min-height: calc(100vh - 120px);
     max-width: 920px;
     margin: 0 auto;
   }
