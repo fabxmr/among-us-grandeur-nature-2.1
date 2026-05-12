@@ -2387,9 +2387,6 @@
   .sidebar-mode-btn.blue:hover   { background: rgba(107, 166, 255, .12); }
   .sidebar-mode-btn.orange:hover { background: rgba(255, 155, 59, .12); }
   .sidebar-mode-btn.pink:hover   { background: rgba(184, 107, 255, .12); }
-  .sidebar-mode-btn.blue.active   { background: rgba(107, 166, 255, .22); box-shadow: 0 0 12px rgba(107, 166, 255, .35); }
-  .sidebar-mode-btn.orange.active { background: rgba(255, 155, 59, .22); box-shadow: 0 0 12px rgba(255, 155, 59, .35); }
-  .sidebar-mode-btn.pink.active   { background: rgba(184, 107, 255, .22); box-shadow: 0 0 12px rgba(184, 107, 255, .35); }
   @media (min-width: 1024px) {
     .sidebar-mode-selector {
       width: 100%;
