@@ -2705,16 +2705,16 @@
     cursor: pointer;
     transition: all .25s cubic-bezier(.2,.7,.3,1);
     box-shadow:
-      0 10px 34px rgba(107, 166, 255, .36),
-      0 10px 34px rgba(255, 155, 59, .30),
-      0 10px 34px rgba(184, 107, 255, .40);
+      0 6px 18px rgba(107, 166, 255, .20),
+      0 6px 18px rgba(255, 155, 59, .16),
+      0 6px 18px rgba(184, 107, 255, .22);
   }
   .accueil-play-btn:hover {
     transform: translateY(-2px);
     box-shadow:
-      0 0 22px rgba(107, 166, 255, .22),
-      0 0 22px rgba(255, 155, 59, .18),
-      0 0 22px rgba(184, 107, 255, .24);
+      0 0 12px rgba(107, 166, 255, .14),
+      0 0 12px rgba(255, 155, 59, .11),
+      0 0 12px rgba(184, 107, 255, .15);
     background:
       linear-gradient(rgba(20, 24, 44, 0.6), rgba(20, 24, 44, 0.6)) padding-box,
       linear-gradient(135deg, #6ba6ff 0%, #ff9b3b 50%, #b86bff 100%) border-box;
@@ -2734,24 +2734,28 @@
     filter: drop-shadow(0 0 14px rgba(255, 90, 170, .30));
   }
 
-  /* Bouton "Règles" : reprend les couleurs initiales du bouton Jouer
-     (blanc -> rose pale -> violet pale), version plus petite/secondaire. */
+  /* Bouton "Règles" : meme principe que Jouer (bordure degradee + halo),
+     mais en degrade violace uniquement. Inversion base/hover identique. */
   .accueil-rules-link {
     display: inline-block;
     padding: 11px 32px;
     margin-top: 12px;
-    background: rgba(20, 24, 44, 0.6);
-    border: 2px solid rgba(255, 170, 210, .42);
+    background:
+      linear-gradient(160deg, rgba(20, 18, 32, .9), rgba(20, 24, 44, .95)) padding-box,
+      linear-gradient(135deg, #c8a2ff 0%, #b86bff 50%, #8a4ad8 100%) border-box;
+    border: 2px solid transparent;
     border-radius: 999px;
     cursor: pointer;
     text-decoration: none;
     transition: all .25s cubic-bezier(.2,.7,.3,1);
+    box-shadow: 0 6px 18px rgba(184, 107, 255, .22);
   }
   .accueil-rules-link:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 170, 210, .8);
-    box-shadow: 0 8px 24px rgba(255, 90, 170, .22);
-    background: linear-gradient(160deg, rgba(32, 18, 32, .9), rgba(20, 24, 44, .95));
+    background:
+      linear-gradient(rgba(20, 24, 44, 0.6), rgba(20, 24, 44, 0.6)) padding-box,
+      linear-gradient(135deg, #c8a2ff 0%, #b86bff 50%, #8a4ad8 100%) border-box;
+    box-shadow: 0 0 12px rgba(184, 107, 255, .14);
   }
   .accueil-rules-text {
     display: inline-block;
