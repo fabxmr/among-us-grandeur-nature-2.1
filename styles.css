@@ -2476,10 +2476,11 @@
   .accueil-mode .amode-num {
     font-weight: 800;
     font-size: 56pt;
-    line-height: 1;
+    line-height: 1.1;
     letter-spacing: -3px;
     color: var(--text);
     margin-bottom: 8px;
+    padding: 2px 4px;
   }
   .accueil-mode .amode-label {
     font-family: 'JetBrains Mono', monospace;
