@@ -567,7 +567,7 @@ function getTrackersHTML(mode) {
   return `
     <div class="tracker-row">
       <div class="tracker-card">
-        <div class="tracker-title">BUZZ RESTANTS (3 max)</div>
+        <div class="tracker-title">BUZZ RESTANTS</div>
         <div class="tracker-circles">
           <div class="tracker-circle" data-tracker="buzz-1"></div>
           <div class="tracker-circle" data-tracker="buzz-2"></div>
@@ -575,9 +575,8 @@ function getTrackersHTML(mode) {
         </div>
       </div>
       <div class="tracker-card">
-        <div class="tracker-title">SHERIFF — BALLE</div>
-        <div class="tracker-circles"><div class="tracker-circle red" data-tracker="sheriff"></div></div>
-        <div style="font-size:10px; color:#445577; margin-top:8px; font-family:'Press Start 2P',monospace; letter-spacing:1px">Cocher si tirée</div>
+        <div class="tracker-title">Balle du Shériff</div>
+        <div class="tracker-circles"><div class="tracker-circle" data-tracker="sheriff"></div></div>
       </div>
       ${sabotageCardHTML}
     </div>

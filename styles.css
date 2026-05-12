@@ -3103,6 +3103,20 @@
     font-size: 18px;
     line-height: 1;
   }
+  /* BUZZ : check en bleu (couleur du BUZZ dans les regles) */
+  .tracker-circle[data-tracker^="buzz"].used {
+    background: var(--neon-blue) !important;
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 12px rgba(107, 166, 255, 0.45);
+  }
+  .tracker-circle[data-tracker^="buzz"].used::after { color: #061a2c; }
+  /* SHERIFF : check en jaune (couleur de sa carte role) */
+  .tracker-circle[data-tracker="sheriff"].used {
+    background: var(--neon-yellow) !important;
+    border-color: var(--neon-yellow) !important;
+    box-shadow: 0 0 12px rgba(255, 224, 85, 0.45);
+  }
+  .tracker-circle[data-tracker="sheriff"].used::after { color: #2a2200; }
   .section.active .card { cursor: pointer; }
 
   @media print {
