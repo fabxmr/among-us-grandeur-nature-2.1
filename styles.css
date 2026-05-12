@@ -1216,9 +1216,10 @@
     transition: width 0.4s cubic-bezier(.2,.7,.2,1);
   }
 
-  /* Bandeau "Joueurs en vie" en partie : compteur + barre + pastilles
-     colorees, une par personnage du mode courant. Click toggle vivant/mort. */
-  .players-bar {
+  /* Panneau "Joueurs en vie" en partie : compteur + barre + mini-cartes
+     (svg du perso + nom de couleur). Place a droite en desktop in-game,
+     en flow normal sur mobile. */
+  .players-panel {
     max-width: 1000px;
     margin: 0 auto 16px;
     padding: 12px 18px 14px;
@@ -1226,7 +1227,7 @@
     border: 1px solid var(--line-2);
     border-radius: var(--radius-md);
   }
-  .players-bar-header {
+  .players-panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1237,21 +1238,17 @@
     color: var(--text-dim);
     margin-bottom: 8px;
   }
-  .players-bar-title { font-weight: 600; }
-  .players-bar-count {
-    color: var(--neon-green);
-    font-weight: 700;
-    font-size: 12px;
-  }
-  .players-bar-progress {
+  .players-panel-title { font-weight: 600; }
+  .players-panel-count { color: var(--neon-green); font-weight: 700; font-size: 12px; }
+  .players-panel-progress {
     height: 8px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--line);
     border-radius: 999px;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
-  .players-bar-fill {
+  .players-panel-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
     border-radius: 999px;
@@ -1259,48 +1256,80 @@
     transition: width 0.4s cubic-bezier(.2,.7,.2,1);
   }
   .players-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 8px 4px;
   }
-  .player-pill {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    border: 2px solid var(--c, var(--line-2));
-    background: var(--c, transparent);
+  .player-card {
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 2px 5px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
     position: relative;
-    padding: 0;
-    box-shadow: inset 0 1px 2px rgba(255,255,255,.15), 0 0 8px rgba(0,0,0,.35);
-    transition: transform .15s, opacity .25s, filter .25s, box-shadow .25s;
+    transition: background .2s, border-color .2s, transform .15s, opacity .25s, filter .25s;
   }
-  .player-pill:hover { transform: scale(1.12); box-shadow: inset 0 1px 2px rgba(255,255,255,.2), 0 0 14px rgba(255,255,255,.18); }
-  .player-pill:active { transform: scale(0.92); }
-  .player-pill.dead {
-    opacity: 0.35;
-    filter: grayscale(0.8);
-    box-shadow: none;
+  .player-card:hover {
+    background: rgba(255,255,255,.04);
+    border-color: var(--line);
+    transform: translateY(-1px);
   }
-  .player-pill.dead::before {
+  .player-card:active { transform: scale(0.96); }
+  .player-card-svg {
+    width: 40px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .player-card-svg svg { width: 100%; height: 100%; overflow: visible; }
+  .player-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  .player-card.dead { opacity: 0.40; filter: grayscale(0.7); }
+  .player-card.dead::before {
     content: '';
     position: absolute;
-    top: 50%; left: -3px; right: -3px;
+    top: 22px; left: 6px; right: 6px;
     height: 2.5px;
     background: rgba(255, 56, 96, 0.9);
-    transform: translateY(-50%) rotate(45deg);
+    transform: rotate(-10deg);
     border-radius: 2px;
+    box-shadow: 0 0 8px rgba(255, 56, 96, .5);
   }
 
-  /* Mode partie desktop : version compacte (apparait dans tab-quests en jeu) */
-  @media (min-width: 720px) {
-    body.in-game .players-bar { padding: 10px 18px 12px; margin-bottom: 12px; }
-    body.in-game .players-bar-progress { height: 7px; margin-bottom: 8px; }
-    body.in-game .player-pill { width: 26px; height: 26px; }
+  /* Desktop in-game : panneau en position fixe a droite. Le contenu
+     de la fiche quests a un padding-right pour ne pas passer en dessous. */
+  @media (min-width: 900px) {
+    body.in-game .quest-sheet { padding-right: 264px !important; max-width: 1200px; }
+    body.in-game .players-panel {
+      position: fixed;
+      top: 70px;
+      right: 16px;
+      width: 232px;
+      max-height: calc(100vh - 90px);
+      overflow-y: auto;
+      margin: 0;
+      z-index: 50;
+    }
+    body.in-game .players-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
-  @media print {
-    .players-bar { display: none !important; }
-  }
+  @media print { .players-panel { display: none !important; } }
 
   .quest-legend {
     display: flex; flex-wrap: wrap; gap: 20px;

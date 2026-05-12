@@ -543,38 +543,47 @@ function getCurrentRoster() {
   return r;
 }
 
-// HTML du bandeau "Joueurs en vie" : compteur + barre + pastilles.
-function renderPlayersBar() {
+// HTML du panneau "Joueurs en vie" : compteur + barre + mini-cartes
+// (SVG du personnage + nom de couleur). Place a droite en partie desktop.
+function renderPlayersPanel() {
   const mode = getCurrentMode();
   const state = loadPlayersState();
   const roster = getCurrentRoster();
   const total = roster.length;
   const alive = roster.filter(p => !state[playerKey(mode, p.id)]).length;
   const pct = total ? Math.round((alive / total) * 100) : 0;
-  const pills = roster.map(p => {
+  const helmet = '#7FC8E8';
+  const cards = roster.map(p => {
     const dead = !!state[playerKey(mode, p.id)];
+    const svg = crewmateSVG(
+      p.color.body, helmet,
+      p.type === 'impostor', p.type === 'sheriff', p.type === 'engineer'
+    );
     return `<button type="button"
-        class="player-pill${dead ? ' dead' : ''}"
-        style="--c:${p.color.hex}"
+        class="player-card${dead ? ' dead' : ''}"
         onclick="togglePlayer('${p.id}')"
         title="${p.color.name}${dead ? ' — éliminé' : ''}"
-        aria-label="${p.color.name}${dead ? ' éliminé' : ', cliquer pour éliminer'}"></button>`;
+        aria-label="${p.color.name}${dead ? ' éliminé' : ', cliquer pour éliminer'}">
+      <span class="player-card-svg">${svg}</span>
+      <span class="player-card-name">${p.color.name}</span>
+    </button>`;
   }).join('');
   return `
-    <div class="players-bar">
-      <div class="players-bar-header">
-        <span class="players-bar-title">Joueurs en vie</span>
-        <span class="players-bar-count">${alive} / ${total}</span>
+    <div class="players-panel">
+      <div class="players-panel-header">
+        <span class="players-panel-title">Joueurs en vie</span>
+        <span class="players-panel-count">${alive} / ${total}</span>
       </div>
-      <div class="players-bar-progress">
-        <div class="players-bar-fill" style="width:${pct}%"></div>
+      <div class="players-panel-progress">
+        <div class="players-panel-fill" style="width:${pct}%"></div>
       </div>
-      <div class="players-list">${pills}</div>
+      <div class="players-list">${cards}</div>
     </div>
   `;
 }
 
-// Toggle vivant <-> elimine pour un joueur et rebuild le bandeau seul.
+// Toggle vivant <-> elimine pour un joueur, rebuild le panneau, et
+// declenche la verification de victoire des Impostors par parite.
 function togglePlayer(id) {
   const mode = getCurrentMode();
   const state = loadPlayersState();
@@ -582,8 +591,26 @@ function togglePlayer(id) {
   if (state[key]) delete state[key];
   else state[key] = true;
   savePlayersState(state);
-  const bar = document.querySelector('#quest-sheet-content .players-bar');
-  if (bar) bar.outerHTML = renderPlayersBar();
+  const panel = document.querySelector('#quest-sheet-content .players-panel');
+  if (panel) panel.outerHTML = renderPlayersPanel();
+  checkImpostorVictory();
+}
+
+// Victoire automatique des Impostors quand ils sont aussi nombreux que
+// les autres joueurs vivants (Crewmates / Sheriff / Engineer).
+function checkImpostorVictory() {
+  const mode = getCurrentMode();
+  const state = loadPlayersState();
+  const roster = getCurrentRoster();
+  const aliveImps = roster.filter(p =>
+    p.type === 'impostor' && !state[playerKey(mode, p.id)]
+  ).length;
+  const aliveOthers = roster.filter(p =>
+    p.type !== 'impostor' && !state[playerKey(mode, p.id)]
+  ).length;
+  if (aliveImps > 0 && aliveImps >= aliveOthers) {
+    showDefeat('parity');
+  }
 }
 
 // Etat du sabotage global : 1 declenchement max par partie, 3 missions tirees
@@ -712,7 +739,7 @@ function buildQuestSheet() {
       <div class="quest-defeat-sub">Le temps est écoulé</div>
       <button type="button" class="quest-newgame-btn red" onclick="newGame()">Nouvelle Partie</button>
     </div>
-    ${renderPlayersBar()}
+    ${renderPlayersPanel()}
     ${pageBlockHTML(page1, page2.length === 0)}
     ${page2.length > 0 ? pageBlockHTML(page2, true) : ''}
   `;
@@ -730,7 +757,10 @@ function buildQuestSheet() {
     renderTimer(remaining);
   }
   // Si le timer avait expire avant un reload : reaffiche l'overlay defaite
-  if (localStorage.getItem(TIMER_EXPIRED_KEY)) showDefeat();
+  if (localStorage.getItem(TIMER_EXPIRED_KEY)) {
+    const reason = localStorage.getItem(DEFEAT_REASON_KEY) || 'time';
+    showDefeat(reason);
+  }
 }
 
 // Met à jour la barre (texte + remplissage) selon les cases joueur cochees.
@@ -776,6 +806,7 @@ function newGame() {
   // Remet le timer a la duree initiale du mode (arrete s'il etait en cours)
   if (typeof resetTimer === 'function') resetTimer();
   localStorage.removeItem(TIMER_EXPIRED_KEY);
+  localStorage.removeItem(DEFEAT_REASON_KEY);
   buildQuestSheet();
   if (typeof buildSuiviPrintPages === 'function') buildSuiviPrintPages();
 }
@@ -1442,8 +1473,7 @@ function startTimerInterval() {
       releaseWakeLock();
       playAlarm();
       // Marque la defaite et affiche l'overlay IMPOSTORS WIN
-      localStorage.setItem(TIMER_EXPIRED_KEY, '1');
-      showDefeat();
+      showDefeat('time');
     } else {
       renderTimer(remaining);
     }
@@ -1452,12 +1482,22 @@ function startTimerInterval() {
 }
 
 // Cle qui survit aux rechargements : permet de re-afficher l'overlay defaite
-// si l'utilisateur recharge la page apres expiration sans cliquer "Nouvelle Partie".
+// si l'utilisateur recharge la page apres expiration ou parite Impostors.
 const TIMER_EXPIRED_KEY = 'among-us:timer-expired:v1';
+const DEFEAT_REASON_KEY = 'among-us:defeat-reason:v1';
 
-function showDefeat() {
+function showDefeat(reason = 'time') {
+  localStorage.setItem(TIMER_EXPIRED_KEY, '1');
+  localStorage.setItem(DEFEAT_REASON_KEY, reason);
   const defeat = document.querySelector('#quest-sheet-content .quest-defeat');
-  if (defeat) defeat.style.display = 'flex';
+  if (!defeat) return;
+  const sub = defeat.querySelector('.quest-defeat-sub');
+  if (sub) {
+    sub.textContent = reason === 'parity'
+      ? 'Les Impostors sont aussi nombreux que les autres'
+      : 'Le temps est écoulé';
+  }
+  defeat.style.display = 'flex';
 }
 function renderTimer(remainingMs) {
   const totalSec = Math.max(0, Math.ceil(remainingMs / 1000));
