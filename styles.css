@@ -2469,42 +2469,6 @@
       transform: translate(-2mm, -2mm) !important;
     }
     #tab-print.print-active .print-page.verso .card-back::before { display: none !important; }
-
-    /* Suivi a imprimer : clone de la fiche quests, deja adaptee au mode.
-       Mêmes marges que "Défis à imprimer" : A4 portrait, padding 12mm,
-       page-break entre chaque quest-floor-block. */
-    #tab-suivi-print.print-active { padding: 0 !important; }
-    #tab-suivi-print.print-active > .section-title,
-    #tab-suivi-print.print-active .cards-print-toolbar { display: none !important; }
-    #tab-suivi-print.print-active .print-pages-container {
-      display: block !important; gap: 0 !important; padding: 0 !important;
-    }
-    #tab-suivi-print.print-active .quest-sheet {
-      background: white !important;
-      color: black !important;
-      padding: 0 !important;
-      border: none !important;
-      box-shadow: none !important;
-      border-radius: 0 !important;
-      max-width: none !important;
-      margin: 0 !important;
-    }
-    #tab-suivi-print.print-active .quest-sheet-header { display: none !important; }
-    #tab-suivi-print.print-active .quest-floor-block {
-      background: white !important;
-      color: black !important;
-      box-shadow: none !important;
-      width: 210mm !important; height: 297mm !important;
-      padding: 12mm !important; margin: 0 !important;
-      box-sizing: border-box !important;
-      page-break-after: always !important; break-after: page !important;
-      page-break-inside: avoid !important; break-inside: avoid !important;
-      border: none !important;
-      border-radius: 0 !important;
-    }
-    #tab-suivi-print.print-active .quest-floor-block:last-child {
-      page-break-after: auto !important; break-after: auto !important;
-    }
   }
 
   /* ═══════════ TIMER ═══════════ */
