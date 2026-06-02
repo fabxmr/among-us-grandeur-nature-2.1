@@ -1902,6 +1902,9 @@
     .card-back {
       background: linear-gradient(160deg, #3a2515, #2a1810) !important;
     }
+    /* Impression : ignorer l'etat .flipped et masquer le verso (explication du role) */
+    .card .card-inner { transform: none !important; }
+    .card .card-explain { display: none !important; }
     .quest-checkbox,
     .quest-checkbox.sabotage-box,
     .legend-box,
