@@ -965,6 +965,11 @@
     color: var(--text);
     letter-spacing: 0.3px;
   }
+  /* Suivi de partie (in-game) : on masque le lieu pour forcer les joueurs
+     a decouvrir le lieu par eux-memes. Reste visible partout ailleurs
+     (livret, suivi a imprimer, cartes, taches-zones). */
+  #tab-quests .quest-row-room { display: none !important; }
+  #tab-quests .quest-row .quest-checkboxes { justify-content: flex-end; }
 
   .quest-checkboxes { display: flex; gap: 8px; align-items: center; }
   .quest-checkbox {
