@@ -1560,14 +1560,21 @@
     box-shadow: 0 8px 24px rgba(0,0,0,.4), 0 0 24px rgba(107,166,255,.1);
   }
   .defi-card.blue:hover { border-color: var(--neon-blue); box-shadow: 0 12px 36px rgba(0,0,0,.5), 0 0 36px rgba(107,166,255,.28); }
+  .defi-card.green {
+    background: linear-gradient(160deg, rgba(8, 36, 22, 0.85), rgba(4, 18, 10, 0.95));
+    border: 1px solid rgba(76, 255, 157, .35);
+    box-shadow: 0 8px 24px rgba(0,0,0,.4), 0 0 24px rgba(76,255,157,.1);
+  }
+  .defi-card.green:hover { border-color: var(--neon-green); box-shadow: 0 12px 36px rgba(0,0,0,.5), 0 0 36px rgba(76,255,157,.28); }
 
   .defi-header {
     display: flex; align-items: center; gap: 12px;
     padding-bottom: 12px;
     border-bottom: 1px solid;
   }
-  .defi-card.red  .defi-header { border-color: rgba(255,56,96,.25); }
-  .defi-card.blue .defi-header { border-color: rgba(107,166,255,.25); }
+  .defi-card.red   .defi-header { border-color: rgba(255,56,96,.25); }
+  .defi-card.blue  .defi-header { border-color: rgba(107,166,255,.25); }
+  .defi-card.green .defi-header { border-color: rgba(76,255,157,.25); }
 
   .defi-icon-wrap {
     width: 42px; height: 42px;
@@ -1575,8 +1582,9 @@
     display: flex; align-items: center; justify-content: center;
     border-radius: 10px;
   }
-  .defi-card.red  .defi-icon-wrap { background: rgba(255,56,96,.1); border: 1px solid rgba(255,56,96,.3); }
-  .defi-card.blue .defi-icon-wrap { background: rgba(107,166,255,.1); border: 1px solid rgba(107,166,255,.3); }
+  .defi-card.red   .defi-icon-wrap { background: rgba(255,56,96,.1);  border: 1px solid rgba(255,56,96,.3); }
+  .defi-card.blue  .defi-icon-wrap { background: rgba(107,166,255,.1); border: 1px solid rgba(107,166,255,.3); }
+  .defi-card.green .defi-icon-wrap { background: rgba(76,255,157,.1);  border: 1px solid rgba(76,255,157,.3); }
   .defi-icon-wrap svg { width: 26px; height: 26px; }
 
   .defi-number {
@@ -1585,8 +1593,9 @@
     font-size: 14px;
     letter-spacing: 1.5px;
   }
-  .defi-card.red  .defi-number { color: var(--neon-red); }
-  .defi-card.blue .defi-number { color: var(--neon-blue); }
+  .defi-card.red   .defi-number { color: var(--neon-red); }
+  .defi-card.blue  .defi-number { color: var(--neon-blue); }
+  .defi-card.green .defi-number { color: var(--neon-green); }
 
   .defi-badge {
     margin-left: auto;
@@ -1599,8 +1608,9 @@
     flex-shrink: 0;
     text-transform: uppercase;
   }
-  .defi-card.red  .defi-badge { background: rgba(255,56,96,.15); color: #ff8aa3; border: 1px solid rgba(255,56,96,.4); }
-  .defi-card.blue .defi-badge { background: rgba(107,166,255,.15); color: #9bc5ff; border: 1px solid rgba(107,166,255,.4); }
+  .defi-card.red   .defi-badge { background: rgba(255,56,96,.15);  color: #ff8aa3; border: 1px solid rgba(255,56,96,.4); }
+  .defi-card.blue  .defi-badge { background: rgba(107,166,255,.15); color: #9bc5ff; border: 1px solid rgba(107,166,255,.4); }
+  .defi-card.green .defi-badge { background: rgba(76,255,157,.15);  color: #9ff5c0; border: 1px solid rgba(76,255,157,.4); }
 
   .defi-text {
     font-size: 14.5px;
@@ -2099,6 +2109,16 @@
   .print-page.defi-verso-blue .card-back-icon {
     filter: drop-shadow(0 0 16px rgba(107, 166, 255, .6)) !important;
   }
+  .print-page.defi-verso-green {
+    background: linear-gradient(160deg, #082212, #041a08) !important;
+  }
+  .print-page.defi-verso-green .card-back-logo {
+    color: var(--neon-green) !important;
+    text-shadow: 0 0 16px rgba(76, 255, 157, .6), 0 0 32px rgba(76, 255, 157, .35) !important;
+  }
+  .print-page.defi-verso-green .card-back-icon {
+    filter: drop-shadow(0 0 16px rgba(76, 255, 157, .6)) !important;
+  }
 
   /* ═══════════ ONGLET PANCARTES À IMPRIMER ═══════════ */
   .pancartes-print-grid {
@@ -2318,6 +2338,9 @@
     }
     #tab-defis-print.print-active .print-page.defi-verso-blue {
       background: linear-gradient(160deg, #081224, #040810) !important;
+    }
+    #tab-defis-print.print-active .print-page.defi-verso-green {
+      background: linear-gradient(160deg, #082212, #041a08) !important;
     }
     /* Verso card-backs : transparent avec bleed 2mm */
     #tab-defis-print.print-active .print-page.defi-verso .card-back {

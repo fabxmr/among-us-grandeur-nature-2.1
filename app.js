@@ -1273,9 +1273,16 @@ function buildDefisPrintPages() {
   const cfg = getModeConfig(getCurrentMode());
   const reds  = DEFIS.filter(d => d.color === 'red'  && d.num <= cfg.missions);
   const blues = DEFIS.filter(d => d.color === 'blue' && d.num <= cfg.missions);
+  // Localisations vertes : taches etage + RDC triees par num (memes que l'onglet "Defis" section verte).
+  // Le badge floor permet de garder le rendu identique aux defis (ETAGE / RDC).
+  const greens = [
+    ...TACHES_ETAGE.filter(t => t.num <= cfg.missions).map(t => ({ num: t.num, lieu: t.lieu, floor: 'etage' })),
+    ...TACHES_RDC  .filter(t => t.num <= cfg.missions).map(t => ({ num: t.num, lieu: t.lieu, floor: 'rdc'   })),
+  ].sort((a, b) => a.num - b.num);
   const PER_PAGE = 4;
-  const RED_HEX  = '#ff3860'; // var(--neon-red)
-  const BLUE_HEX = '#6ba6ff'; // var(--neon-blue)
+  const RED_HEX   = '#ff3860'; // var(--neon-red)
+  const BLUE_HEX  = '#6ba6ff'; // var(--neon-blue)
+  const GREEN_HEX = '#4cff9d'; // var(--neon-green)
 
   const defiCardHTML = (d) => `
     <div class="defi-card ${d.color}">
@@ -1288,20 +1295,31 @@ function buildDefisPrintPages() {
     </div>
   `;
 
+  const lieuCardHTML = (l) => `
+    <div class="defi-card green">
+      <div class="defi-header">
+        <div class="defi-icon-wrap">${defiIconSVG('green')}</div>
+        <div class="defi-number">LIEU N°${String(l.num).padStart(2,'0')}</div>
+        <div class="defi-badge">${l.floor === 'etage' ? 'ÉTAGE' : 'RDC'}</div>
+      </div>
+      <div class="defi-text">${l.lieu}</div>
+    </div>
+  `;
+
   let html = '';
   let pageNum = 1;
 
-  function buildSet(defis, colorClass, hexColor) {
+  function buildSet(items, colorClass, hexColor, renderer, itemLabel) {
     let setHtml = '';
-    for (let i = 0; i < defis.length; i += PER_PAGE) {
-      const chunk = defis.slice(i, i + PER_PAGE);
-      const cards = chunk.map(defiCardHTML).join('');
+    for (let i = 0; i < items.length; i += PER_PAGE) {
+      const chunk = items.slice(i, i + PER_PAGE);
+      const cards = chunk.map(renderer).join('');
       // Toujours 4 dos par page (uniforme), peu importe le nb de cartes recto
       const backsHTML = Array(PER_PAGE).fill(backCardHTMLColored(hexColor)).join('');
 
       setHtml += `
         <div class="print-page defi-recto">
-          <div class="print-page-label">RECTO ${colorClass.toUpperCase()} — PAGE ${pageNum} (${chunk.length} défi${chunk.length > 1 ? 's' : ''})</div>
+          <div class="print-page-label">RECTO ${colorClass.toUpperCase()} — PAGE ${pageNum} (${chunk.length} ${itemLabel}${chunk.length > 1 ? 's' : ''})</div>
           <div class="defi-print-grid">${cards}</div>
         </div>
       `;
@@ -1318,8 +1336,9 @@ function buildDefisPrintPages() {
     return setHtml;
   }
 
-  html += buildSet(reds,  'red',  RED_HEX);
-  html += buildSet(blues, 'blue', BLUE_HEX);
+  html += buildSet(reds,   'red',   RED_HEX,   defiCardHTML, 'défi');
+  html += buildSet(blues,  'blue',  BLUE_HEX,  defiCardHTML, 'défi');
+  html += buildSet(greens, 'green', GREEN_HEX, lieuCardHTML, 'lieu');
 
   container.innerHTML = html;
 }
@@ -1360,8 +1379,10 @@ const TACHES_ETAGE = MISSIONS_DATA.filter(m => MISSION_FLOOR_BY_ID[m.id] === 'et
 const TACHES_RDC   = MISSIONS_DATA.filter(m => MISSION_FLOOR_BY_ID[m.id] === 'rdc').map(m => ({ num: m.id, lieu: m.room }));
 
 function defiIconSVG(color) {
-  const stroke = color === "red" ? "#ff2244" : "#4a9eff";
-  const fill   = color === "red" ? "#ff224433" : "#4a9eff33";
+  let stroke, fill;
+  if (color === "red")        { stroke = "#ff2244"; fill = "#ff224433"; }
+  else if (color === "green") { stroke = "#22cc7d"; fill = "#22cc7d33"; }
+  else                        { stroke = "#4a9eff"; fill = "#4a9eff33"; }
   return `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
     <path d="M 6 8 Q 6 4 16 4 Q 26 4 26 8 L 26 22 Q 26 26 22 26 L 21 26 L 21 28 L 19 28 L 19 26 L 13 26 L 13 28 L 11 28 L 11 26 L 10 26 Q 6 26 6 22 Z"
           fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
