@@ -1273,12 +1273,9 @@ function buildDefisPrintPages() {
   const cfg = getModeConfig(getCurrentMode());
   const reds  = DEFIS.filter(d => d.color === 'red'  && d.num <= cfg.missions);
   const blues = DEFIS.filter(d => d.color === 'blue' && d.num <= cfg.missions);
-  // Localisations vertes : taches etage + RDC triees par num (memes que l'onglet "Defis" section verte).
-  // Le badge floor permet de garder le rendu identique aux defis (ETAGE / RDC).
-  const greens = [
-    ...TACHES_ETAGE.filter(t => t.num <= cfg.missions).map(t => ({ num: t.num, lieu: t.lieu, floor: 'etage' })),
-    ...TACHES_RDC  .filter(t => t.num <= cfg.missions).map(t => ({ num: t.num, lieu: t.lieu, floor: 'rdc'   })),
-  ].sort((a, b) => a.num - b.num);
+  // Localisations vertes : taches etage + RDC, condensees en 2 cartes (1 par etage) pour economiser le papier
+  const etageItems = TACHES_ETAGE.filter(t => t.num <= cfg.missions);
+  const rdcItems   = TACHES_RDC  .filter(t => t.num <= cfg.missions);
   const PER_PAGE = 4;
   const RED_HEX   = '#ff3860'; // var(--neon-red)
   const BLUE_HEX  = '#6ba6ff'; // var(--neon-blue)
@@ -1295,31 +1292,37 @@ function buildDefisPrintPages() {
     </div>
   `;
 
-  const lieuCardHTML = (l) => `
-    <div class="defi-card green">
-      <div class="defi-header">
-        <div class="defi-icon-wrap">${defiIconSVG('green')}</div>
-        <div class="defi-number">LIEU N°${String(l.num).padStart(2,'0')}</div>
-        <div class="defi-badge">${l.floor === 'etage' ? 'ÉTAGE' : 'RDC'}</div>
+  // Carte recapitulative : titre (TACHES ETAGE / RDC) + liste de tous les lieux
+  const lieuSummaryCardHTML = (title, items, badge) => {
+    const lines = items.map(t =>
+      `<div class="lieu-line"><span class="lieu-num">N°${String(t.num).padStart(2,'0')}</span><span class="lieu-name">${t.lieu}</span></div>`
+    ).join('');
+    return `
+      <div class="defi-card green">
+        <div class="defi-header">
+          <div class="defi-icon-wrap">${defiIconSVG('green')}</div>
+          <div class="defi-number">${title}</div>
+          <div class="defi-badge">${badge}</div>
+        </div>
+        <div class="defi-text lieu-list">${lines}</div>
       </div>
-      <div class="defi-text">${l.lieu}</div>
-    </div>
-  `;
+    `;
+  };
 
   let html = '';
   let pageNum = 1;
 
-  function buildSet(items, colorClass, hexColor, renderer, itemLabel) {
+  function buildSet(items, colorClass, hexColor) {
     let setHtml = '';
     for (let i = 0; i < items.length; i += PER_PAGE) {
       const chunk = items.slice(i, i + PER_PAGE);
-      const cards = chunk.map(renderer).join('');
+      const cards = chunk.map(defiCardHTML).join('');
       // Toujours 4 dos par page (uniforme), peu importe le nb de cartes recto
       const backsHTML = Array(PER_PAGE).fill(backCardHTMLColored(hexColor)).join('');
 
       setHtml += `
         <div class="print-page defi-recto">
-          <div class="print-page-label">RECTO ${colorClass.toUpperCase()} — PAGE ${pageNum} (${chunk.length} ${itemLabel}${chunk.length > 1 ? 's' : ''})</div>
+          <div class="print-page-label">RECTO ${colorClass.toUpperCase()} — PAGE ${pageNum} (${chunk.length} défi${chunk.length > 1 ? 's' : ''})</div>
           <div class="defi-print-grid">${cards}</div>
         </div>
       `;
@@ -1336,9 +1339,30 @@ function buildDefisPrintPages() {
     return setHtml;
   }
 
-  html += buildSet(reds,   'red',   RED_HEX,   defiCardHTML, 'défi');
-  html += buildSet(blues,  'blue',  BLUE_HEX,  defiCardHTML, 'défi');
-  html += buildSet(greens, 'green', GREEN_HEX, lieuCardHTML, 'lieu');
+  html += buildSet(reds,  'red',  RED_HEX);
+  html += buildSet(blues, 'blue', BLUE_HEX);
+
+  // Pages "lieux" : 2 cartes (ETAGE + RDC) sur une seule page recto, suivies du verso vert
+  if (etageItems.length || rdcItems.length) {
+    const greenBacks = Array(2).fill(backCardHTMLColored(GREEN_HEX)).join('');
+    html += `
+      <div class="print-page defi-recto defi-recto-summary">
+        <div class="print-page-label">RECTO GREEN — PAGE ${pageNum} (2 cartes)</div>
+        <div class="defi-print-grid defi-print-grid-summary">
+          ${lieuSummaryCardHTML('TÂCHES ÉTAGE', etageItems, 'ÉTAGE')}
+          ${lieuSummaryCardHTML('TÂCHES RDC',   rdcItems,   'RDC')}
+        </div>
+      </div>
+    `;
+    pageNum++;
+    html += `
+      <div class="print-page defi-verso defi-verso-green defi-verso-summary">
+        <div class="print-page-label">VERSO GREEN — PAGE ${pageNum}</div>
+        <div class="defi-print-grid defi-print-grid-summary">${greenBacks}</div>
+      </div>
+    `;
+    pageNum++;
+  }
 
   container.innerHTML = html;
 }

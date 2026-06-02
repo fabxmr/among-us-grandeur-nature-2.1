@@ -2119,6 +2119,46 @@
   .print-page.defi-verso-green .card-back-icon {
     filter: drop-shadow(0 0 16px rgba(76, 255, 157, .6)) !important;
   }
+  /* Pages "summary" (TACHES ETAGE + TACHES RDC) : 2 cartes plein page au lieu de 4 */
+  .defi-print-grid-summary {
+    grid-template-rows: repeat(2, 130mm) !important;
+    gap: 6mm !important;
+  }
+  .print-page.defi-recto-summary .defi-card {
+    height: 130mm !important;
+  }
+  .print-page.defi-verso-summary .card-back {
+    height: 134mm !important;
+  }
+  /* Liste des lieux : 2 colonnes, items numerotes type "N°XX  Cuisine" */
+  .print-page.defi-recto-summary .defi-card .defi-text.lieu-list {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 18px;
+    text-align: left !important;
+    align-items: start !important;
+    justify-content: flex-start !important;
+    align-content: start !important;
+    font-size: 15px !important;
+    padding-top: 4mm;
+  }
+  .lieu-line {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .lieu-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--neon-green);
+    flex-shrink: 0;
+  }
+  .lieu-name {
+    color: var(--text);
+    font-weight: 600;
+  }
 
   /* ═══════════ ONGLET PANCARTES À IMPRIMER ═══════════ */
   .pancartes-print-grid {
@@ -2341,6 +2381,28 @@
     }
     #tab-defis-print.print-active .print-page.defi-verso-green {
       background: linear-gradient(160deg, #082212, #041a08) !important;
+    }
+    /* Summary (TACHES ETAGE/RDC) : 2 cartes plein page au lieu de 4 cartes 60mm */
+    #tab-defis-print.print-active .defi-print-grid-summary {
+      grid-template-rows: repeat(2, 130mm) !important;
+      gap: 6mm !important;
+    }
+    #tab-defis-print.print-active .print-page.defi-recto-summary .defi-card {
+      height: 130mm !important;
+    }
+    #tab-defis-print.print-active .print-page.defi-verso-summary .card-back {
+      height: 134mm !important;
+    }
+    #tab-defis-print.print-active .print-page.defi-recto-summary .defi-card .defi-text.lieu-list {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 6px 18px !important;
+      text-align: left !important;
+      align-items: start !important;
+      justify-content: flex-start !important;
+      align-content: start !important;
+      font-size: 15px !important;
+      padding-top: 4mm !important;
     }
     /* Verso card-backs : transparent avec bleed 2mm */
     #tab-defis-print.print-active .print-page.defi-verso .card-back {
